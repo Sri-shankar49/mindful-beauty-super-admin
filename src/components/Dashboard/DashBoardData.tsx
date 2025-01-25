@@ -1,4 +1,4 @@
-import { useState } from "react"
+// import { useState } from "react"
 // import { SelectField } from "@/common/SelectField"
 // import { Button } from "@/common/Button"
 // import { AreaChart } from "@/components/Dashboard/DashBoardData/AreaChart"
@@ -10,8 +10,8 @@ import { useState } from "react"
 // import stylist from "../../assets/images/stylist.png"
 import { SelectField } from "../../common/SelectField";
 // import { Button } from "../../common/Button";
-import { DenialPopup } from "./DashBoardData/DenialPopup";
-import { StylistPopup } from "./DashBoardData/StylistPopup";
+// import { DenialPopup } from "./DashBoardData/DenialPopup";
+// import { StylistPopup } from "./DashBoardData/StylistPopup";
 
 
 // Define the type for each option
@@ -61,26 +61,27 @@ export const DashBoardData = () => {
 
 
     // State declaration for Denial Popup
-    const [showDenialPopup, setShowDenialPopup] = useState(false);
+    // const [showDenialPopup, setShowDenialPopup] = useState(false);
 
     // State declaration for Stylist Popup
-    const [showStylistPopup, setShowStylistPopup] = useState(false);
+    // const [showStylistPopup, setShowStylistPopup] = useState(false);
 
-    const openDenialPopup = () => {
-        setShowDenialPopup(true);
-    }
+    // const openDenialPopup = () => {
+    //     setShowDenialPopup(true);
+    // }
 
-    const closeDenialPopup = () => {
-        setShowDenialPopup(false);
-    }
+    // const closeDenialPopup = () => {
+    //     setShowDenialPopup(false);
+    // }
 
     // const openStylistPopup = () => {
     //   setShowStylistPopup(true);
     // }
 
-    const closeStylistPopup = () => {
-        setShowStylistPopup(false);
-    }
+    // const closeStylistPopup = () => {
+    //     setShowStylistPopup(false);
+    // }
+
     return (
         <div>
             {/* Heading & Sort */}
@@ -293,8 +294,8 @@ export const DashBoardData = () => {
                 </div>
             </div>
 
-            {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />}
-            {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />}
+            {/* {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />}
+            {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />} */}
 
         </div>
 
