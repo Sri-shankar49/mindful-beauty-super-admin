@@ -1,10 +1,8 @@
-// import { Button } from '@/common/Button'
-// import { InputField } from '@/common/InputField'
-// import { SelectField } from '@/common/SelectField';
 import React from 'react';
 import { IoCloseCircle } from 'react-icons/io5'
 import { InputField } from '../../../common/InputField';
 import { SelectField } from '../../../common/SelectField';
+import { Button } from '../../../common/Button';
 
 interface PaymentDetailsPopupProps {
     closePopup: () => void;

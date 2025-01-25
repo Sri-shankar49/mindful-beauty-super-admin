@@ -7,9 +7,9 @@ import { useState } from "react"
 // import { DenialPopup } from "@/components/Dashboard/DashBoardData/DenialPopup"
 // import { StylistPopup } from "@/components/Dashboard/DashBoardData/StylistPopup"
 // import Select, { SingleValue } from 'react-select';
-import stylist from "../../assets/images/stylist.png"
+// import stylist from "../../assets/images/stylist.png"
 import { SelectField } from "../../common/SelectField";
-import { Button } from "../../common/Button";
+// import { Button } from "../../common/Button";
 import { DenialPopup } from "./DashBoardData/DenialPopup";
 import { StylistPopup } from "./DashBoardData/StylistPopup";
 

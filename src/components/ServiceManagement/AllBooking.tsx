@@ -5,7 +5,7 @@ import editButton from "../../assets/icons/editButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import { Button } from "@/common/Button";
 // import Select, { SingleValue } from 'react-select';
-import stylist from "../../assets/images/stylist.png"
+// import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { SelectField } from "../../common/SelectField";
 import { Button } from "../../common/Button";

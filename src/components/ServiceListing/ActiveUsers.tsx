@@ -54,7 +54,6 @@ export const ActiveUsers = () => {
                                     <div className="flex items-center space-x-2">
                                         {/* Eye Button */}
                                         <div
-                                            // onClick={openInvoicePopup}
                                             className="border-2 border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer">
                                             <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack" />
                                         </div>
@@ -65,7 +64,9 @@ export const ActiveUsers = () => {
                                         </div>
 
                                         {/* Delete Button */}
-                                        <div className="border-2 border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer">
+                                        <div
+                                            onClick={openEditService}
+                                            className="border-2 border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer">
                                             <RiDeleteBinLine className="text-[20px] text-mindfulBlack" />
                                         </div>
                                     </div>
