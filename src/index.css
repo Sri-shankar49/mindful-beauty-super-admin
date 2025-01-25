@@ -1,0 +1,125 @@
+/* Roboto font family link */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* :root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */
+
+
+@import "tailwindcss";
+
+/********** custom CSS **********/
+* {
+  /* margin: 0;
+  padding: 0;
+  box-sizing: border-box; */
+  font-family: "Roboto","sans-serif";
+  scroll-behavior: smooth;
+}
+
+
+.active-nav {
+  @apply font-semibold hover:text-mindfulBlue hover:cursor-pointer relative before:content-[''] before:absolute before:block before:w-full before:h-[3px] before:rounded before:-bottom-[2.6rem] before:left-0 before:bg-mindfulBlue before:hover:scale-x-100 before:scale-x-0 before:origin-top-left before:transition before:ease-in-out before:duration-300;
+}
+
+.active-nav.active {
+  @apply text-mindfulBlack cursor-pointer before:scale-x-100 transition-all hover:transition-all;
+}
+
+.active-sub-nav {
+  @apply font-semibold hover:text-main hover:cursor-pointer relative before:content-[''] before:absolute before:block before:w-full before:h-[3px] before:rounded-full before:-bottom-[18px] before:left-0 before:bg-main before:hover:scale-x-100 before:scale-x-0 before:origin-top-left before:transition before:ease-in-out before:duration-300;
+}
+
+.active-sub-nav.active {
+  @apply text-main cursor-pointer before:scale-x-100 transition-all hover:transition-all;
+}
+
+
+
+
+@theme {
+
+  /* --container-container: */
+
+  /* --background-SignInBgImg: url('assets/images/signInBgImg.svg'); */
+
+  --color-main: #FF197D;
+  --color-mindfulWhite: #FFFFFF;
+  --color-mindfulBlack: #000000;
+  --color-mindfulRed: #FF0000;
+  --color-mindfulBlue: #02BCFB;
+  --color-mindfulSecondaryBlue: #3C79F6;
+  --color-mindfulGreen: #0F9F2B;
+  --color-mindfulYellow: #FABC2A;
+  --color-mindfulgrey: #ACACAC;
+  --color-mindfulAsh: #707070;
+  --color-mindfulGreyTypeTwo: #E5E7EB;
+  --color-mindfulLightgrey: #F8F8F9;
+  --color-mindfulLightPink: #FFF5F9;
+  --color-mindfulLightBlack: rgb(0 0 0 / 50%);
+}
