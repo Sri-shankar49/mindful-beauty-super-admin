@@ -1,12 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom'
-// import { InputField } from '@/common/InputField'
-import { MdSearch } from "react-icons/md";
-import { InputField } from '../../common/InputField';
+import { InputField } from '../../common/InputField'
+// import { MdSearch } from "react-icons/md";
 
 export const BookingStatus = () => {
     return (
         <div>
-            <div className="bg-mindfulLightPink h-dvh px-5 py-5" >
+            <div className="bg-mindfulLightPink px-5 py-5">
 
                 <div className="bg-mindfulWhite px-5 py-5">
 
@@ -57,7 +56,7 @@ export const BookingStatus = () => {
                             </ul>
 
                             <div>
-                                <div className="relative">
+                                <div className="">
                                     {/* <input
                                             type="text"
                                             name=""
@@ -69,7 +68,7 @@ export const BookingStatus = () => {
                                         placeholder="Search"
                                         className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
                                     />
-                                    <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" />
+                                    {/* <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" /> */}
                                 </div>
                             </div>
                         </div>

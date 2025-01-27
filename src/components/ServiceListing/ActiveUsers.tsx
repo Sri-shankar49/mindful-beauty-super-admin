@@ -54,20 +54,20 @@ export const ActiveUsers = () => {
                                     <div className="flex items-center space-x-2">
                                         {/* Eye Button */}
                                         <div
-                                            className="border-2 border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer">
-                                            <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack" />
+                                            className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e6f2ff] transition-colors duration-200">
+                                            <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack group-hover:text-mindfulSecondaryBlue" />
                                         </div>
 
                                         {/* Edit Button */}
-                                        <div className="border-2 border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer">
-                                            <BiEditAlt className="text-[20px] text-mindfulBlack" />
+                                        <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                                            <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                                         </div>
 
                                         {/* Delete Button */}
                                         <div
                                             onClick={openEditService}
-                                            className="border-2 border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer">
-                                            <RiDeleteBinLine className="text-[20px] text-mindfulBlack" />
+                                            className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
+                                            <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
                                         </div>
                                     </div>
                                 </td>

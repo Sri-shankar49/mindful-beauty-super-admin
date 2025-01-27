@@ -61,15 +61,6 @@ export const Header = () => {
                                     <li className="text-md">Service Provider</li>
                                 </NavLink>
 
-                                {/* Bookings */}
-                                <NavLink
-                                    to="/ServiceManagement"
-                                    className="active-nav"
-                                    aria-current="page"
-                                >
-                                    <li className="text-md">Bookings</li>
-                                </NavLink>
-
                                 {/* Service Management */}
                                 <NavLink
                                     to="/ServiceManagement"
@@ -77,6 +68,15 @@ export const Header = () => {
                                     aria-current="page"
                                 >
                                     <li className="text-md">Service Management</li>
+                                </NavLink>
+
+                                {/* Bookings */}
+                                <NavLink
+                                    to="/Bookings"
+                                    className="active-nav"
+                                    aria-current="page"
+                                >
+                                    <li className="text-md">Bookings</li>
                                 </NavLink>
 
                                 {/* Sales & Transactions */}
@@ -110,20 +110,20 @@ export const Header = () => {
                         </nav>
                     </div>
 
-                    <div className="flex items-center space-x-5">
+                    <div className="flex items-center space-x-3">
 
                         {/* Notification Bell Icon */}
-                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center mr-1 cursor-pointer hover:bg-white transition-colors duration-200">
+                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
                             <FaBell className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
                         </div>
 
                         {/* User Profile Icon */}
-                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center mr-1 cursor-pointer hover:bg-white transition-colors duration-200">
+                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
                             <FaUserLarge className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
                         </div>
 
                         {/* More Details Icon */}
-                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center mr-1 cursor-pointer hover:bg-white transition-colors duration-200">
+                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
                             <FiMoreVertical className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
                         </div>
 

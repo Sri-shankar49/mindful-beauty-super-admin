@@ -10,6 +10,7 @@ import { Dashboard } from './pages/Dashboard';
 import { ManageRole } from './pages/ManageRole';
 import { ServiceListing } from './pages/ServiceListing';
 import { ServiceManagement } from './pages/ServiceManagement';
+import { Bookings } from './pages/Bookings';
 import { SalesTransactions } from './pages/SalesTransactions';
 import { RatingsReviews } from './pages/RatingsReviews';
 import { Reports } from './pages/Reports';
@@ -19,21 +20,26 @@ import { ProfileProgress } from './components/Dashboard/ProfileProgress';
 
 import { RolesManagement } from './components/ManageRole/RolesManagement';
 import { StaffManagement } from './components/ManageRole/StaffManagement';
-import { BranchManagement } from './components/ManageRole/BranchManagement';
+// import { BranchManagement } from './components/ManageRole/BranchManagement';
 
 import { AddServices } from './components/ServiceListing/AddServices';
 import { ActiveUsers } from './components/ServiceListing/ActiveUsers';
 import { PendingRequests } from './components/ServiceListing/PendingRequests';
 import { InactiveUsers } from './components/ServiceListing/InactiveUsers';
 
-import { BookingStatus } from './components/ServiceManagement/BookingStatus';
+import { ServicesCategories } from './components/ServiceManagement/ServicesCategories';
 import { EditServices } from './components/ServiceManagement/EditServices';
 
-import { AllBooking } from './components/ServiceManagement/AllBooking';
-import { Schedule } from './components/ServiceManagement/Schedule';
-import { Inprogress } from './components/ServiceManagement/Inprogress';
-import { Completed } from './components/ServiceManagement/Completed';
-import { Cancelled } from './components/ServiceManagement/Cancelled';
+import { Categories } from './components/ServiceManagement/Categories';
+import { Subcategories } from './components/ServiceManagement/Subcategories';
+import { Services } from './components/ServiceManagement/Services';
+
+import { BookingStatus } from './components/Bookings/BookingStatus';
+import { AllBooking } from './components/Bookings/AllBooking';
+import { Schedule } from './components/Bookings/Schedule';
+import { Inprogress } from './components/Bookings/Inprogress';
+import { Completed } from './components/Bookings/Completed';
+import { Cancelled } from './components/Bookings/Cancelled';
 
 
 import { GeneralInfoForm } from './pages/GeneralInfoForm';
@@ -43,6 +49,7 @@ import { TaxInfoForm } from './pages/TaxInfoForm';
 import { GeneralInfoFreelanceForm } from './pages/GeneralInfoFreelanceForm';
 import { BankAccInfoFreelanceForm } from './pages/BankAccInfoFreelanceForm';
 import { TaxInfoFreelanceForm } from './pages/TaxInfoFreelanceForm';
+
 
 
 function App() {
@@ -107,7 +114,7 @@ function App() {
               {/* Sub-routes */}
               <Route path="RolesManagement" element={<RolesManagement />} />
               <Route path="StaffManagement" element={<StaffManagement />} />
-              <Route path="BranchManagement" element={<BranchManagement />} />
+              {/* <Route path="BranchManagement" element={<BranchManagement />} /> */}
             </Route>
 
             <Route path="/ServiceListing" element={<ServiceListing />}>
@@ -147,6 +154,32 @@ function App() {
 
             <Route path="/ServiceManagement" element={<ServiceManagement />}>
 
+              {/* Redirect to ServicesCategories when /ServiceManagement is accessed */}
+              <Route index element={<Navigate to="ServicesCategories" replace />} />
+
+              {/* ServicesCategories sub-routes */}
+              <Route path="ServicesCategories" element={<ServicesCategories />}>
+
+                {/* Redirect to AllBooking when /BookingStatus is accessed */}
+                <Route index element={<Navigate to="Categories" replace />} />
+
+                <Route path="Categories" element={<Categories />} />
+                <Route path="Subcategories" element={<Subcategories />} />
+                <Route path="Services" element={<Services />} />
+              </Route>
+
+              {/* EditServices route */}
+              <Route path="EditServices" element={<EditServices />} />
+
+            </Route>
+
+            <Route path="/Bookings" element={<Bookings />}>
+
+
+            </Route>
+
+            <Route path="/Bookings" element={<Bookings />}>
+
               {/* Redirect to BookingStatus when /ServiceManagement is accessed */}
               <Route index element={<Navigate to="BookingStatus" replace />} />
 
@@ -167,6 +200,7 @@ function App() {
               <Route path="EditServices" element={<EditServices />} />
 
             </Route>
+
 
             <Route path="/SalesTransactions" element={<SalesTransactions />} />
             <Route path="/RatingsReviews" element={<RatingsReviews />} />

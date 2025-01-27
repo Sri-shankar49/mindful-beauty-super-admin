@@ -22,7 +22,7 @@ export const ServiceListing = () => {
             <div className="flex items-center justify-between">
               <div>
                 {/* <NavLink to="ServiceList"> */}
-                <h5 className="text-3xl font-semibold py-5">Salons and Freelancers</h5>
+                <h5 className="text-3xl font-semibold pb-5">Salons and Freelancers</h5>
                 {/* </NavLink> */}
               </div>
 

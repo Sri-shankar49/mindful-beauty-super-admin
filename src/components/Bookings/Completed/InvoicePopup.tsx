@@ -1,6 +1,5 @@
 import { IoCloseCircle } from 'react-icons/io5'
 import { Button } from '../../../common/Button';
-// import { Button } from '@/common/Button'
 
 interface InvoicePopupProps {
     closePopup: () => void;

@@ -8,13 +8,13 @@ import { useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FiDownload } from "react-icons/fi";
 // import { PaymentDetailsPopup } from "./Completed/PaymentDetailsPopup";
-import { InvoicePopup } from '../ServiceManagement/Completed/InvoicePopup';
 // import { Button } from '@/common/Button';
 // import { InputField } from '@/common/InputField';
 import { BiCalendar } from "react-icons/bi";
 import { InputField } from "../../common/InputField";
 import { Button } from "../../common/Button";
 import { Pagination } from "../../common/Pagination";
+import { InvoicePopup } from "../Bookings/Completed/InvoicePopup";
 // import { Pagination } from '@/common/Pagination';
 
 export const SalesTransactionsTable = () => {
