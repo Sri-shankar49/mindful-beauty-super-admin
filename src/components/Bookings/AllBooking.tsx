@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import editButton from "../../assets/icons/editButton.png"
+// import editButton from "../../assets/icons/editButton.png"
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
-import Select, { SingleValue } from 'react-select';
-import stylist from "../../assets/images/stylist.png"
+// import Select, { SingleValue } from 'react-select';
+// import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { Button } from "../../common/Button";
-import { SelectField } from "../../common/SelectField";
 import { Pagination } from "../../common/Pagination";
 
 // Define the type for each option

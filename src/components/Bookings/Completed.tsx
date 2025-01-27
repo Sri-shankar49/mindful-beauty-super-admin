@@ -2,7 +2,7 @@ import { useState } from "react";
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';
-import stylist from "../../assets/images/stylist.png"
+// import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FiDownload } from "react-icons/fi";

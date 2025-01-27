@@ -4,7 +4,6 @@ import { useState } from "react";
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
-import { SelectField } from "../../common/SelectField";
 import { Pagination } from "../../common/Pagination";
 
 

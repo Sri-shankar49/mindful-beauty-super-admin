@@ -1,16 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import editButton from "../../assets/icons/editButton.png"
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import { Button } from "@/common/Button";
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
-import { SelectField } from "../../common/SelectField";
 import { Button } from "../../common/Button";
 import { Pagination } from "../../common/Pagination";
-import { MdFormatListBulletedAdd, MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdFormatListBulletedAdd } from "react-icons/md";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 // import { SelectField } from "@/common/SelectField";

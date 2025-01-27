@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
-import editButton from "../../assets/icons/editButton.png"
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';

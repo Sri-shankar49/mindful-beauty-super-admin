@@ -1,8 +1,8 @@
-import { Button } from '@/common/Button'
-import { InputField } from '@/common/InputField';
-import { SelectField } from '@/common/SelectField'
 // import { PiCopySimpleLight } from "react-icons/pi";
 import { IoCloseCircle } from 'react-icons/io5'
+import { SelectField } from '../../common/SelectField'
+import { InputField } from '../../common/InputField'
+import { Button } from '../../common/Button'
 
 
 export const EditServices = () => {
