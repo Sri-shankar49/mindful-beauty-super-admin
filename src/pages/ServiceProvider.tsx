@@ -9,7 +9,7 @@ import { MdSearch } from 'react-icons/md';
 // import "../components/ServiceListing/ServiceListing.css"
 // import { Pagination } from '@/common/Pagination';
 
-export const ServiceListing = () => {
+export const ServiceProvider = () => {
 
   return (
     <div>

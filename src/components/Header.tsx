@@ -54,7 +54,7 @@ export const Header = () => {
 
                                 {/* Service Listing */}
                                 <NavLink
-                                    to="/ServiceListing"
+                                    to="/ServiceProvider"
                                     className="active-nav"
                                     aria-current="page"
                                 >

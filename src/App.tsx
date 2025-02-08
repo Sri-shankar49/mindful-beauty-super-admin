@@ -8,7 +8,7 @@ import ScrollToTop from './common/ScrollToTop';
 import { LoginLayout } from './layout/LoginLayout';
 import { Dashboard } from './pages/Dashboard';
 import { ManageRole } from './pages/ManageRole';
-import { ServiceListing } from './pages/ServiceListing';
+import { ServiceProvider } from './pages/ServiceProvider';
 import { ServiceManagement } from './pages/ServiceManagement';
 import { Bookings } from './pages/Bookings';
 import { SalesTransactions } from './pages/SalesTransactions';
@@ -117,7 +117,7 @@ function App() {
               {/* <Route path="BranchManagement" element={<BranchManagement />} /> */}
             </Route>
 
-            <Route path="/ServiceListing" element={<ServiceListing />}>
+            <Route path="/ServiceProvider" element={<ServiceProvider />}>
 
               {/* Redirect to ServiceList when /ServiceListing is accessed */}
               <Route index element={<Navigate to="ActiveUsers" replace />} />
