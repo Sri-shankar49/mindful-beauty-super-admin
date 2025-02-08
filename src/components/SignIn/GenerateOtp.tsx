@@ -7,7 +7,6 @@ import * as zod from "zod";
 import { fetchLogin } from "../../api/apiConfig";
 import { useDispatch } from "react-redux";
 import { setPhoneNumber } from "../../redux/loginSlice";
-import { data } from "react-router-dom";
 
 interface GenerateOtpProps {
     onGenerateOtp: () => void;
