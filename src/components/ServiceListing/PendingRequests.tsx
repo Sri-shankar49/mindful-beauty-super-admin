@@ -3,10 +3,8 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
-import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
 import { FaCheck } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
-
+import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
 
 // Proptypes frpm API
 interface PendingRequestsProps {
@@ -94,7 +92,7 @@ export const PendingRequests = () => {
       const response = await fetchProvidersList("Pending");
       setPendingRequestsData(response.results.data);
       setTotalItems(response.count);
-      
+
       console.log("Pending requests list data refreshed:", response);
     } catch (error: any) {
       console.error("Error refreshing pending request data:", error.message);

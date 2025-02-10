@@ -182,7 +182,16 @@ export const Completed = () => {
 
       {/* Pagination */}
       <div>
-        <Pagination />
+        <Pagination
+          currentPage={0}
+          totalItems={0}
+          itemsPerPage={0}
+          onPageChange={function (page: number): void {
+            throw new Error("Function not implemented.");
+          }} onItemsPerPageChange={function (items: number): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
 
     </div>
