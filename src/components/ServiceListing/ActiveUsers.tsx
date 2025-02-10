@@ -4,7 +4,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
 import { EditServicePopup } from "./AddServices/EditServicePopup";
-import { fetchProvidersList } from "../../api/apiConfig";
+import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
+import { IoClose } from "react-icons/io5";
 
 // Proptypes frpm API
 interface ActiveUsersProps {
@@ -25,6 +26,12 @@ export const ActiveUsers = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [totalItems, setTotalItems] = useState(0);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
     const [showEditServicePopup, setShowEditServicePopup] = useState(false);
 
     const openEditService = () => {
@@ -42,9 +49,13 @@ export const ActiveUsers = () => {
 
             try {
                 const response = await fetchProvidersList("Active");
+
                 setActiveUsersData(response.results.data);
+                setTotalItems(response.count);
 
                 console.log("Active Users Data log:", response);
+
+                console.log("Fetched Active Users List pagination count data log :", response.count);
 
             } catch (error: any) {
                 setError(error.message || "Unable to fetch active users data. Please try again later.");
@@ -53,7 +64,51 @@ export const ActiveUsers = () => {
             }
         }
         fetchActiveUsersData();
-    }, []);
+    }, [currentPage, itemsPerPage]);
+
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const handleItemsPerPageChange = (items: number) => {
+        setItemsPerPage(items);
+        setCurrentPage(1); // Reset to the first page when items per page changes
+    };
+
+
+    // Function for handling the pending requests
+    const handleActionSubmit = async (providerID: number, action: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await pendingAction(providerID, action);
+            console.log("Pending Action Data log based on Active Users:", data);
+
+            if (data?.status === "success") {
+                refreshedData();
+            }
+
+        } catch (error: any) {
+            setError(error.message || 'An error occurred while processing your request.');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // Refreshing the data on handleActionSubmit
+    const refreshedData = async () => {
+        try {
+            const response = await fetchProvidersList("Active");
+            setActiveUsersData(response.results.data);
+            setTotalItems(response.count);
+
+            console.log("Active Users list data refreshed:", response);
+        } catch (error: any) {
+            console.error("Error refreshing active users data:", error.message);
+        }
+    }
+
 
 
 
@@ -123,6 +178,16 @@ export const ActiveUsers = () => {
                                                     className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
                                                     <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
                                                 </div>
+
+                                                {/* Close Button */}
+                                                <div
+                                                    title="Deactivate Salon"
+                                                    onClick={() => handleActionSubmit(activeData.salon_id, "Inactive")}
+                                                    className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200"
+                                                >
+                                                    <IoClose className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
+
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -182,7 +247,13 @@ export const ActiveUsers = () => {
                 {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />}
                 {/* Pagination */}
                 <div>
-                    <Pagination />
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={totalItems}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={handlePageChange}
+                        onItemsPerPageChange={handleItemsPerPageChange}
+                    />
                 </div>
                 {/* </div> */}
 

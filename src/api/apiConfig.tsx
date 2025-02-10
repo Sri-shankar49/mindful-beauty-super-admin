@@ -82,3 +82,29 @@ export const fetchProvidersList = async (status: string) => {
   }
 };
 
+
+
+// Service Provider Page --> Pending Requests
+export const pendingAction = async (providerID: number, action: string) => {
+  try {
+    const response = await apiAxios.post(`/provider-api/accept-provider-status/`,
+      {
+        provider_id: providerID,
+        status: action,
+      },
+    );
+    console.log("Pending Action response", response.data);
+
+    // Assuming the API returns an object with a `status` field and a `data` field
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Login API");
+    }
+
+    return response.data;
+  }
+  catch (error: any) {
+    console.error("Error fetching Login API:", error.response.data.message || error);
+    throw new Error(error.response.data.message || "Unable to fetch Login API. Please try again later.");
+  }
+}
+

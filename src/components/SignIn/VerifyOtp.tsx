@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { MdModeEdit } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { Button } from "../../common/Button";
@@ -29,6 +30,8 @@ export const VerifyOtp: React.FC<VerifyOtpProps> = ({ onVerifyOtp }) => {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<VerifyOtpFormData>({
         resolver: zodResolver(verifyOtpSchema),
     });
+
+    const otpRefs = useRef<(HTMLInputElement | null)[]>([]); // Create refs for OTP inputs
 
     // Handle OTP submission
     const onSubmit = async (data: VerifyOtpFormData) => {
@@ -105,7 +108,15 @@ export const VerifyOtp: React.FC<VerifyOtpProps> = ({ onVerifyOtp }) => {
                             onChange={(e) => {
                                 const value = e.target.value.replace(/[^0-9]/g, "");
                                 setValue(`otp.${index}`, value);
+
+                                // Move focus
+                                if (value && index < 3) {
+                                    otpRefs.current[index + 1]?.focus();
+                                } else if (!value && index > 0) {
+                                    otpRefs.current[index - 1]?.focus();
+                                }
                             }}
+                            ref={(el) => (otpRefs.current[index] = el)} // Store refs
                         />
                     ))}
                 </div>

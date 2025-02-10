@@ -3,7 +3,8 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
-import { fetchProvidersList } from "../../api/apiConfig";
+import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
+import { FaCheck } from "react-icons/fa6";
 // import { EditServicePopup } from "./AddServices/EditServicePopup";
 
 
@@ -27,6 +28,13 @@ export const InactiveUsers = () => {
   const [error, setError] = useState<string | null>(null);
 
 
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+
   // Fetching data from API
   useEffect(() => {
     const fetchInactiveUsersData = async () => {
@@ -35,8 +43,13 @@ export const InactiveUsers = () => {
       try {
         const response = await fetchProvidersList("Inactive");
         setInactiveUsersData(response.results.data);
+        setTotalItems(response.count);
+
 
         console.log("Inactive Users Data log:", response);
+
+        console.log("Fetched Inactive Users List pagination count data log :", response.count);
+
 
       } catch (error: any) {
         setError(error.message || "Unable to fetch inactive users data. Please try again later.");
@@ -45,7 +58,50 @@ export const InactiveUsers = () => {
       }
     }
     fetchInactiveUsersData();
-  }, []);
+  }, [currentPage, itemsPerPage]);
+
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
+
+
+  // Function for handling the pending requests
+  const handleActionSubmit = async (providerID: number, action: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await pendingAction(providerID, action);
+      console.log("Pending Action Data log based on Inactive Users:", data);
+
+      if (data?.status === "success") {
+        refreshedData();
+      }
+
+    } catch (error: any) {
+      setError(error.message || 'An error occurred while processing your request.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Refreshing the data on handleActionSubmit
+  const refreshedData = async () => {
+    try {
+      const response = await fetchProvidersList("Inactive");
+      setInactiveUsersData(response.results.data);
+      setTotalItems(response.count);
+
+      console.log("Inactive users list data refreshed:", response);
+    } catch (error: any) {
+      console.error("Error refreshing inactive users data:", error.message);
+    }
+  }
 
 
   return (
@@ -114,6 +170,15 @@ export const InactiveUsers = () => {
                             className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
                             <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
                           </div>
+
+                          {/* Check Button */}
+                          <div
+                            title="Activate Salon"
+                            onClick={() => handleActionSubmit(inactiveData.salon_id, "Active")}
+                            className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200"
+                          >
+                            <FaCheck className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -170,7 +235,13 @@ export const InactiveUsers = () => {
           {/* {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />} */}
           {/* Pagination */}
           <div>
-            <Pagination />
+            <Pagination
+              currentPage={currentPage}
+              totalItems={totalItems}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              onItemsPerPageChange={handleItemsPerPageChange}
+            />
           </div>
           {/* </div> */}
 

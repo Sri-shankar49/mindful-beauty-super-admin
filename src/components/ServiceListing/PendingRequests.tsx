@@ -3,7 +3,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
-import { fetchProvidersList } from "../../api/apiConfig";
+import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
@@ -27,6 +27,12 @@ export const PendingRequests = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
 
   // Fetching data from API
   useEffect(() => {
@@ -37,7 +43,12 @@ export const PendingRequests = () => {
         const response = await fetchProvidersList("Pending");
         setPendingRequestsData(response.results.data);
 
+        setTotalItems(response.count);
+
         console.log("Pending Requests Data log:", response);
+
+        console.log("Fetched Pending Request List pagination count data log :", response.count);
+
 
       } catch (error: any) {
         setError(error.message || "Unable to fetch pending requests data. Please try again later.");
@@ -46,7 +57,49 @@ export const PendingRequests = () => {
       }
     }
     fetchPendingRequestsData();
-  }, []);
+  }, [currentPage, itemsPerPage]);
+
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
+
+  // Function for handling the pending requests
+  const handleActionSubmit = async (providerID: number, action: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await pendingAction(providerID, action);
+      console.log("Pending Action Data log based on Pending Requests:", data);
+
+      if (data?.status === "success") {
+        refreshedData();
+      }
+    } catch (error: any) {
+      setError(error.message || 'An error occurred while processing your request.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+  // Refreshing the data on handleActionSubmit
+  const refreshedData = async () => {
+    try {
+      const response = await fetchProvidersList("Pending");
+      setPendingRequestsData(response.results.data);
+      setTotalItems(response.count);
+      
+      console.log("Pending requests list data refreshed:", response);
+    } catch (error: any) {
+      console.error("Error refreshing pending request data:", error.message);
+    }
+  }
 
   return (
     <div>
@@ -117,13 +170,12 @@ export const PendingRequests = () => {
                             </div>
 
                             {/* Check Button */}
-                            <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                            <div
+                              title="Activate Salon"
+                              onClick={() => handleActionSubmit(pendingData.salon_id, "Active")}
+                              className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200"
+                            >
                               <FaCheck className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
-                            </div>
-
-                            {/* Close Button */}
-                            <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
-                              <IoClose className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                             </div>
 
                           </div>
@@ -179,7 +231,13 @@ export const PendingRequests = () => {
             {/* {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />} */}
             {/* Pagination */}
             <div>
-              <Pagination />
+              <Pagination
+                currentPage={currentPage}
+                totalItems={totalItems}
+                itemsPerPage={itemsPerPage}
+                onPageChange={handlePageChange}
+                onItemsPerPageChange={handleItemsPerPageChange}
+              />
             </div>
             {/* </div> */}
 
@@ -187,6 +245,6 @@ export const PendingRequests = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
