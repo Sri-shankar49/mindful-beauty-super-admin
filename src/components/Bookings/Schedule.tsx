@@ -7,7 +7,7 @@ import { useState } from "react";
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 // import { Link } from "react-router-dom";
 // import { SelectField } from "../../common/SelectField";
-import { Pagination } from "../../common/Pagination";
+// import { Pagination } from "../../common/Pagination";
 import { Button } from "../../common/Button";
 
 // Define the type for each option
@@ -224,16 +224,7 @@ export const Schedule = () => {
 
       {/* Pagination */}
       <div>
-        <Pagination
-          currentPage={0}
-          totalItems={0}
-          itemsPerPage={0}
-          onPageChange={function (page: number): void {
-            throw new Error("Function not implemented.");
-          }} onItemsPerPageChange={function (items: number): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        {/* <Pagination /> */}
       </div>
     </div>
   )

@@ -5,7 +5,7 @@ import { useState } from "react";
 // import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { SelectField } from "../../common/SelectField";
-import { Pagination } from "../../common/Pagination";
+// import { Pagination } from "../../common/Pagination";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
@@ -107,7 +107,7 @@ export const Services = () => {
             // error="This field is required."
             />
           </div>
-
+          
           {/* Sub Category */}
           <div>
             <SelectField
@@ -199,16 +199,7 @@ export const Services = () => {
 
       {/* Pagination */}
       <div>
-        <Pagination
-          currentPage={0}
-          totalItems={0}
-          itemsPerPage={0}
-          onPageChange={function (page: number): void {
-            throw new Error("Function not implemented.");
-          }} onItemsPerPageChange={function (items: number): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        {/* <Pagination /> */}
       </div>
     </div>
   )

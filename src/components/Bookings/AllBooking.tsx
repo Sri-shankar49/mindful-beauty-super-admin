@@ -6,7 +6,7 @@ import { useState } from "react";
 // import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { Button } from "../../common/Button";
-import { Pagination } from "../../common/Pagination";
+// import { Pagination } from "../../common/Pagination";
 
 // Define the type for each option
 // interface StylistOption {
@@ -222,16 +222,7 @@ export const AllBooking = () => {
 
       {/* Pagination */}
       <div>
-        <Pagination
-          currentPage={0}
-          totalItems={0}
-          itemsPerPage={0}
-          onPageChange={function (page: number): void {
-            throw new Error("Function not implemented.");
-          }} onItemsPerPageChange={function (items: number): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        {/* <Pagination /> */}
       </div>
     </div>
   )

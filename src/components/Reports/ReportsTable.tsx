@@ -7,7 +7,7 @@ import { BiCalendar } from "react-icons/bi";
 import { SelectField } from "../../common/SelectField";
 import { InputField } from "../../common/InputField";
 import { Button } from "../../common/Button";
-import { Pagination } from "../../common/Pagination";
+// import { Pagination } from "../../common/Pagination";
 // import { SelectField } from '@/common/SelectField';
 // import { Pagination } from '@/common/Pagination';
 
@@ -212,16 +212,7 @@ export const ReportsTable = () => {
 
                     {/* Pagination */}
                     <div>
-                        <Pagination
-                            currentPage={0}
-                            totalItems={0}
-                            itemsPerPage={0}
-                            onPageChange={function (page: number): void {
-                                throw new Error("Function not implemented.");
-                            }} onItemsPerPageChange={function (items: number): void {
-                                throw new Error("Function not implemented.");
-                            }}
-                        />
+                        {/* <Pagination /> */}
                     </div>
                 </div>
             </div>

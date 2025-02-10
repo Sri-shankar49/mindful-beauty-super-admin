@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 // import { InputField } from '@/common/InputField'
 import { MdSearch } from 'react-icons/md'
 import { FaSort } from "react-icons/fa";
-import { Pagination } from '../../common/Pagination';
+// import { Pagination } from '../../common/Pagination';
 import { InputField } from '../../common/InputField';
 // import { Pagination } from '@/common/Pagination';
 
@@ -113,16 +113,7 @@ export const RatingReviewsTable = () => {
 
       {/* Pagination */}
       <div>
-        <Pagination
-          currentPage={0}
-          totalItems={0}
-          itemsPerPage={0}
-          onPageChange={function (page: number): void {
-            throw new Error("Function not implemented.");
-          }} onItemsPerPageChange={function (items: number): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        {/* <Pagination /> */}
       </div>
     </div>
   )

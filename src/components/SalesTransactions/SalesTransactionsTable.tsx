@@ -13,7 +13,7 @@ import { FiDownload } from "react-icons/fi";
 import { BiCalendar } from "react-icons/bi";
 import { InputField } from "../../common/InputField";
 import { Button } from "../../common/Button";
-import { Pagination } from "../../common/Pagination";
+// import { Pagination } from "../../common/Pagination";
 import { InvoicePopup } from "../Bookings/Completed/InvoicePopup";
 // import { Pagination } from '@/common/Pagination';
 
@@ -252,16 +252,7 @@ export const SalesTransactionsTable = () => {
 
                     {/* Pagination */}
                     <div>
-                        <Pagination
-                            currentPage={0}
-                            totalItems={0}
-                            itemsPerPage={0}
-                            onPageChange={function (page: number): void {
-                                throw new Error("Function not implemented.");
-                            }} onItemsPerPageChange={function (items: number): void {
-                                throw new Error("Function not implemented.");
-                            }}
-                        />
+                        {/* <Pagination /> */}
                     </div>
                 </div>
             </div>

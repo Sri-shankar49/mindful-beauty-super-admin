@@ -9,7 +9,7 @@ import { FiDownload } from "react-icons/fi";
 // import { PaymentDetailsPopup } from "./Completed/PaymentDetailsPopup";
 // import { InvoicePopup } from "./Completed/InvoicePopup";
 import { SelectField } from "../../common/SelectField";
-import { Pagination } from "../../common/Pagination";
+// import { Pagination } from "../../common/Pagination";
 import { InvoicePopup } from "./Completed/InvoicePopup";
 import { PaymentDetailsPopup } from "./Completed/PaymentDetailsPopup";
 
@@ -182,16 +182,7 @@ export const Completed = () => {
 
       {/* Pagination */}
       <div>
-        <Pagination
-          currentPage={0}
-          totalItems={0}
-          itemsPerPage={0}
-          onPageChange={function (page: number): void {
-            throw new Error("Function not implemented.");
-          }} onItemsPerPageChange={function (items: number): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        {/* <Pagination /> */}
       </div>
 
     </div>
