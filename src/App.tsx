@@ -102,7 +102,7 @@ function App() {
 
 
               {/* Sub-routes */}
-              <Route path="DashBoardData" element={<DashBoardData />} />
+              <Route path="DashBoardData" element={<DashBoardData appointment_id={0} appointment_date={''} appointment_time={''} branch={0} user_name={''} user_phone={''} service_names={[]} branch_city={''} stylist_name={''} stylist_id={''} />} />
               <Route path="ProfileProgress" element={<ProfileProgress />} />
             </Route>
 
