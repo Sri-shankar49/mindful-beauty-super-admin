@@ -5,6 +5,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
 import { FaCheck } from "react-icons/fa6";
 import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
+import { IoClose } from "react-icons/io5";
 
 // Proptypes frpm API
 interface PendingRequestsProps {
@@ -175,6 +176,17 @@ export const PendingRequests = () => {
                             >
                               <FaCheck className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                             </div>
+
+                            {/* Close Button */}
+                            <div
+                              title="Deactivate Salon"
+                              onClick={() => handleActionSubmit(pendingData.salon_id, "Inactive")}
+                              className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200"
+                            >
+                              <IoClose className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
+
+                            </div>
+
 
                           </div>
                         </td>
