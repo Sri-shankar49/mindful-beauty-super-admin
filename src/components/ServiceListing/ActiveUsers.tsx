@@ -48,7 +48,7 @@ export const ActiveUsers = () => {
             setLoading(true);
 
             try {
-                const response = await fetchProvidersList("Active");
+                const response = await fetchProvidersList("Active", currentPage);
 
                 setActiveUsersData(response.results.data);
                 setTotalItems(response.count);
@@ -99,7 +99,7 @@ export const ActiveUsers = () => {
     // Refreshing the data on handleActionSubmit
     const refreshedData = async () => {
         try {
-            const response = await fetchProvidersList("Active");
+            const response = await fetchProvidersList("Active", currentPage);
             setActiveUsersData(response.results.data);
             setTotalItems(response.count);
 

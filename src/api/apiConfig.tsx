@@ -59,11 +59,12 @@ export const verifyOTP = async (phoneNumber: string, otp: number) => {
 
 
 // Service Provider Page -- > Active, Pending and Inactive
-export const fetchProvidersList = async (status: string) => {
+export const fetchProvidersList = async (status: string, pageNumber: number) => {
   try {
     const response = await apiAxios.get('provider-api/providers_list/', {
       params: {
         status: status,  // Active, Pending, Inactive
+        page: pageNumber
       },
     });
 
@@ -108,3 +109,29 @@ export const pendingAction = async (providerID: number, action: string) => {
   }
 }
 
+
+
+
+// Service Provider Page -- > Active, Pending and Inactive
+export const fetchDashboardList = async () => {
+  try {
+    const response = await apiAxios.get('provider-api/getbookings/', {
+      // params: {
+      //   status: status,  // Active, Pending, Inactive
+      // },
+    });
+
+    console.log("Dashboard Booking List Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch bashboard booking list");
+    }
+
+    // Accessing the correct data path
+    return response.data; // Correct path to the data
+
+  } catch (error: any) {
+    console.error("Error fetching bashboard booking list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error fetching bashboard booking list");
+  }
+};

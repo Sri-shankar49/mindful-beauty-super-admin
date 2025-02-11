@@ -41,7 +41,7 @@ export const InactiveUsers = () => {
       setLoading(true);
 
       try {
-        const response = await fetchProvidersList("Inactive");
+        const response = await fetchProvidersList("Inactive", currentPage);
         setInactiveUsersData(response.results.data);
         setTotalItems(response.count);
 
@@ -93,7 +93,7 @@ export const InactiveUsers = () => {
   // Refreshing the data on handleActionSubmit
   const refreshedData = async () => {
     try {
-      const response = await fetchProvidersList("Inactive");
+      const response = await fetchProvidersList("Inactive", currentPage);
       setInactiveUsersData(response.results.data);
       setTotalItems(response.count);
 

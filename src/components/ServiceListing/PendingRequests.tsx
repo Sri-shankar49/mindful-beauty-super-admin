@@ -38,7 +38,7 @@ export const PendingRequests = () => {
       setLoading(true);
 
       try {
-        const response = await fetchProvidersList("Pending");
+        const response = await fetchProvidersList("Pending", currentPage);
         setPendingRequestsData(response.results.data);
 
         setTotalItems(response.count);
@@ -89,7 +89,7 @@ export const PendingRequests = () => {
   // Refreshing the data on handleActionSubmit
   const refreshedData = async () => {
     try {
-      const response = await fetchProvidersList("Pending");
+      const response = await fetchProvidersList("Pending", currentPage);
       setPendingRequestsData(response.results.data);
       setTotalItems(response.count);
 

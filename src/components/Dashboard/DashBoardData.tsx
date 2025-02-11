@@ -8,7 +8,9 @@
 // import { StylistPopup } from "@/components/Dashboard/DashBoardData/StylistPopup"
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
+import { useEffect, useState } from "react";
 import { SelectField } from "../../common/SelectField";
+import { fetchDashboardList } from "../../api/apiConfig";
 // import { Button } from "../../common/Button";
 // import { DenialPopup } from "./DashBoardData/DenialPopup";
 // import { StylistPopup } from "./DashBoardData/StylistPopup";
@@ -21,8 +23,26 @@ import { SelectField } from "../../common/SelectField";
 //     icon: string; // URL or path to the image
 // }
 
+// Proptypes frpm API
+interface DashBoardDataProps {
+    appointment_id: number;
+    appointment_date: string;
+    appointment_time: string;
+    branch: number;
+    user_name: string;
+    user_phone: string;
+    service_names: Services[];
+    branch_city: string;
+    stylist_name: string;
+    stylist_id: string;
+}
 
-export const DashBoardData = () => {
+interface Services {
+    service_name: string;
+    price: number;
+}
+
+export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
     // const stylistData: StylistOption[] = [
     //     {
@@ -81,6 +101,31 @@ export const DashBoardData = () => {
     // const closeStylistPopup = () => {
     //     setShowStylistPopup(false);
     // }
+
+
+    const [dashboardData, setDashboardData] = useState<DashBoardDataProps[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            setLoading(true);
+
+            try {
+                const response = await fetchDashboardList();
+                setDashboardData(response.bookings);
+
+                console.log("Dashboard Bookings Data log:", response);
+
+            } catch (error: any) {
+                setError(error.message || "Unable to fetch dashboard bookings data. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchDashboardData();
+    }, [])
+
 
     return (
         <div>
@@ -174,7 +219,7 @@ export const DashBoardData = () => {
                                     <th className="w- text-start px-2 py-3">Cust. Mobile</th>
                                     <th className="w- text-start px-2 py-3">Service</th>
                                     <th className="w- text-start px-2 py-3">Assign Stylist</th>
-                                    <th className="w- text-start px-2 py-3">Action</th>
+                                    {/* <th className="w- text-start px-2 py-3">Action</th> */}
                                 </tr>
                             </thead>
 
@@ -185,108 +230,132 @@ export const DashBoardData = () => {
                         </tr> */}
 
                                 {/* Content & Checkbox */}
-                                <tr className="border-b-2 border-mindfulGreyTypeTwo pb-2">
-                                    <td className="px-2 py-5">BK023</td>
-                                    <td className="text-start px-2 py-5">18-08-2024</td>
-                                    <td className="text-start px-2 py-5">10.00</td>
-                                    <td className="text-start px-2 py-5">Shenoys</td>
-                                    <td className="text-start px-2 py-5">Ramya</td>
-                                    <td className="text-start px-2 py-5">1234567890</td>
-                                    <td className="text-start px-2 py-5">
-                                        <ul>
-                                            <li>Eyesbrows Threading</li>
-                                            <li>Forehead Threading</li>
-                                        </ul>
-                                    </td>
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={7} className="text-center py-5">
+                                            Loading...
+                                        </td>
+                                    </tr>
+                                ) : error ? (
+                                    <tr>
+                                        <td colSpan={7} className="text-center py-5">
+                                            Error: {error}
+                                        </td>
+                                    </tr>
+                                ) : dashboardData.length > 0 ? (
+                                    dashboardData.map((data) => (
+                                        <tr key={data.appointment_id} className="border-b-2 border-mindfulGreyTypeTwo pb-2">
+                                            <td className="px-2 py-5">{data.appointment_id}</td>
+                                            <td className="text-start px-2 py-5">{data.appointment_date}</td>
+                                            <td className="text-start px-2 py-5">{data.appointment_time}</td>
+                                            <td className="text-start px-2 py-5">{data.branch_city}</td>
+                                            <td className="text-start px-2 py-5">{data.user_name}</td>
+                                            <td className="text-start px-2 py-5">{data.user_phone}</td>
+                                            <td className="text-start px-2 py-5">
+                                                <ul >
+                                                    {data.service_names.map((service, index) => (
+                                                        <li key={index}>{service.service_name}</li>
+                                                    ))}
+                                                </ul>
+                                            </td>
 
-                                    <td className="text-start px-2 py-5">
-                                        {/* Branch Select Field */}
+                                            <td className="text-start px-2 py-5">
+                                                {/* Branch Select Field */}
+                                                <div>
+                                                    {/* <SelectField
+                        onChange={openStylistPopup}
+                        label=""
+                        name="branch"
+                        // required
+                        className="w-full rounded-[5px] border-2 border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
+                        options={[
+                          { value: "swetha", label: "Swetha" },
+                          { value: "swetha", label: "Swetha" },
+                          { value: "swetha", label: "Swetha" },
+                          { value: "swetha", label: "Swetha" },
+                        ]}
+                      // error="This field is required."
+                      /> */}
+
+                                                    {/* <Select
+                        placeholder="Select Option"
+                        value={selectedStylistOption}
+                        options={stylistData}
+                        onChange={handleStylistOption}
+                        getOptionLabel={(option) => (
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
+                            <span style={{ marginLeft: 5 }}>{option.text}</span>
+                          </div>
+                        )}
+                        getOptionValue={(option) => option.value.toString()}
+                      /> */}
+
+                                                    {/* <Select
+                                            placeholder="Select Option"
+                                            value={selectedStylistOption}
+                                            options={stylistData}
+                                            onChange={handleStylistOption}
+                                            getOptionLabel={(option) => option.text} // Use `text` as the string label for accessibility and filtering
+                                            formatOptionLabel={(option) => (
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
+                                                    <span style={{ marginLeft: 5 }}>{option.text}</span>
+                                                </div>
+                                            )}
+                                            getOptionValue={(option) => option.value.toString()}
+                                        /> */}
+
+                                                    {/* {selectedStylistOption && (
+                        <div style={{ marginTop: 20, lineHeight: '25px' }}>
+                          <b>Selected Option:</b> {selectedStylistOption.text}
+                        </div>
+                      )} */}
+                                                </div>
+                                            </td>
+
+                                            {/* <td className="text-center px-2 py-5">
+                                    <div className="space-y-3">
+
                                         <div>
-                                            {/* <SelectField
-                            onChange={openStylistPopup}
-                            label=""
-                            name="branch"
-                            // required
-                            className="w-full rounded-[5px] border-2 border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
-                            options={[
-                              { value: "swetha", label: "Swetha" },
-                              { value: "swetha", label: "Swetha" },
-                              { value: "swetha", label: "Swetha" },
-                              { value: "swetha", label: "Swetha" },
-                            ]}
-                          // error="This field is required."
-                          /> */}
-
-                                            {/* <Select
-                            placeholder="Select Option"
-                            value={selectedStylistOption}
-                            options={stylistData}
-                            onChange={handleStylistOption}
-                            getOptionLabel={(option) => (
-                              <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
-                                <span style={{ marginLeft: 5 }}>{option.text}</span>
-                              </div>
-                            )}
-                            getOptionValue={(option) => option.value.toString()}
-                          /> */}
-
-                                            {/* <Select
-                                                placeholder="Select Option"
-                                                value={selectedStylistOption}
-                                                options={stylistData}
-                                                onChange={handleStylistOption}
-                                                getOptionLabel={(option) => option.text} // Use `text` as the string label for accessibility and filtering
-                                                formatOptionLabel={(option) => (
-                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
-                                                        <span style={{ marginLeft: 5 }}>{option.text}</span>
-                                                    </div>
-                                                )}
-                                                getOptionValue={(option) => option.value.toString()}
-                                            /> */}
-
-                                            {/* {selectedStylistOption && (
-                            <div style={{ marginTop: 20, lineHeight: '25px' }}>
-                              <b>Selected Option:</b> {selectedStylistOption.text}
-                            </div>
-                          )} */}
+                                            <Button
+                                                buttonType="button"
+                                                buttonTitle="Accept"
+                                                className="w-20 text-md text-mindfulGreen font-semibold border-[1px] border-mindfulGreen rounded-[5px] px-3 py-1"
+                                            />
                                         </div>
-                                    </td>
 
-                                    {/* <td className="text-center px-2 py-5">
-                                        <div className="space-y-3">
-
-                                            <div>
-                                                <Button
-                                                    buttonType="button"
-                                                    buttonTitle="Accept"
-                                                    className="w-20 text-md text-mindfulGreen font-semibold border-[1px] border-mindfulGreen rounded-[5px] px-3 py-1"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <Button
-                                                    onClick={openDenialPopup}
-                                                    buttonType="button"
-                                                    buttonTitle="Deny"
-                                                    className="w-20 text-md text-mindfulBlue font-semibold border-[1px] border-mindfulBlue rounded-[5px] px-3 py-1"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <Button
-                                                    onClick={openDenialPopup}
-                                                    buttonType="button"
-                                                    buttonTitle="Decline"
-                                                    className="w-20 text-md text-mindfulRed font-semibold border-[1px] border-mindfulRed rounded-[5px] px-3 py-1"
-                                                />
-                                            </div>
+                                        <div>
+                                            <Button
+                                                onClick={openDenialPopup}
+                                                buttonType="button"
+                                                buttonTitle="Deny"
+                                                className="w-20 text-md text-mindfulBlue font-semibold border-[1px] border-mindfulBlue rounded-[5px] px-3 py-1"
+                                            />
                                         </div>
-                                    </td> */}
+
+                                        <div>
+                                            <Button
+                                                onClick={openDenialPopup}
+                                                buttonType="button"
+                                                buttonTitle="Decline"
+                                                className="w-20 text-md text-mindfulRed font-semibold border-[1px] border-mindfulRed rounded-[5px] px-3 py-1"
+                                            />
+                                        </div>
+                                    </div>
+                                </td> */}
 
 
-                                </tr>
+                                        </tr>
+                                    ))) : (
+                                    <tr>
+                                        <td colSpan={7} className="text-gray-500 text-center px-2 py-5">
+                                            No Active Users Data available
+                                        </td>
+                                    </tr>
+                                )
+                                }
+
 
                             </tbody>
                         </table>
