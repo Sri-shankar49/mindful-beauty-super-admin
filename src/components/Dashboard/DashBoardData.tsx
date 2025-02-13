@@ -11,6 +11,7 @@
 import { useEffect, useState } from "react";
 import { SelectField } from "../../common/SelectField";
 import { fetchDashboardList } from "../../api/apiConfig";
+import { NavLink } from "react-router-dom";
 // import { Button } from "../../common/Button";
 // import { DenialPopup } from "./DashBoardData/DenialPopup";
 // import { StylistPopup } from "./DashBoardData/StylistPopup";
@@ -137,9 +138,9 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                     </div>
 
                     <div>
-                        {/* City */}
+                        {/* Sort */}
                         <div>
-                            <label
+                            {/* <label
                                 htmlFor="sort"
                                 className="text-md text-mindfulBlack font-semibold mb-1"
                             >
@@ -154,7 +155,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                     { value: "z-a", label: "Z-A" },
                                 ]}
                                 className="w-72 rounded-sm border-2 border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>
@@ -163,10 +164,10 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
 
             {/* Charts & Booking Table */}
-            <div className="grid grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 gap-5">
 
                 {/* Grid Column One -- --> Charts  */}
-                <div>
+                {/* <div>
                     <div>
                         <h5 className="text-lg font-semibold py-5">Overview</h5>
                     </div>
@@ -175,23 +176,23 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                     <div>
                         <div className="grid grid-cols-2 gap-2">
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <AreaChart /> */}
+                                <AreaChart />
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <BarChart /> */}
+                                <BarChart />
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <RangeChart /> */}
+                                <RangeChart />
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <BarChart /> */}
+                                <BarChart />
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
 
                 {/* Grid Column Two -- --> Booking Table  */}
@@ -203,7 +204,9 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                         </div>
 
                         <div>
-                            <p className="text-lg text-main font-semibold underline hover:no-underline">View All Booking</p>
+                            <NavLink to="/Bookings/BookingStatus/AllBooking">
+                                <p className="text-lg text-main font-semibold underline hover:no-underline">View All Booking</p>
+                            </NavLink>
                         </div>
                     </div>
 
@@ -260,58 +263,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                             </td>
 
                                             <td className="text-start px-2 py-5">
-                                                {/* Branch Select Field */}
-                                                <div>
-                                                    {/* <SelectField
-                        onChange={openStylistPopup}
-                        label=""
-                        name="branch"
-                        // required
-                        className="w-full rounded-[5px] border-2 border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
-                        options={[
-                          { value: "swetha", label: "Swetha" },
-                          { value: "swetha", label: "Swetha" },
-                          { value: "swetha", label: "Swetha" },
-                          { value: "swetha", label: "Swetha" },
-                        ]}
-                      // error="This field is required."
-                      /> */}
-
-                                                    {/* <Select
-                        placeholder="Select Option"
-                        value={selectedStylistOption}
-                        options={stylistData}
-                        onChange={handleStylistOption}
-                        getOptionLabel={(option) => (
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
-                            <span style={{ marginLeft: 5 }}>{option.text}</span>
-                          </div>
-                        )}
-                        getOptionValue={(option) => option.value.toString()}
-                      /> */}
-
-                                                    {/* <Select
-                                            placeholder="Select Option"
-                                            value={selectedStylistOption}
-                                            options={stylistData}
-                                            onChange={handleStylistOption}
-                                            getOptionLabel={(option) => option.text} // Use `text` as the string label for accessibility and filtering
-                                            formatOptionLabel={(option) => (
-                                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                    <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
-                                                    <span style={{ marginLeft: 5 }}>{option.text}</span>
-                                                </div>
-                                            )}
-                                            getOptionValue={(option) => option.value.toString()}
-                                        /> */}
-
-                                                    {/* {selectedStylistOption && (
-                        <div style={{ marginTop: 20, lineHeight: '25px' }}>
-                          <b>Selected Option:</b> {selectedStylistOption.text}
-                        </div>
-                      )} */}
-                                                </div>
+                                                {data.stylist_name || "N/A"}
                                             </td>
 
                                             {/* <td className="text-center px-2 py-5">
@@ -366,7 +318,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
             {/* {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />}
             {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />} */}
 
-        </div>
+        </div >
 
 
     )

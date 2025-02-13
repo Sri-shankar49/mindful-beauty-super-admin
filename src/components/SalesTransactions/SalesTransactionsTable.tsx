@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';
@@ -13,11 +13,41 @@ import { FiDownload } from "react-icons/fi";
 import { BiCalendar } from "react-icons/bi";
 import { InputField } from "../../common/InputField";
 import { Button } from "../../common/Button";
-// import { Pagination } from "../../common/Pagination";
+import { Pagination } from "../../common/Pagination";
 import { InvoicePopup } from "../Bookings/Completed/InvoicePopup";
-// import { Pagination } from '@/common/Pagination';
+import { salesTransactionsList } from "../../api/apiConfig";
+
+// Proptypes from API
+interface SalesTransactionProps {
+    order_id: number;
+    appointment_date: string;
+    city: string;
+    user_name: string;
+    phone: string;
+    services: number;
+    amount: number;
+    sgst: number;
+    cgst: number;
+    total: number;
+    paymode: string;
+    paystatus: string;
+    appointment_status: string;
+    branch_name: string;
+    branch_phone: string;
+}
 
 export const SalesTransactionsTable = () => {
+
+    const [salesTransactionsData, setSalesTransactionsData] = useState<SalesTransactionProps[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const [totalItems, setTotalItems] = useState(0);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
 
     // State Declaration for Invoice Popup
     const [showInvoicePopup, setShowInvoicePopup] = useState(false);
@@ -29,6 +59,43 @@ export const SalesTransactionsTable = () => {
     const closeInvoicePopup = () => {
         setShowInvoicePopup(false)
     }
+
+
+
+    useEffect(() => {
+        // Fetch data from API
+        const fetchSalesTransactionsListData = async () => {
+            try {
+                setLoading(true);
+                const response = await salesTransactionsList(currentPage);
+
+                setSalesTransactionsData(response.results || []);
+                setTotalItems(response.count);
+
+                console.log("Fetched Sales & Transactions List data log:", response);
+
+                console.log("Fetched Sales & Transactions List pagination count data log :", response.count);
+
+            } catch (error: any) {
+                setError(error.message || "Failed to fetch Sales & Transactions list data.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSalesTransactionsListData();
+    }, [currentPage, itemsPerPage]);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const handleItemsPerPageChange = (items: number) => {
+        setItemsPerPage(items);
+        setCurrentPage(1); // Reset to the first page when items per page changes
+    };
+
+
 
 
     return (
@@ -179,46 +246,58 @@ export const SalesTransactionsTable = () => {
                                 <tr className="">
                                     <th className="text-start px-2 py-3">#</th>
                                     <th className="text-start px-2 py-3">Order ID</th>
-                                    <th className="text-start px-2 py-3">Date of Service</th>
-                                    <th className="text-start px-2 py-3">Branch</th>
-                                    <th className="text-start px-2 py-3">Customer</th>
+                                    <th className="text-start px-2 py-3">Date</th>
+                                    <th className="text-start px-2 py-3">Service Provider</th>
+                                    <th className="text-start px-2 py-3">Owner</th>
                                     <th className="text-start px-2 py-3">Phone</th>
-                                    <th className="text-start px-2 py-3">Service</th>
+                                    <th className="text-start px-2 py-3">Credits</th>
                                     <th className="text-start px-2 py-3">Amount</th>
                                     <th className="text-start px-2 py-3">SGST</th>
                                     <th className="text-start px-2 py-3">CGST</th>
                                     <th className="text-start px-2 py-3">Total</th>
                                     <th className="text-start px-2 py-3">Pay Mode</th>
-                                    <th className="text-start px-2 py-3">Pay Status</th>
-                                    <th className="text-start px-2 py-3">Order Status</th>
                                     <th className="text-start px-2 py-3">Action</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 {/* Content */}
-                                <tr className="border-b-2">
-                                    <td className="text-start px-2 py-5">1</td>
-                                    <td className="text-start px-2 py-5">MB65541</td>
-                                    <td className="text-start px-2 py-5">20-08-2024</td>
-                                    <td className="text-start px-2 py-5">Chottanikkara</td>
-                                    <td className="text-start px-2 py-5">Ramya</td>
-                                    <td className="text-start px-2 py-5">97347196578</td>
-                                    <td className="text-start px-2 py-5">
-                                        <ul>
-                                            <li>Eyesbrows Threading</li>
-                                            <li>Forehead Threading</li>
-                                        </ul>
-                                    </td>
-                                    <td className="text-start px-2 py-5">1200</td>
-                                    <td className="text-start px-2 py-5">30</td>
-                                    <td className="text-start px-2 py-5">20</td>
-                                    <td className="text-start px-2 py-5">1250</td>
-                                    <td className="text-start px-2 py-5">Gpay</td>
-                                    <td className="text-start px-2 py-5">Paid</td>
-                                    <td className="text-start px-2 py-5">Completed</td>
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={14} className="text-center px-2 py-5">
+                                            Loading...
+                                        </td>
+                                    </tr>
+                                ) : error ? (
+                                    /* Error State */
+                                    <tr>
+                                        <td colSpan={14} className="text-center text-red-600 py-5">
+                                            Error: {error}
+                                        </td>
+                                    </tr>
+                                ) : salesTransactionsData.length > 0 ? (
+                                    salesTransactionsData.map((transaction, index) => (
+                                        <tr key={transaction.order_id} className="border-b-2 border-mindfulGreyTypeTwo">
+                                            <td className="text-start px-2 py-5">{index + 1}</td>
+                                            <td className="text-start px-2 py-5">{transaction.order_id}</td>
+                                            <td className="text-start px-2 py-5">{transaction.appointment_date}</td>
+                                            <td className="text-start px-2 py-5">{transaction.city}</td>
+                                            <td className="text-start px-2 py-5">{transaction.user_name}</td>
+                                            <td className="text-start px-2 py-5">{transaction.phone}</td>
+                                            <td className="text-start px-2 py-5">
+                                                {/* <ul>
+                                                    <li>Eyesbrows Threading</li>
+                                                    <li>Forehead Threading</li>
+                                                </ul> */}
+                                                {"N/A"}
+                                            </td>
+                                            <td className="text-start px-2 py-5">{transaction.amount}</td>
+                                            <td className="text-start px-2 py-5">{transaction.sgst}</td>
+                                            <td className="text-start px-2 py-5">{transaction.cgst}</td>
+                                            <td className="text-start px-2 py-5">{transaction.total}</td>
+                                            <td className="text-start px-2 py-5">{transaction.paymode}</td>
 
-                                    {/* <td className="text-start px-2 py-5">
+                                            {/* <td className="text-start px-2 py-5">
                                         <div>
                                         <Button
                                             buttonType="button"
@@ -228,23 +307,32 @@ export const SalesTransactionsTable = () => {
                                         </div>
                                     </td> */}
 
-                                    <td className="text-start px-2 py-5">
-                                        <div className="flex items-center space-x-2">
-                                            {/* Eye Button */}
-                                            <div
-                                                onClick={openInvoicePopup}
-                                                className="border-[1px] border-mindfulBlack rounded-sm px-2 py-1.5 cursor-pointer">
-                                                <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack" />
-                                            </div>
+                                            <td className="text-start px-2 py-5">
+                                                <div className="flex items-center space-x-2">
+                                                    {/* Eye Button */}
+                                                    <div
+                                                        onClick={openInvoicePopup}
+                                                        className="border-[1px] border-mindfulBlack rounded-sm px-2 py-1.5 cursor-pointer">
+                                                        <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack" />
+                                                    </div>
 
-                                            {/* Download Button */}
-                                            <div className="border-[1px] border-mindfulGreen rounded-sm px-2 py-1.5 cursor-pointer">
-                                                <FiDownload className="text-[18px] text-mindfulGreen" />
-                                            </div>
-                                        </div>
-                                    </td>
+                                                    {/* Download Button */}
+                                                    <div className="border-[1px] border-mindfulGreen rounded-sm px-2 py-1.5 cursor-pointer">
+                                                        <FiDownload className="text-[18px] text-mindfulGreen" />
+                                                    </div>
+                                                </div>
+                                            </td>
 
-                                </tr>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={14} className="text-center py-5">
+                                            No transactions available.
+                                        </td>
+                                    </tr>
+                                )
+                                }
 
                             </tbody>
                         </table>
@@ -252,7 +340,13 @@ export const SalesTransactionsTable = () => {
 
                     {/* Pagination */}
                     <div>
-                        {/* <Pagination /> */}
+                        <Pagination
+                            currentPage={currentPage}
+                            totalItems={totalItems}
+                            itemsPerPage={itemsPerPage}
+                            onPageChange={handlePageChange}
+                            onItemsPerPageChange={handleItemsPerPageChange}
+                        />
                     </div>
                 </div>
             </div>

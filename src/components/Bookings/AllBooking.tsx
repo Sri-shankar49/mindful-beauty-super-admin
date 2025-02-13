@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import editButton from "../../assets/icons/editButton.png"
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';
-// import stylist from "../../assets/images/stylist.png"
+import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { Button } from "../../common/Button";
-// import { Pagination } from "../../common/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { Pagination } from "../../common/Pagination";
+import { fetchBookingList, setCurrentPage, setError, setLoading } from "../../redux/allbookingSlice";
 
 // Define the type for each option
 // interface StylistOption {
@@ -46,6 +49,8 @@ export const AllBooking = () => {
   const [showStylistPopup, setShowStylistPopup] = useState(false);
 
 
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   // const openStylistPopup = () => {
   //   setShowStylistPopup(true);
   // }
@@ -74,6 +79,32 @@ export const AllBooking = () => {
   //   setShowEditServicePopup(false)
   // }
 
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Redux state
+  const { bookingListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.allbooking);
+
+  // Fetch allbooking list on mount and when dependencies change
+  useEffect(() => {
+    dispatch(setLoading(true)); // Ensure UI updates before fetching
+    dispatch(fetchBookingList({ searchQuery, currentPage })).catch((error) => {
+      dispatch(setError(error.message));
+    });;
+  }, [dispatch, searchQuery, currentPage]);
+
+
+  const handlePageChange = (page: number) => {
+    // setCurrentPage(page);
+    dispatch(setCurrentPage(page));
+
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
+
   return (
     <div>
 
@@ -87,9 +118,9 @@ export const AllBooking = () => {
           <thead className="bg-mindfulLightgrey">
             <tr className="">
               <th className="text-start px-2 py-3">#</th>
-              <th className="text-start px-2 py-3">Date</th>
+              <th className="w-32 text-start px-2 py-3">Date</th>
               <th className="text-start px-2 py-3">Booking Time</th>
-              <th className="text-start px-2 py-3">Salon</th>
+              <th className="w-52 text-start px-2 py-3">Salon</th>
               <th className="text-start px-2 py-3">Branch</th>
               <th className="text-start px-2 py-3">Customer Name</th>
               <th className="text-start px-2 py-3">Customer Mobile</th>
@@ -102,84 +133,92 @@ export const AllBooking = () => {
 
           <tbody>
             {/* Content */}
-            <tr className="border-b-2 border-mindfulGreyTypeTwo">
-              <td className="text-start px-2 py-5">1</td>
-              <td className="text-start px-2 py-5">18 Aug 2024</td>
-              <td className="text-start px-2 py-5">10.00 - 11.00</td>
-              <td className="text-start px-2 py-5">Astamudi</td>
-              <td className="text-start px-2 py-5">Shakthikulangara, Kollam</td>
-              <td className="text-start px-2 py-5">Ramya</td>
-              <td className="text-start px-2 py-5">97347196578</td>
+            {loading ? (
+              <tr>
+                <td colSpan={12} className="text-center px-2 py-5">
+                  Loading...
+                </td>
+              </tr>
+            ) : error ? (
+              /* Error State */
+              <tr>
+                <td colSpan={12} className="text-center text-red-600 py-5">
+                  Error: {error}
+                </td>
+              </tr>
+            ) :
+              bookingListData.length > 0 ? (
+                bookingListData.map((bookingData) => (
+                  <tr key={bookingData.id} className="border-b-2 border-mindfulGreyTypeTwo">
+                    <td className="text-start px-2 py-5">{bookingData.id}</td>
+                    <td className="text-start px-2 py-5">{bookingData.date}</td>
+                    <td className="text-start px-2 py-5">{bookingData.time}</td>
+                    <td className="text-start px-2 py-5">{bookingData.provider_name}</td>
+                    <td className="text-start px-2 py-5">{bookingData.location || null}</td>
+                    <td className="text-start px-2 py-5">{bookingData.name}</td>
+                    <td className="text-start px-2 py-5">{bookingData.phone}</td>
 
-              <td className="text-start px-2 py-5">
-                <ul>
-                  <li>Eyesbrows Threading</li>
-                  <li>Forehead Threading</li>
-                </ul>
-              </td>
+                    <td className="text-start px-2 py-5">
+                      <ul>
+                        {bookingData.services.map((service) => (
+                          <li key={service.service_id}>{service.name}</li>
+                        ))}
+                      </ul>
+                    </td>
 
-              <td className="text-start px-2 py-5">250</td>
+                    <td className="text-start px-2 py-5">{bookingData.amount}</td>
 
-              <td className="text-start px-2 py-5">
+                    <td className="text-start px-2 py-5">
+                      {bookingData.status === "Completed" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Completed"}
+                            className="bg-[#e5ffec] text-md text-mindfulGreen font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
+                      ) : bookingData.status === "Inprogress" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Inprogress"}
+                            className="bg-[#e6f2ff] text-md text-mindfulSecondaryBlue font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
+                      ) : bookingData.status === "Schedule" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Schedule"}
+                            className="bg-[#fff8e5] text-md text-mindfulYellow font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
+                      ) : bookingData.status === "Cancelled" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Cancelled"}
+                            className="bg-[#ffe1e1] text-md text-mindfulRed font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
 
-                {/* Completed */}
-                <div>
-                  <Button
-                    buttonType="button"
-                    buttonTitle={"Completed"}
-                    className="bg-[#e5ffec] text-md text-mindfulGreen font-semibold rounded-sm px-3 py-1"
-                  />
-                </div>
+                      ) : "Not Available"}
 
-                {/* Inprogress
-                <div>
-                  <Button
-                    buttonType="button"
-                    buttonTitle={"Inprogress"}
-                    className="bg-[#e6f2ff] text-md text-mindfulSecondaryBlue font-semibold rounded-sm px-3 py-1"
-                  />
-                </div> */}
+                    </td>
 
-                {/* Schedule
-                <div>
-                  <Button
-                    buttonType="button"
-                    buttonTitle={"Schedule"}
-                    className="bg-[#fff8e5] text-md text-mindfulYellow font-semibold rounded-sm px-3 py-1"
-                  />
-                </div> */}
+                    <td className="text-start px-2 py-5">
+                      <div className="flex items-center space-x-2">
+                        <div>
+                          <img src={stylist} alt="stylist-image" className="w-6 h-6 " />
+                        </div>
 
-                {/* Cancelled
-                <div>
-                  <Button
-                    buttonType="button"
-                    buttonTitle={"Cancelled"}
-                    className="bg-[#ffe1e1] text-md text-mindfulRed font-semibold rounded-sm px-3 py-1"
-                  />
-                </div> */}
-
-              </td>
-
-              <td className="text-start px-2 py-5">
-                <div>
-                  {/* <Select
-                    placeholder="Select Option"
-                    value={selectedStylistOption}
-                    options={stylistData}
-                    onChange={handleStylistOption}
-                    getOptionLabel={(option) => option.text} // Use `text` as the string label for accessibility and filtering
-                    formatOptionLabel={(option) => (
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
-                        <span style={{ marginLeft: 5 }}>{option.text}</span>
+                        <div key={bookingData.stylist_id}>
+                          {bookingData.stylist || "N/A"}
+                        </div>
                       </div>
-                    )}
-                    getOptionValue={(option) => option.value.toString()}
-                  /> */}
-                </div>
-              </td>
+                    </td>
 
-              {/* <td>
+                    {/* <td>
                 <SelectField
                   label={''}
                   name="status"
@@ -193,7 +232,7 @@ export const AllBooking = () => {
                 />
               </td> */}
 
-              {/* <td className="text-start px-2 py-5">
+                    {/* <td className="text-start px-2 py-5">
                 <Link
                   to="/ServiceManagement/EditServices"
                   aria-current="page"
@@ -210,7 +249,14 @@ export const AllBooking = () => {
               </td> */}
 
 
-            </tr>
+                  </tr>
+                ))) : (
+                <tr>
+                  <td colSpan={12} className="text-center py-5">
+                    No Booking data available.
+                  </td>
+                </tr>
+              )}
 
           </tbody>
         </table>
@@ -222,7 +268,13 @@ export const AllBooking = () => {
 
       {/* Pagination */}
       <div>
-        {/* <Pagination /> */}
+        <Pagination
+          currentPage={currentPage}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div>
   )

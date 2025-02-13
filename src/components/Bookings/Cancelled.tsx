@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
-// import { Pagination } from "../../common/Pagination";
+import { Pagination } from "../../common/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchCancelledList, setCurrentPage, setError, setLoading } from "../../redux/cancelledSlice";
 
 
 // Define the type for each option
@@ -45,6 +48,9 @@ export const Cancelled = () => {
   const [showStylistPopup, setShowStylistPopup] = useState(false);
 
 
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+
   // const openStylistPopup = () => {
   //   setShowStylistPopup(true);
   // }
@@ -73,6 +79,33 @@ export const Cancelled = () => {
   //   setShowEditServicePopup(false)
   // }
 
+
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Redux state
+  const { cancelledListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.cancelled);
+
+  // Fetch cancelled list on mount and when dependencies change
+  useEffect(() => {
+    dispatch(setLoading(true)); // Ensure UI updates before fetching
+    dispatch(fetchCancelledList({ status: 4, searchQuery, currentPage })).catch((error) => {
+      dispatch(setError(error.message));
+    });
+  }, [dispatch, searchQuery, currentPage]);
+
+
+  const handlePageChange = (page: number) => {
+    // setCurrentPage(page);
+    dispatch(setCurrentPage(page));
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
+
+
   return (
     <div>
 
@@ -100,25 +133,42 @@ export const Cancelled = () => {
 
           <tbody>
             {/* Content */}
-            <tr className="border-b-2 border-mindfulGreyTypeTwo">
-              <td className="text-start px-2 py-5">1</td>
-              <td className="text-start px-2 py-5">18 Aug 2024</td>
-              <td className="text-start px-2 py-5">10.00 - 11.00</td>
-              <td className="text-start px-2 py-5">Astamudi</td>
-              <td className="text-start px-2 py-5">Kovalam, Trivandrum</td>
-              <td className="text-start px-2 py-5">Ramya</td>
-              <td className="text-start px-2 py-5">97347196578</td>
+            {loading ? (
+              <tr>
+                <td colSpan={11} className="text-center px-2 py-5">
+                  Loading...
+                </td>
+              </tr>
+            ) : error ? (
+              /* Error State */
+              <tr>
+                <td colSpan={11} className="text-center text-red-600 py-5">
+                  Error: {error}
+                </td>
+              </tr>
+            ) : (
+              cancelledListData.length > 0 ? (
+                cancelledListData.map((cancelled) => (
+                  <tr className="border-b-2 border-mindfulGreyTypeTwo">
+                    <td className="text-start px-2 py-5">{cancelled.id}</td>
+                    <td className="text-start px-2 py-5">{cancelled.date}</td>
+                    <td className="text-start px-2 py-5">{cancelled.time}</td>
+                    <td className="text-start px-2 py-5">{cancelled.provider_name}</td>
+                    <td className="text-start px-2 py-5">{cancelled.location || null}</td>
+                    <td className="text-start px-2 py-5">{cancelled.name}</td>
+                    <td className="text-start px-2 py-5">{cancelled.phone}</td>
 
-              <td className="text-start px-2 py-5">
-                <ul>
-                  <li>Eyesbrows Threading</li>
-                  <li>Forehead Threading</li>
-                </ul>
-              </td>
+                    <td className="text-start px-2 py-5">
+                      <ul>
+                        {cancelled.services.map((service) => (
+                          <li key={service.service_id}>{service.name}</li>
+                        ))}
+                      </ul>
+                    </td>
 
-              <td className="text-start px-2 py-5">250</td>
+                    <td className="text-start px-2 py-5">{cancelled.amount}</td>
 
-              {/* <td className="text-start px-2 py-5">
+                    {/* <td className="text-start px-2 py-5">
                 <div>
                   <Button
                     buttonType="button"
@@ -128,7 +178,7 @@ export const Cancelled = () => {
                 </div>
               </td> */}
 
-              {/* <td>
+                    {/* <td>
                 <SelectField
                   label={''}
                   name="status"
@@ -142,14 +192,23 @@ export const Cancelled = () => {
                 />
               </td> */}
 
-              <td className="text-start px-2 py-5">
-                <ul>
-                  <li>Unexpected Staff</li>
-                  <li>Unavailability</li>
-                </ul>
-              </td>
+                    <td className="text-start px-2 py-5">
+                      <ul>
+                        <li>Unexpected Staff</li>
+                        <li>Unavailability</li>
+                      </ul>
+                    </td>
 
-            </tr>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={10} className="text-center py-5">
+                    No Cancelled Booking data available.
+                  </td>
+                </tr>
+              ))
+            }
 
           </tbody>
         </table>
@@ -161,7 +220,13 @@ export const Cancelled = () => {
 
       {/* Pagination */}
       <div>
-        {/* <Pagination /> */}
+        <Pagination
+          currentPage={currentPage}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div>
   )

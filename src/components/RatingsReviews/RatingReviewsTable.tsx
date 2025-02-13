@@ -1,12 +1,77 @@
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 // import { InputField } from '@/common/InputField'
 import { MdSearch } from 'react-icons/md'
 import { FaSort } from "react-icons/fa";
-// import { Pagination } from '../../common/Pagination';
+import { Pagination } from '../../common/Pagination';
 import { InputField } from '../../common/InputField';
-// import { Pagination } from '@/common/Pagination';
+import { reviewsList } from '../../api/apiConfig';
+
+// Proptypes frpm API
+interface RatingReviewsTableProps {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  review_id: number;
+  created_at: string;
+  order_id: string;
+  user_id: string;
+  customer_name: string;
+  rating: string | null;
+  comment: string | null;
+  service_objects: Services[];
+}
+
+interface Services {
+  service_id: number;
+  service_name: string;
+}
 
 export const RatingReviewsTable = () => {
+
+  const [reviewsListData, setReviewsListData] = useState<RatingReviewsTableProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+
+  useEffect(() => {
+
+    const fetchReviewsList = async () => {
+      setLoading(true); // Set loading to true before fetching
+      try {
+        const data = await reviewsList(currentPage);
+
+        setReviewsListData(data.results.data || []); // Fallback to an empty array if data is null
+        setTotalItems(data.count);
+
+        console.log("Reviews list data log:", data);
+        console.log("Fetched Reviews List pagination count data log :", data.count);
+
+      } catch (error: any) {
+        setError(error.message || 'Failed to fetch Reviews list');
+      } finally {
+        setLoading(false); // Ensure loading is false after fetching
+      }
+    };
+
+    fetchReviewsList();
+  }, [currentPage, itemsPerPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
+
   return (
     <div>
       <div>
@@ -92,29 +157,64 @@ export const RatingReviewsTable = () => {
 
                   <tbody>
                     {/* Content */}
-                    <tr className="border-b-2">
-                      <td className="text-start pl-8 ml-2 py-5">1</td>
-                      <td className="text-start pl-8 py-5">11 August 2024</td>
-                      <td className="text-start pl-8 py-5">MB94873</td>
-                      <td className="text-start pl-8 py-5">Arshada</td>
-                      <td className="text-start pl-8 py-5">Bridal Glow Facial</td>
-                      <td className="text-start pl-8 py-5">4.8</td>
-                      <td className="text-start pl-8 py-5">Excellent Service, Well-Trained professionals</td>
-                    </tr>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={8} className="text-center px-2 py-5">
+                          Loading...
+                        </td>
+                      </tr>
+                    ) : error ? (
+                      /* Error State */
+                      <tr>
+                        <td colSpan={8} className="text-center text-red-600 py-5">
+                          Error: {error}
+                        </td>
+                      </tr>
+                    ) : (
+                      reviewsListData.length > 0 ? (
+                        reviewsListData.map((review) => (
+                          <tr key={review.review_id} className="border-b-2 border-mindfulGreyTypeTwo">
+                            <td className="text-start pl-8 ml-2 py-5">{review.review_id}</td>
+                            <td className="text-start pl-8 py-5">{review.created_at}</td>
+                            <td className="text-start pl-8 py-5">{review.order_id}</td>
+                            <td className="text-start pl-8 py-5">{review.customer_name}</td>
+                            <td className="text-start pl-8 py-5">
+                              <ul >
+                                {review.service_objects.map((service) => (
+                                  <li key={service.service_id}>{service.service_name}</li>
+                                ))}
+                              </ul>
+                            </td>
+                            <td className="text-start pl-8 py-5">{review.rating}</td>
+                            <td className="text-start pl-8 py-5">{review.comment}</td>
+                          </tr>
+                        ))) : (
+                        <tr>
+                          <td colSpan={6} className="text-center py-5">
+                            No ratings & reviews data available.
+                          </td>
+                        </tr>)
+                    )}
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            {/* Pagination */}
+            <div>
+              <Pagination
+                currentPage={currentPage}
+                totalItems={totalItems}
+                itemsPerPage={itemsPerPage}
+                onPageChange={handlePageChange}
+                onItemsPerPageChange={handleItemsPerPageChange}
+              />
             </div>
 
           </div>
         </div>
       </div>
 
-
-      {/* Pagination */}
-      <div>
-        {/* <Pagination /> */}
-      </div>
     </div>
   )
 }

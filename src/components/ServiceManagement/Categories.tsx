@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import { Button } from "@/common/Button";
@@ -10,6 +10,8 @@ import { Button } from "../../common/Button";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { fetchCategoriesList } from "../../api/apiConfig";
+import { DeleteCategoryPopup } from "./Categories/DeleteCategoryPopup";
 // import { SelectField } from "@/common/SelectField";
 // import { Pagination } from "@/common/Pagination";
 
@@ -19,6 +21,18 @@ import { RiDeleteBinLine } from "react-icons/ri";
 //   text: string;
 //   icon: string; // URL or path to the image
 // }
+
+// Proptypes for API
+interface Category {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  category_id: number;
+  category_name: string;
+  status: string;
+  image: string;
+  is_deleted: string;
+}
 
 export const Categories = () => {
 
@@ -47,8 +61,16 @@ export const Categories = () => {
   // ];
 
 
+  const [categoriesData, setCategoriesData] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [selectedCatID, setSelectedCatID] = useState<number | null>(null);
+
   // State declaration for Stylist Popup
   const [showStylistPopup, setShowStylistPopup] = useState(false);
+  const [showDeleteCategoryPopup, setShowDeleteCategorypopup] = useState(false);
+
 
 
   // const openStylistPopup = () => {
@@ -57,6 +79,16 @@ export const Categories = () => {
 
   const closeStylistPopup = () => {
     setShowStylistPopup(false);
+  }
+
+  const openDeleteCategoryPopup = (catID: number) => {
+    setShowDeleteCategorypopup(true);
+    setSelectedCatID(catID);
+    console.log("Delete the selected category with ID:", catID);
+  }
+
+  const closeDeleteCategoryPopup = () => {
+    setShowDeleteCategorypopup(false);
   }
   // const [selectedStylistOption, setSelectedStylistOption] = useState<SingleValue<StylistOption>>(null);
 
@@ -78,6 +110,33 @@ export const Categories = () => {
   // const closeEditService = () => {
   //   setShowEditServicePopup(false)
   // }
+
+  useEffect(() => {
+    const fetchCategoriesData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await fetchCategoriesList();
+        setCategoriesData(response.data);
+
+        console.log("Categories Data log:", response);
+
+      } catch (error: any) {
+        setError(error.message || "Unable to fetch categories users data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCategoriesData();
+  }, []);
+
+
+
+
+
+
+
+
 
   return (
     <div>
@@ -124,48 +183,68 @@ export const Categories = () => {
             <tbody>
 
               {/* Content */}
-              <tr className="border-b-2 border-mindfulGreyTypeTwo">
-                <td className="text-start px-2 py-5">Hair</td>
-                <td className="text-start px-2 py-5">
-                  <div className="flex items-center space-x-2">
+              {loading ? (
+                <tr>
+                  <td colSpan={2} className="text-center py-5">
+                    Loading...
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan={2} className="text-center py-5">
+                    Error: {error}
+                  </td>
+                </tr>
+              ) : categoriesData?.length > 0 ? ( // ✅ Added optional chaining (?.)
+                categoriesData.map((category) => (
+                  <tr key={category.category_id} className="border-b-2 border-mindfulGreyTypeTwo">
+                    <td className="text-start px-2 py-5">{category.category_name}</td>
+                    <td className="text-start px-2 py-5">
+                      <div className="flex items-center space-x-2">
 
-                    {/* Edit Button */}
-                    <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
-                      <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
-                    </div>
+                        {/* Edit Button */}
+                        <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                          <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
+                        </div>
 
-                    {/* Delete Button */}
-                    <div
-                      // onClick={openEditService}
-                      className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
-                      <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
-                    </div>
-                  </div>
-                </td>
-              </tr>
+                        {/* Delete Button */}
+                        <div
+                          onClick={() => openDeleteCategoryPopup(Number(category.category_id))}
+                          className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
+                          <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={2} className="text-center py-5">
+                    No Categories Data available
+                  </td>
+                </tr>
+              )}
 
               {/* Content */}
-              <tr className="border-b-2 border-mindfulGreyTypeTwo">
+              {/* <tr className="border-b-2 border-mindfulGreyTypeTwo" >
                 <td className="text-start px-2 py-5">Skin</td>
                 <td className="text-start px-2 py-5">
                   <div className="flex items-center space-x-2">
 
-                    {/* Edit Button */}
+                    Edit Button
                     <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
                       <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                     </div>
 
-                    {/* Delete Button */}
+                    Delete Button
                     <div
-                      // onClick={openEditService}
+                      onClick={openEditService}
                       className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
                       <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
                     </div>
                   </div>
                 </td>
-
-
-              </tr>
+              </tr> */}
 
             </tbody>
           </table>
@@ -178,11 +257,16 @@ export const Categories = () => {
       {/* {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />} */}
       {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />}
 
+      {showDeleteCategoryPopup && <DeleteCategoryPopup
+        closePopup={closeDeleteCategoryPopup}
+        catID={Number(selectedCatID)}
+      />}
+
 
       {/* Pagination */}
       <div>
         {/* <Pagination /> */}
       </div>
-    </div>
+    </div >
   )
 }

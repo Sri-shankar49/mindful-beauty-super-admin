@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import editButton from "../../assets/icons/editButton.png"
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';
-// import stylist from "../../assets/images/stylist.png"
+import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 // import { Link } from "react-router-dom";
 // import { SelectField } from "../../common/SelectField";
-// import { Pagination } from "../../common/Pagination";
+import { Pagination } from "../../common/Pagination";
 import { Button } from "../../common/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchScheduleList, setCurrentPage, setError, setLoading } from "../../redux/scheduleSlice";
 
 // Define the type for each option
 // interface StylistOption {
@@ -48,6 +51,8 @@ export const Schedule = () => {
   const [showStylistPopup, setShowStylistPopup] = useState(false);
 
 
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   // const openStylistPopup = () => {
   //   setShowStylistPopup(true);
   // }
@@ -75,6 +80,34 @@ export const Schedule = () => {
   // const closeEditService = () => {
   //   setShowEditServicePopup(false)
   // }
+
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Redux state
+  const { scheduleListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.schedule);
+
+  // Fetch schedule list on mount and when dependencies change
+  useEffect(() => {
+    dispatch(setLoading(true)); // Ensure UI updates before fetching
+    dispatch(fetchScheduleList({ status: 1, searchQuery, currentPage })).catch((error) => {
+      console.error("Error fetching schedule list:", error);
+      dispatch(setError(error.message))
+    });
+  }, [dispatch, searchQuery, currentPage]);
+
+
+
+  const handlePageChange = (page: number) => {
+    // setCurrentPage(page);
+    dispatch(setCurrentPage(page));
+
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
 
   return (
     <div>
@@ -104,84 +137,92 @@ export const Schedule = () => {
 
           <tbody>
             {/* Content */}
-            <tr className="border-b-2 border-mindfulGreyTypeTwo">
-              <td className="text-start px-2 py-5">1</td>
-              <td className="text-start px-2 py-5">18 Aug 2024</td>
-              <td className="text-start px-2 py-5">10.00 - 11.00</td>
-              <td className="text-start px-2 py-5">Astamudi</td>
-              <td className="text-start px-2 py-5">Shakthikulangara, Kollam</td>
-              <td className="text-start px-2 py-5">Ramya</td>
-              <td className="text-start px-2 py-5">97347196578</td>
+            {loading ? (
+              <tr>
+                <td colSpan={12} className="text-center px-2 py-5">
+                  Loading...
+                </td>
+              </tr>
+            ) : error ? (
+              /* Error State */
+              <tr>
+                <td colSpan={12} className="text-center text-red-600 py-5">
+                  Error: {error}
+                </td>
+              </tr>
+            ) : (
+              scheduleListData.length > 0 ? (
+                scheduleListData.map((schedule) => (
+                  <tr key={schedule.id} className="border-b-2 border-mindfulGreyTypeTwo">
+                    <td className="text-start px-2 py-5">{schedule.id}</td>
+                    <td className="text-start px-2 py-5">{schedule.date}</td>
+                    <td className="text-start px-2 py-5">{schedule.time}</td>
+                    <td className="text-start px-2 py-5">{schedule.provider_name}</td>
+                    <td className="text-start px-2 py-5">{schedule.location || null}</td>
+                    <td className="text-start px-2 py-5">{schedule.name}</td>
+                    <td className="text-start px-2 py-5">{schedule.phone}</td>
 
-              <td className="text-start px-2 py-5">
-                <ul>
-                  <li>Eyesbrows Threading</li>
-                  <li>Forehead Threading</li>
-                </ul>
-              </td>
+                    <td className="text-start px-2 py-5">
+                      <ul>
+                        {schedule.services.map((service) => (
+                          <li key={service.service_id}>{service.name}</li>
+                        ))}
+                      </ul>
+                    </td>
 
-              <td className="text-start px-2 py-5">250</td>
+                    <td className="text-start px-2 py-5">{schedule.amount}</td>
 
-              <td className="text-start px-2 py-5">
+                    <td className="text-start px-2 py-5">
+                      {schedule.status === "Completed" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Completed"}
+                            className="bg-[#e5ffec] text-md text-mindfulGreen font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
+                      ) : schedule.status === "Inprogress" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Inprogress"}
+                            className="bg-[#e6f2ff] text-md text-mindfulSecondaryBlue font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
+                      ) : schedule.status === "Schedule" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Schedule"}
+                            className="bg-[#fff8e5] text-md text-mindfulYellow font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
+                      ) : schedule.status === "Cancelled" ? (
+                        <div>
+                          <Button
+                            buttonType="button"
+                            buttonTitle={"Cancelled"}
+                            className="bg-[#ffe1e1] text-md text-mindfulRed font-semibold rounded-sm px-3 py-1"
+                          />
+                        </div>
 
-                {/* Completed */}
-                <div>
-                  <Button
-                    buttonType="button"
-                    buttonTitle={"Completed"}
-                    className="bg-[#e5ffec] text-md text-mindfulGreen font-semibold rounded-sm px-3 py-1"
-                  />
-                </div>
+                      ) : "Not Available"}
 
-                {/* Inprogress
-                     <div>
-                       <Button
-                         buttonType="button"
-                         buttonTitle={"Inprogress"}
-                         className="bg-[#e6f2ff] text-md text-mindfulSecondaryBlue font-semibold rounded-sm px-3 py-1"
-                       />
-                     </div> */}
+                    </td>
 
-                {/* Schedule
-                     <div>
-                       <Button
-                         buttonType="button"
-                         buttonTitle={"Schedule"}
-                         className="bg-[#fff8e5] text-md text-mindfulYellow font-semibold rounded-sm px-3 py-1"
-                       />
-                     </div> */}
+                    <td className="text-start px-2 py-5">
+                      <div className="flex items-center space-x-2">
+                        <div>
+                          <img src={stylist} alt="stylist-image" className="w-6 h-6 " />
+                        </div>
 
-                {/* Cancelled
-                     <div>
-                       <Button
-                         buttonType="button"
-                         buttonTitle={"Cancelled"}
-                         className="bg-[#ffe1e1] text-md text-mindfulRed font-semibold rounded-sm px-3 py-1"
-                       />
-                     </div> */}
+                        <div key={schedule.stylist_id}>
+                          {schedule.stylist || "N/A"}
+                        </div>
+                      </div>
+                    </td>
 
-              </td>
-
-              <td className="text-start px-2 py-5">
-                <div>
-                  {/* <Select
-                         placeholder="Select Option"
-                         value={selectedStylistOption}
-                         options={stylistData}
-                         onChange={handleStylistOption}
-                         getOptionLabel={(option) => option.text} // Use `text` as the string label for accessibility and filtering
-                         formatOptionLabel={(option) => (
-                           <div style={{ display: 'flex', alignItems: 'center' }}>
-                             <img src={option.icon} alt={option.text} style={{ width: 16, height: 16 }} />
-                             <span style={{ marginLeft: 5 }}>{option.text}</span>
-                           </div>
-                         )}
-                         getOptionValue={(option) => option.value.toString()}
-                       /> */}
-                </div>
-              </td>
-
-              {/* <td>
+                    {/* <td>
                      <SelectField
                        label={''}
                        name="status"
@@ -195,7 +236,7 @@ export const Schedule = () => {
                      />
                    </td> */}
 
-              {/* <td className="text-start px-2 py-5">
+                    {/* <td className="text-start px-2 py-5">
                      <Link
                        to="/ServiceManagement/EditServices"
                        aria-current="page"
@@ -212,7 +253,16 @@ export const Schedule = () => {
                    </td> */}
 
 
-            </tr>
+                  </tr>
+                ))) : (
+                <tr>
+                  <td colSpan={11} className="text-center py-5">
+                    No Schedule Booking data available.
+                  </td>
+                </tr>
+              )
+            )}
+
 
           </tbody>
         </table>
@@ -224,7 +274,13 @@ export const Schedule = () => {
 
       {/* Pagination */}
       <div>
-        {/* <Pagination /> */}
+        <Pagination
+          currentPage={currentPage}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div>
   )

@@ -8,7 +8,7 @@ interface InvoicePopupProps {
 export const InvoicePopup: React.FC<InvoicePopupProps> = ({ closePopup }) => {
     return (
         <div>
-            <div className="fixed inset-0 bg-mindfulBlack bg-opacity-50 flex justify-center items-center z-50">
+            <div className="fixed inset-0 bg-mindfulLightBlack flex justify-center items-center z-50">
                 <div className="container mx-auto">
 
                     <div className="relative bg-white rounded-[5px] w-6/12 mx-auto px-20 py-10">

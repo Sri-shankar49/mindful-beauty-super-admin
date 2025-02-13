@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';
@@ -10,6 +10,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { Button } from "../../common/Button";
+import { fetchSubcategoriesList } from "../../api/apiConfig";
 // import { Pagination } from "@/common/Pagination";
 
 // Define the type for each option
@@ -18,6 +19,20 @@ import { Button } from "../../common/Button";
 //   text: string;
 //   icon: string; // URL or path to the image
 // }
+
+// Proptypes for API
+interface Category {
+  category_id: number;
+  category_name: string;
+  subcategories: Subcategory[];
+}
+
+interface Subcategory {
+  subcategory_id: number;
+  subcategory_name: number;
+  status: number;
+  is_deleted: number;
+}
 
 export const Subcategories = () => {
 
@@ -44,6 +59,12 @@ export const Subcategories = () => {
   //     icon: `${stylist}`
   //   }
   // ];
+
+
+
+  const [subcategoriesData, setSubcategoriesData] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
 
   // State declaration for Stylist Popup
@@ -77,6 +98,27 @@ export const Subcategories = () => {
   // const closeEditService = () => {
   //   setShowEditServicePopup(false)
   // }
+
+
+  useEffect(() => {
+    const fetchSubcategoriesData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await fetchSubcategoriesList();
+        setSubcategoriesData(response.data);
+
+        console.log("Sub categories Data log:", response);
+
+      } catch (error: any) {
+        setError(error.message || "Unable to fetch Sub categories users data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSubcategoriesData();
+  }, []);
+
 
   return (
     <div>
@@ -121,36 +163,65 @@ export const Subcategories = () => {
             <tbody>
 
               {/* Content */}
-              <tr className="border-b-2 border-mindfulGreyTypeTwo">
-                <td className="text-start px-2 py-5">Hair</td>
-                <td className="text-start px-2 py-5">
-                  <div>
-                    <div className="grid grid-cols-4">
-                      <div>Sub Category 1</div>
-                      <div>Sub Category 2</div>
-                      <div>Sub Category 3</div>
-                      <div>Sub Category 4</div>
+              {loading ? (
+                <tr>
+                  <td colSpan={3} className="text-center py-5">
+                    Loading...
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan={3} className="text-center py-5">
+                    Error: {error}
+                  </td>
+                </tr>
+              ) : (
+                subcategoriesData.length > 0 ? (
+                  subcategoriesData.map((subCategory) => (
+                    <tr key={subCategory.category_id} className="border-b-2 border-mindfulGreyTypeTwo">
+                      <td className="text-start px-2 py-5">{subCategory.category_name}</td>
 
-                    </div>
-                  </div>
-                </td>
-                <td className="text-start px-2 py-5">
-                  <div className="flex items-center space-x-2">
+                      <td className="text-start px-2 py-5">
 
-                    {/* Edit Button */}
-                    <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
-                      <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
-                    </div>
+                        <div>
+                          <div className="grid grid-cols-4">
+                            {/* <div>Sub Category 1</div>
+                            <div>Sub Category 2</div>
+                            <div>Sub Category 3</div>
+                            <div>Sub Category 4</div> */}
+                            {subCategory.subcategories.map((sub) => (
+                              <div key={sub.subcategory_id}>{sub.subcategory_name}</div>
+                            ))}
+                          </div>
+                        </div>
 
-                    {/* Delete Button */}
-                    <div
-                      // onClick={openEditService}
-                      className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
-                      <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
-                    </div>
-                  </div>
-                </td>
-              </tr>
+                      </td>
+                      <td className="text-start px-2 py-5">
+                        <div className="flex items-center space-x-2">
+
+                          {/* Edit Button */}
+                          <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                            <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
+                          </div>
+
+                          {/* Delete Button */}
+                          <div
+                            // onClick={openEditService}
+                            className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
+                            <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={2} className="text-center py-5">
+                      No Sub categories Data available
+                    </td>
+                  </tr>
+                ))
+              }
 
             </tbody>
           </table>

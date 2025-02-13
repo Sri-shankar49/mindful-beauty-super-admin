@@ -1,8 +1,15 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // Use localStorage as the default storage
-import loginReducer from "../redux/loginSlice"; // Adjust the path as needed
+import storage from "redux-persist/lib/storage";             // Use localStorage as the default storage
+
+
+import loginReducer from "../redux/loginSlice";              // Adjust the path as needed
+import allbookingReducer from './allbookingSlice'
+import scheduleReducer from './scheduleSlice'
+import inprogressReducer from './inprogressSlice'
+import completedReducer from './completedSlice'
+import cancelledReducer from './cancelledSlice'
 
 // Persist configuration
 const persistConfig = {
@@ -14,6 +21,11 @@ const persistConfig = {
 // Combine reducers
 const rootReducer = combineReducers({
     login: loginReducer,
+    allbooking: allbookingReducer,
+    schedule: scheduleReducer,
+    inprogress: inprogressReducer,
+    completed: completedReducer,
+    cancelled: cancelledReducer,
 });
 
 // Create persisted reducer

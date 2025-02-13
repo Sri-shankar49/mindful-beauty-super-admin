@@ -61,7 +61,7 @@ export const verifyOTP = async (phoneNumber: string, otp: number) => {
 // Service Provider Page -- > Active, Pending and Inactive
 export const fetchProvidersList = async (status: string, pageNumber: number) => {
   try {
-    const response = await apiAxios.get('provider-api/providers_list/', {
+    const response = await apiAxios.get('/provider-api/providers_list/', {
       params: {
         status: status,  // Active, Pending, Inactive
         page: pageNumber
@@ -115,7 +115,7 @@ export const pendingAction = async (providerID: number, action: string) => {
 // Service Provider Page -- > Active, Pending and Inactive
 export const fetchDashboardList = async () => {
   try {
-    const response = await apiAxios.get('provider-api/getbookings/', {
+    const response = await apiAxios.get('/provider-api/getbookings/', {
       // params: {
       //   status: status,  // Active, Pending, Inactive
       // },
@@ -135,3 +135,374 @@ export const fetchDashboardList = async () => {
     throw new Error(error.response?.data?.message || "Error fetching bashboard booking list");
   }
 };
+
+
+
+
+
+// Service Management Page -- --> Categories Tab
+// GET Method from the API
+export const fetchCategoriesList = async () => {
+  try {
+    const response = await apiAxios.get('/provider-api/category/');
+
+    console.log("Category List Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch categories list");
+    }
+
+    return response.data; // Extracting the category data
+
+  } catch (error: any) {
+    console.error("Error fetching categories list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error fetching categories list");
+  }
+};
+
+
+
+
+
+// Service Management Page -- --> Categories Tab
+export const deleteCategory = async (categoryID: number) => {
+  try {
+    // Using axios.delete is more semantically correct for deletion,
+    // but if your backend expects a GET request for deletion, you can change it accordingly.
+    const response = await apiAxios.delete('/provider-api/category/delete/', {
+      params: {
+        category_id: categoryID,
+      },
+    });
+
+    console.log("Delete Category Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to delete category");
+    }
+
+    return response.data; // Expected to be: { "status": "success", "message": "Category deleted successfully" }
+
+  } catch (error: any) {
+    console.error("Error deleting category:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error deleting category");
+  }
+};
+
+
+
+
+
+// Service Management Page -- --> Sub Categories Tab
+export const fetchSubcategoriesList = async () => {
+  try {
+    const response = await apiAxios.get('/provider-api/subcategory/');
+
+    console.log("Subcategory List Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch subcategories list");
+    }
+
+    return response.data; // Extracting the subcategory data
+
+  } catch (error: any) {
+    console.error("Error fetching subcategories list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error fetching subcategories list");
+  }
+};
+
+
+
+
+// Service Management Page -- --> Categories Tab
+export const deleteSubcategory = async (subcategoryID: number) => {
+  try {
+    // Using axios.delete is more semantically correct for deletion,
+    // but if your backend expects a GET request for deletion, you can change it accordingly.
+    const response = await apiAxios.delete('/provider-api/subcategory/delete/', {
+      params: {
+        subcategory_id: subcategoryID,
+      },
+    });
+
+    console.log("Delete Sub Category Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to delete Sub category");
+    }
+
+    return response.data; // Expected to be: { "status": "success", "message": "Category deleted successfully" }
+
+  } catch (error: any) {
+    console.error("Error deleting Sub category:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error Sub deleting category");
+  }
+};
+
+
+
+
+
+// Service Management Page -- --> Services Tab
+export const fetchServicesList = async (pageNumber: number) => {
+  try {
+    const response = await apiAxios.get('/provider-api/get_services/', {
+      params: {
+        page: pageNumber,
+      }
+    });
+
+    console.log("Services List Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch services list");
+    }
+
+    return response.data; // Extracting the services data array
+
+  } catch (error: any) {
+    console.error("Error fetching services list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error fetching services list");
+  }
+};
+
+
+
+
+// Service Management Page -- --> Categories Tab
+export const deleteServices = async (serviceID: number) => {
+  try {
+    // Using axios.delete is more semantically correct for deletion,
+    // but if your backend expects a GET request for deletion, you can change it accordingly.
+    const response = await apiAxios.delete('/provider-api/delete_service/', {
+      params: {
+        service_id: serviceID,
+      },
+    });
+
+    console.log("Delete Services Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to delete Services");
+    }
+
+    return response.data; // Expected to be: { "status": "success", "message": "Category deleted successfully" }
+
+  } catch (error: any) {
+    console.error("Error deleting Services:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error deleting Services");
+  }
+};
+
+
+
+
+
+
+// Service Management Page -- --> All Booking List
+// GET Method from the API
+export const bookingsList = async (searchQuery: string, pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/getappointments/`, {
+      params: {
+        search: searchQuery,
+        page: pageNumber,
+      }
+    });
+
+    console.log("Booking list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch booking list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching booking list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch booking list. Please try again later.");
+  }
+}
+
+
+
+
+
+// Service Management Page -- --> Schedule List
+// GET Method from the API
+export const scheduleList = async (status: number, searchQuery: string, pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/getappointments/`, {
+      params: {
+        status: status,
+        search: searchQuery,
+        page: pageNumber,
+      }
+    });
+
+    console.log("Schedule Booking list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch schedule booking list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching schedule booking list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch schedule booking list. Please try again later.");
+  }
+}
+
+
+// Service Management Page -- --> Inprogress List
+// GET Method from the API
+export const inprogressList = async (status: number, searchQuery: string, pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/getappointments/`, {
+      params: {
+        status: status,
+        search: searchQuery,
+        page: pageNumber,
+      }
+    });
+
+    console.log("Inprogress Booking list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch inprogress list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching inprogress booking list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch inprogress list. Please try again later.");
+  }
+}
+
+
+
+
+// Service Management Page -- --> Completed List
+// GET Method from the API
+export const completedList = async (status: number, searchQuery: string, pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/getappointments/`, {
+      params: {
+        status: status,
+        search: searchQuery,
+        page: pageNumber,
+      }
+    });
+
+    console.log("Completed Booking list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch completed booking list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching completed booking list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch completed booking list. Please try again later.");
+  }
+}
+
+
+
+
+// Service Management Page -- --> Cancelled List
+// GET Method from the API
+export const cancelledList = async (status: number, searchQuery: string, pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/getappointments/`, {
+      params: {
+        status: status,
+        search: searchQuery,
+        page: pageNumber,
+      }
+    });
+
+    console.log("Cancelled Booking list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch cancelled booking list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching cancelled booking list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch cancelled booking list. Please try again later.");
+  }
+}
+
+
+
+
+// Sales & Transactions Page
+// GET Method from the API
+export const salesTransactionsList = async (pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/get-sales-transactions/`, {
+      params: {
+        //   provider_id: providerID,
+        page: pageNumber,
+      },
+    });
+
+    console.log("Sales & Transactions list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch sales & transactions list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching sales & transactions list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions list. Please try again later.");
+  }
+}
+
+
+// Ratings & Reviews Page
+// GET Method from the API
+export const reviewsList = async (pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/review-list/`, {
+      params: {
+        page: pageNumber,
+      },
+    });
+
+    console.log("Reviews list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch reviews list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching reviews list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch reviews list. Please try again later.");
+  }
+}
