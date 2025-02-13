@@ -9,7 +9,7 @@
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
 import { useEffect, useState } from "react";
-import { SelectField } from "../../common/SelectField";
+// import { SelectField } from "../../common/SelectField";
 import { fetchDashboardList } from "../../api/apiConfig";
 import { NavLink } from "react-router-dom";
 // import { Button } from "../../common/Button";
