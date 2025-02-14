@@ -81,6 +81,8 @@ export const Completed = () => {
     setShowPaymentDetailsPopup(!showPaymentDetailsPopup)
   }
 
+  console.log(openPaymentDetailsPopup, "just logging");
+  
   const closePaymentDetailsPopup = () => {
     setShowPaymentDetailsPopup(false)
   }
@@ -235,7 +237,9 @@ export const Completed = () => {
       </div>
 
       {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />}
+
       {showPaymentDetailsPopup && <PaymentDetailsPopup closePopup={closePaymentDetailsPopup} />}
+
       {showInvoicePopup && <InvoicePopup closePopup={closeInvoicePopup} />}
 
 

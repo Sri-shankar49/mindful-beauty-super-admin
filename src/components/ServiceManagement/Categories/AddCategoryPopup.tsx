@@ -37,7 +37,7 @@ export const AddCategoryPopup: React.FC<AddCategoryPopupProps> = ({ closePopup }
         setError(null);
 
         try {
-            const response = await addCategory(data.category);
+            const response = await addCategory(data.category, null);
             console.log("Category added successfully", response.data);
 
             if (response?.status === "success") {

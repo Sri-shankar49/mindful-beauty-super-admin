@@ -4,7 +4,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
 import { EditServicePopup } from "./AddServices/EditServicePopup";
-import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
+import { pendingAction } from "../../api/apiConfig";
 import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
