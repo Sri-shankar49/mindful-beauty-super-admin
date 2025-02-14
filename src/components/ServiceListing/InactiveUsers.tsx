@@ -5,64 +5,85 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
 import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
 import { FaCheck } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchInactiveUserList, setCurrentPage, setError, setLoading } from "../../redux/inactiveUserSlice";
 // import { EditServicePopup } from "./AddServices/EditServicePopup";
 
 
 // Proptypes frpm API
-interface InactiveUsersProps {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  salon_id: number;
-  salon_name: string;
-  email: string;
-  mobile: string;
-  owner_name: string | null;
-  location: string | null;
-}
+// interface InactiveUsersProps {
+//   count: number;
+//   next: string | null;
+//   previous: string | null;
+//   salon_id: number;
+//   salon_name: string;
+//   email: string;
+//   mobile: string;
+//   owner_name: string | null;
+//   location: string | null;
+// }
 
 export const InactiveUsers = () => {
 
-  const [inActiveUsersData, setInactiveUsersData] = useState<InactiveUsersProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [inActiveUsersData, setInactiveUsersData] = useState<InactiveUsersProps[]>([]);
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<string | null>(null);
 
 
-  const [totalItems, setTotalItems] = useState(0);
+  // const [totalItems, setTotalItems] = useState(0);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
 
   // Fetching data from API
+  // useEffect(() => {
+  //   const fetchInactiveUsersData = async () => {
+  //     setLoading(true);
+
+  //     try {
+  //       const response = await fetchProvidersList("Inactive", currentPage);
+  //       setInactiveUsersData(response.results.data);
+  //       setTotalItems(response.count);
+
+
+  //       console.log("Inactive Users Data log:", response);
+
+  //       console.log("Fetched Inactive Users List pagination count data log :", response.count);
+
+
+  //     } catch (error: any) {
+  //       setError(error.message || "Unable to fetch inactive users data. Please try again later.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   fetchInactiveUsersData();
+  // }, [currentPage, itemsPerPage]);
+
+
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Redux state
+  const { inactiveUserData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.inactiveUser);
+
+  // Fetch active Users list on mount and when dependencies change
   useEffect(() => {
-    const fetchInactiveUsersData = async () => {
-      setLoading(true);
+    dispatch(setLoading(true)); // Ensure UI updates before fetching
+    dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage })).catch((error) => {
+      console.error("Error fetching inactive users list:", error);
+      dispatch(setError(error.message))
+    });
+  }, [dispatch, searchQuery, currentPage]);
 
-      try {
-        const response = await fetchProvidersList("Inactive", currentPage);
-        setInactiveUsersData(response.results.data);
-        setTotalItems(response.count);
-
-
-        console.log("Inactive Users Data log:", response);
-
-        console.log("Fetched Inactive Users List pagination count data log :", response.count);
-
-
-      } catch (error: any) {
-        setError(error.message || "Unable to fetch inactive users data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchInactiveUsersData();
-  }, [currentPage, itemsPerPage]);
 
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    // setCurrentPage(page);
+    dispatch(setCurrentPage(page));
   };
 
   const handleItemsPerPageChange = (items: number) => {
@@ -91,17 +112,32 @@ export const InactiveUsers = () => {
   }
 
   // Refreshing the data on handleActionSubmit
+  // const refreshedData = async () => {
+  //   try {
+  //     const response = await fetchProvidersList("Inactive", currentPage);
+  //     setInactiveUsersData(response.results.data);
+  //     setTotalItems(response.count);
+
+  //     console.log("Inactive users list data refreshed:", response);
+  //   } catch (error: any) {
+  //     console.error("Error refreshing inactive users data:", error.message);
+  //   }
+  // }
+
+
+  // Refresh function call according to Redux state
   const refreshedData = async () => {
     try {
-      const response = await fetchProvidersList("Inactive", currentPage);
-      setInactiveUsersData(response.results.data);
-      setTotalItems(response.count);
+      dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-      console.log("Inactive users list data refreshed:", response);
+      await dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage }));
+
+      console.log("Inactive Users list data refreshed.");
     } catch (error: any) {
       console.error("Error refreshing inactive users data:", error.message);
+      dispatch(setError(error.message)); // ✅ Handle errors correctly
     }
-  }
+  };
 
 
   return (
@@ -141,8 +177,8 @@ export const InactiveUsers = () => {
                       Error: {error}
                     </td>
                   </tr>
-                ) : inActiveUsersData.length > 0 ? (
-                  inActiveUsersData.map((inactiveData) => (
+                ) : inactiveUserData.length > 0 ? (
+                  inactiveUserData.map((inactiveData) => (
                     <tr key={inactiveData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">
                       <td className="text-start px-2 py-5">{inactiveData.salon_id}</td>
                       <td className="text-start px-2 py-5">{inactiveData.salon_name}</td>

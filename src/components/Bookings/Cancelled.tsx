@@ -193,10 +193,11 @@ export const Cancelled = () => {
               </td> */}
 
                     <td className="text-start px-2 py-5">
-                      <ul>
+                      {/* <ul>
                         <li>Unexpected Staff</li>
                         <li>Unavailability</li>
-                      </ul>
+                      </ul> */}
+                      {cancelled.cancellation_message}
                     </td>
 
                   </tr>

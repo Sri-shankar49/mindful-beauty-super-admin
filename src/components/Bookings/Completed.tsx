@@ -8,7 +8,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FiDownload } from "react-icons/fi";
 // import { PaymentDetailsPopup } from "./Completed/PaymentDetailsPopup";
 // import { InvoicePopup } from "./Completed/InvoicePopup";
-import { SelectField } from "../../common/SelectField";
+// import { SelectField } from "../../common/SelectField";
 import { Pagination } from "../../common/Pagination";
 import { InvoicePopup } from "./Completed/InvoicePopup";
 import { PaymentDetailsPopup } from "./Completed/PaymentDetailsPopup";
@@ -153,14 +153,14 @@ export const Completed = () => {
             {/* Content */}
             {loading ? (
               <tr>
-                <td colSpan={12} className="text-center px-2 py-5">
+                <td colSpan={10} className="text-center px-2 py-5">
                   Loading...
                 </td>
               </tr>
             ) : error ? (
               /* Error State */
               <tr>
-                <td colSpan={12} className="text-center text-red-600 py-5">
+                <td colSpan={10} className="text-center text-red-600 py-5">
                   Error: {error}
                 </td>
               </tr>
@@ -185,8 +185,9 @@ export const Completed = () => {
                     </td>
 
                     <td className="text-start px-2 py-5">{completed.amount}</td>
+                    <td className="text-start px-2 py-5">{completed.payment_status}</td>
 
-                    <td>
+                    {/* <td>
                       <SelectField
                         label={''}
                         name="status"
@@ -199,7 +200,7 @@ export const Completed = () => {
                         className="w-full rounded-sm border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
                         onChange={openPaymentDetailsPopup}
                       />
-                    </td>
+                    </td> */}
 
                     <td className="text-start px-2 py-5">
 
@@ -222,7 +223,7 @@ export const Completed = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={11} className="text-center py-5">
+                  <td colSpan={10} className="text-center py-5">
                     No Completed Booking data available.
                   </td>
                 </tr>

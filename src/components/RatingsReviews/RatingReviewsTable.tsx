@@ -5,66 +5,92 @@ import { MdSearch } from 'react-icons/md'
 import { FaSort } from "react-icons/fa";
 import { Pagination } from '../../common/Pagination';
 import { InputField } from '../../common/InputField';
-import { reviewsList } from '../../api/apiConfig';
+// import { reviewsList } from '../../api/apiConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { fetchReviewRatingsList, setCurrentPage, setError, setLoading, setSearchQuery } from '../../redux/reviewSlice';
 
 // Proptypes frpm API
-interface RatingReviewsTableProps {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  review_id: number;
-  created_at: string;
-  order_id: string;
-  user_id: string;
-  customer_name: string;
-  rating: string | null;
-  comment: string | null;
-  service_objects: Services[];
-}
+// interface RatingReviewsTableProps {
+//   count: number;
+//   next: string | null;
+//   previous: string | null;
+//   review_id: number;
+//   created_at: string;
+//   order_id: string;
+//   user_id: string;
+//   customer_name: string;
+//   rating: string | null;
+//   comment: string | null;
+//   service_objects: Services[];
+// }
 
-interface Services {
-  service_id: number;
-  service_name: string;
-}
+// interface Services {
+//   service_id: number;
+//   service_name: string;
+// }
 
 export const RatingReviewsTable = () => {
 
-  const [reviewsListData, setReviewsListData] = useState<RatingReviewsTableProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [reviewsListData, setReviewsListData] = useState<RatingReviewsTableProps[]>([]);
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<string | null>(null);
 
-  const [totalItems, setTotalItems] = useState(0);
+  // const [totalItems, setTotalItems] = useState(0);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
 
+  // useEffect(() => {
+
+  //   const fetchReviewsList = async () => {
+  //     setLoading(true); // Set loading to true before fetching
+  //     try {
+  //       const data = await reviewsList(currentPage);
+
+  //       setReviewsListData(data.results.data || []); // Fallback to an empty array if data is null
+  //       setTotalItems(data.count);
+
+  //       console.log("Reviews list data log:", data);
+  //       console.log("Fetched Reviews List pagination count data log :", data.count);
+
+  //     } catch (error: any) {
+  //       setError(error.message || 'Failed to fetch Reviews list');
+  //     } finally {
+  //       setLoading(false); // Ensure loading is false after fetching
+  //     }
+  //   };
+
+  //   fetchReviewsList();
+  // }, [currentPage, itemsPerPage]);
+
+
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Redux state
+  const { reviewsListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.review);
+
+  // Fetch cancelled list on mount and when dependencies change
   useEffect(() => {
+    dispatch(setLoading(true)); // Ensure UI updates before fetching
+    dispatch(fetchReviewRatingsList({ searchQuery, currentPage })).catch((error) => {
+      dispatch(setError(error.message));
+    });
+  }, [dispatch, searchQuery, currentPage]);
 
-    const fetchReviewsList = async () => {
-      setLoading(true); // Set loading to true before fetching
-      try {
-        const data = await reviewsList(currentPage);
+  // Handle search input change
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    dispatch(setSearchQuery(value)); // Dispatch action to update search query in Redux
+  };
 
-        setReviewsListData(data.results.data || []); // Fallback to an empty array if data is null
-        setTotalItems(data.count);
-
-        console.log("Reviews list data log:", data);
-        console.log("Fetched Reviews List pagination count data log :", data.count);
-
-      } catch (error: any) {
-        setError(error.message || 'Failed to fetch Reviews list');
-      } finally {
-        setLoading(false); // Ensure loading is false after fetching
-      }
-    };
-
-    fetchReviewsList();
-  }, [currentPage, itemsPerPage]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    // setCurrentPage(page);
+    dispatch(setCurrentPage(page));
   };
 
   const handleItemsPerPageChange = (items: number) => {
@@ -94,6 +120,8 @@ export const RatingReviewsTable = () => {
                     <InputField
                       label={''}
                       placeholder="Search"
+                      value={searchQuery}
+                      onChange={handleSearch}
                       className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
                     />
                     <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" />
@@ -159,14 +187,14 @@ export const RatingReviewsTable = () => {
                     {/* Content */}
                     {loading ? (
                       <tr>
-                        <td colSpan={8} className="text-center px-2 py-5">
+                        <td colSpan={7} className="text-center px-2 py-5">
                           Loading...
                         </td>
                       </tr>
                     ) : error ? (
                       /* Error State */
                       <tr>
-                        <td colSpan={8} className="text-center text-red-600 py-5">
+                        <td colSpan={7} className="text-center text-red-600 py-5">
                           Error: {error}
                         </td>
                       </tr>
@@ -190,7 +218,7 @@ export const RatingReviewsTable = () => {
                           </tr>
                         ))) : (
                         <tr>
-                          <td colSpan={6} className="text-center py-5">
+                          <td colSpan={7} className="text-center py-5">
                             No ratings & reviews data available.
                           </td>
                         </tr>)

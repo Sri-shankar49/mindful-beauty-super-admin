@@ -19,21 +19,25 @@ import { salesTransactionsList } from "../../api/apiConfig";
 
 // Proptypes from API
 interface SalesTransactionProps {
-    order_id: number;
-    appointment_date: string;
-    city: string;
-    user_name: string;
-    phone: string;
-    services: number;
+    id: number;
+    provider_id: number;
+    date: string;
     amount: number;
-    sgst: number;
+    credits: number;
+    type: string;
+    payment_type: string;
+    transaction_id: string;
+    order_id: string;
+    total_amount: number;
+    status: string;
+    pay_id: string;
     cgst: number;
-    total: number;
-    paymode: string;
-    paystatus: string;
-    appointment_status: string;
-    branch_name: string;
-    branch_phone: string;
+    sgst: number;
+    provider_name: string;
+    owner_name: string;
+    provider_phone: string;
+    payment_mode: string;
+    service_type: string;
 }
 
 export const SalesTransactionsTable = () => {
@@ -276,26 +280,26 @@ export const SalesTransactionsTable = () => {
                                         </td>
                                     </tr>
                                 ) : salesTransactionsData.length > 0 ? (
-                                    salesTransactionsData.map((transaction, index) => (
-                                        <tr key={transaction.order_id} className="border-b-2 border-mindfulGreyTypeTwo">
-                                            <td className="text-start px-2 py-5">{index + 1}</td>
+                                    salesTransactionsData.map((transaction) => (
+                                        <tr key={transaction.id} className="border-b-2 border-mindfulGreyTypeTwo">
+                                            <td className="text-start px-2 py-5">{transaction.id}</td>
                                             <td className="text-start px-2 py-5">{transaction.order_id}</td>
-                                            <td className="text-start px-2 py-5">{transaction.appointment_date}</td>
-                                            <td className="text-start px-2 py-5">{transaction.city}</td>
-                                            <td className="text-start px-2 py-5">{transaction.user_name}</td>
-                                            <td className="text-start px-2 py-5">{transaction.phone}</td>
+                                            <td className="text-start px-2 py-5">{transaction.date}</td>
+                                            <td className="text-start px-2 py-5">{transaction.provider_name}</td>
+                                            <td className="text-start px-2 py-5">{transaction.owner_name || "N/A"}</td>
+                                            <td className="text-start px-2 py-5">{transaction.provider_phone}</td>
                                             <td className="text-start px-2 py-5">
                                                 {/* <ul>
                                                     <li>Eyesbrows Threading</li>
                                                     <li>Forehead Threading</li>
                                                 </ul> */}
-                                                {"N/A"}
+                                                {transaction.credits}
                                             </td>
                                             <td className="text-start px-2 py-5">{transaction.amount}</td>
                                             <td className="text-start px-2 py-5">{transaction.sgst}</td>
                                             <td className="text-start px-2 py-5">{transaction.cgst}</td>
-                                            <td className="text-start px-2 py-5">{transaction.total}</td>
-                                            <td className="text-start px-2 py-5">{transaction.paymode}</td>
+                                            <td className="text-start px-2 py-5">{transaction.total_amount}</td>
+                                            <td className="text-start px-2 py-5">{transaction.payment_mode}</td>
 
                                             {/* <td className="text-start px-2 py-5">
                                         <div>

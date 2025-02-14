@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { InputField } from '../common/InputField';
 import { MdSearch } from 'react-icons/md';
 // import { Button } from '@/common/Button'
@@ -8,8 +8,54 @@ import { MdSearch } from 'react-icons/md';
 // import { SelectField } from '@/common/SelectField';
 // import "../components/ServiceListing/ServiceListing.css"
 // import { Pagination } from '@/common/Pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../redux/store';
+import { setSearchQuery as setactiveUserSearchQuery } from '../redux/activeUserSlice';
+import { setSearchQuery as setpendingRequestSearchQuery } from '../redux/pendingRequestSlice';
+import { setSearchQuery as setInactiveUserSearchQuery } from '../redux/inactiveUserSlice';
+
 
 export const ServiceProvider = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
+
+
+  // Determine current tab and fetch appropriate search state
+  // Determine which tab is active
+  const isActiveUsersTab = location.pathname.includes('ActiveUsers');
+  const isPendingRequestTab = location.pathname.includes('PendingRequests');
+  const isInactiveUsersTab = location.pathname.includes('InactiveUsers');
+
+  // Get searchQuery from Redux state
+  // const searchQuery = useSelector((state: RootState) => state.activeUser.searchQuery);
+  // Get search query from Redux state
+  const activeUsersSearchQuery = useSelector((state: RootState) => state.activeUser.searchQuery);
+  const pendingRequestSearchQuery = useSelector((state: RootState) => state.pendingRequest.searchQuery);
+  const inactiveUsersSearchQuery = useSelector((state: RootState) => state.inactiveUser.searchQuery);
+
+
+  const searchQuery =
+    isActiveUsersTab ? activeUsersSearchQuery :
+      isPendingRequestTab ? pendingRequestSearchQuery :
+        isInactiveUsersTab ? inactiveUsersSearchQuery :
+          '';
+
+
+
+  // Handle search input change
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+
+    if (isActiveUsersTab) {
+      dispatch(setactiveUserSearchQuery(value));
+    } else if (isPendingRequestTab) {
+      dispatch(setpendingRequestSearchQuery(value));
+    } else if (isInactiveUsersTab) {
+      dispatch(setInactiveUserSearchQuery(value));
+    }
+  };
+
 
   return (
     <div>
@@ -37,6 +83,8 @@ export const ServiceProvider = () => {
                   <InputField
                     label={''}
                     placeholder="Search"
+                    value={searchQuery}
+                    onChange={handleSearch}
                     className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
                   />
                   <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" />

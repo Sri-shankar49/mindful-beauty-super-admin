@@ -59,11 +59,12 @@ export const verifyOTP = async (phoneNumber: string, otp: number) => {
 
 
 // Service Provider Page -- > Active, Pending and Inactive
-export const fetchProvidersList = async (status: string, pageNumber: number) => {
+export const fetchProvidersList = async (status: string, searchQuery: string, pageNumber: number) => {
   try {
     const response = await apiAxios.get('/provider-api/providers_list/', {
       params: {
         status: status,  // Active, Pending, Inactive
+        search: searchQuery,// Search query
         page: pageNumber
       },
     });
@@ -161,6 +162,57 @@ export const fetchCategoriesList = async () => {
 };
 
 
+// Service Management Page -- --> Categories Tab
+export const addCategory = async (CategoryName: string, imageFile: any) => {
+  try {
+    const response = await apiAxios.post('/provider-api/category/add/',
+      {
+        category_name: CategoryName,
+        image: imageFile
+      }
+    );
+
+    console.log("Add Category List Response:", response.data);
+
+    if (!response.data || response.status !== 201) {
+      throw new Error("Failed to Add Category");
+    }
+
+    return response.data; // Extracting the category data
+
+  } catch (error: any) {
+    console.error("Error adding category:", error.response?.data.message || error);
+    throw new Error(error.response?.data.message || "Error adding category list");
+  }
+};
+
+
+// Service Management Page -- --> Categories Tab
+export const editCategory = async (CategoryID: number, CategoryName: string, imageFile: any) => {
+  try {
+    const response = await apiAxios.put('/provider-api/category/edit/', {
+      // params: {
+      category_id: CategoryID,
+      category_name: CategoryName,
+      image: imageFile
+      // },
+    });
+
+    console.log("Edit Category List Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to edit Category");
+    }
+
+    return response.data; // Extracting the category data
+
+  } catch (error: any) {
+    console.error("Error Editing category:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error Editing category list");
+  }
+}
+
+
 
 
 
@@ -215,7 +267,7 @@ export const fetchSubcategoriesList = async () => {
 
 
 
-// Service Management Page -- --> Categories Tab
+// Service Management Page -- --> Sub Categories Tab
 export const deleteSubcategory = async (subcategoryID: number) => {
   try {
     // Using axios.delete is more semantically correct for deletion,
@@ -268,9 +320,90 @@ export const fetchServicesList = async (pageNumber: number) => {
 };
 
 
+// Service Listing Page -> Category List -- --> Services Tab
+export const categories = async () => {
+  try {
+    const response = await apiAxios.get('/provider-api/categories/');
+    console.log("Category List response", response.data);
+
+    // Assuming the API returns an object with a `status` field and a `data` field
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Category list");
+    }
+
+    return response.data; // Adjust based on the actual response structure
+
+  } catch (error: any) {
+    console.error("Error fetching Category list:", error.message || error);
+    throw new Error("Unable to fetch Category list. Please try again later.");
+  }
+};
 
 
-// Service Management Page -- --> Categories Tab
+
+
+// Service Listing Page -> Sub Category List -- --> Services Tab
+export const subCategories = async (categoryID: string) => {
+
+  try {
+    const response = await apiAxios.get('/provider-api/subcategories/', {
+      params: {
+        category_id: categoryID, // Replace with the actual category ID
+      },
+    });
+    console.log("Sub category List response", response.data);
+
+    // Assuming the API returns an object with a `status` field and a `data` field
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Sub category list");
+    }
+
+    return response.data; // Adjust based on the actual response structure
+
+  } catch (error: any) {
+    console.error("Error fetching Sub Category list:", error.message || error);
+    throw new Error("Unable to fetch Sub Category list. Please try again later.");
+  }
+};
+
+
+
+// Service Listing Page -> Sub Category List -- --> Services Tab
+export const addService = async (
+  serviceName: string,
+  category: number,
+  subcategory: number,
+  price: string,
+  description: string,
+  serviceTime: string,
+) => {
+  try {
+    const response = await apiAxios.post('/provider-api/add_service/', {
+      service_name: serviceName,
+      category: category,
+      subcategory: subcategory,
+      price: price,
+      description: description,
+      service_time: serviceTime,
+    });
+
+    console.log("Add Service Response:", response.data);
+
+    // Optionally check for a success status code (201 for creation)
+    if (!response.data || response.status !== 201) {
+      throw new Error("Failed to add service");
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error adding service:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error adding service");
+  }
+};
+
+
+
+// Service Management Page -- --> Services Tab
 export const deleteServices = async (serviceID: number) => {
   try {
     // Using axios.delete is more semantically correct for deletion,
@@ -483,11 +616,12 @@ export const salesTransactionsList = async (pageNumber: number) => {
 
 // Ratings & Reviews Page
 // GET Method from the API
-export const reviewsList = async (pageNumber: number) => {
+export const reviewsList = async (searchQuery: string, pageNumber: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/review-list/`, {
       params: {
+        search: searchQuery,
         page: pageNumber,
       },
     });

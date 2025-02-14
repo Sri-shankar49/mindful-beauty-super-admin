@@ -1,38 +1,22 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { cancelledList } from '../api/apiConfig';
+import { fetchProvidersList } from '../api/apiConfig';
 
 // Define TypeScript types
-interface CancelledItem {
+interface ActiveUserItem {
     count: number;
     next: string | null;
     previous: string | null;
-    id: string;
-    date: string;
-    time: string;
-    phone: string;
-    services: Service[];
-    amount: string;
-    status: string;
-    status_id?: string;
-    name: string;
-    modify_status: string;
-    location: string;
-    stylist: string;
-    stylist_id?: string;
-    payment_status: string;
-    provider_name: string;
-    cancellation_message: string;
-}
-
-interface Service {
-    service_id: number;
-    name: string;
-    price: number;
+    salon_id: number;
+    salon_name: string;
+    email: string;
+    mobile: string;
+    owner_name: string | null;
+    location: string | null;
 }
 
 // Define initial state
-interface CancelledState {
-    cancelledListData: CancelledItem[];
+interface ActiveUserState {
+    activeUserData: ActiveUserItem[];
     loading: boolean;
     error: string | null;
     searchQuery: string;
@@ -40,8 +24,8 @@ interface CancelledState {
     totalItems: number;
 }
 
-const initialState: CancelledState = {
-    cancelledListData: [],
+const initialState: ActiveUserState = {
+    activeUserData: [],
     loading: false,
     error: null,
     searchQuery: '',
@@ -49,26 +33,28 @@ const initialState: CancelledState = {
     totalItems: 0,
 };
 
-// Async thunk for fetching cancelled list with pagination and search
-export const fetchCancelledList = createAsyncThunk(
-    'cancelled/fetchCancelledList',
+// Async thunk for fetching active User list with pagination and search
+export const fetchActiveUserList = createAsyncThunk(
+    'activeUser/fetchActiveUserList',
     async (
         { status, searchQuery, currentPage }:
-            { status: number; searchQuery: string; currentPage: number },
+            { status: string; searchQuery: string; currentPage: number },
         { rejectWithValue }
     ) => {
         try {
-            const response = await cancelledList(status, searchQuery, currentPage);
+            const response = await fetchProvidersList(status, searchQuery, currentPage);
+            console.log("Active Users Data log:", response);
+
             return response;
         } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch cancelled list');
+            return rejectWithValue(error.message || 'Failed to fetch active users list');
         }
     }
 );
 
 // Create slice
-const cancelledSlice = createSlice({
-    name: 'cancelled',
+const activeUserSlice = createSlice({
+    name: 'activeUser',
     initialState,
     reducers: {
         setSearchQuery(state, action: PayloadAction<string>) {
@@ -88,21 +74,21 @@ const cancelledSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCancelledList.pending, (state) => {
+            .addCase(fetchActiveUserList.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchCancelledList.fulfilled, (state, action) => {
+            .addCase(fetchActiveUserList.fulfilled, (state, action) => {
                 state.loading = false;
-                state.cancelledListData = action.payload.results || [];
+                state.activeUserData = action.payload.results.data || [];
                 state.totalItems = action.payload.count || 0;
             })
-            .addCase(fetchCancelledList.rejected, (state, action) => {
+            .addCase(fetchActiveUserList.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });
     },
 });
 
-export const { setSearchQuery, setCurrentPage, setLoading, setError } = cancelledSlice.actions;
-export default cancelledSlice.reducer;
+export const { setSearchQuery, setCurrentPage, setLoading, setError } = activeUserSlice.actions;
+export default activeUserSlice.reducer;

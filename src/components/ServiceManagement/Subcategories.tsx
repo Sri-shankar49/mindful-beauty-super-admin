@@ -7,7 +7,7 @@ import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 // import { SelectField } from "@/common/SelectField";
 // import { Pagination } from "../../common/Pagination";
 import { BiEditAlt } from "react-icons/bi";
-import { RiDeleteBinLine } from "react-icons/ri";
+// import { RiDeleteBinLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { Button } from "../../common/Button";
 import { fetchSubcategoriesList } from "../../api/apiConfig";
@@ -106,7 +106,7 @@ export const Subcategories = () => {
 
       try {
         const response = await fetchSubcategoriesList();
-        setSubcategoriesData(response.data);
+        setSubcategoriesData(response.results.data);
 
         console.log("Sub categories Data log:", response);
 
@@ -205,11 +205,11 @@ export const Subcategories = () => {
                           </div>
 
                           {/* Delete Button */}
-                          <div
+                          {/* <div
                             // onClick={openEditService}
                             className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
                             <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
-                          </div>
+                          </div> */}
                         </div>
                       </td>
                     </tr>

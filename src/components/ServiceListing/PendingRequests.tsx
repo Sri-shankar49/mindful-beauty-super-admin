@@ -6,61 +6,82 @@ import { Pagination } from "../../common/Pagination";
 import { FaCheck } from "react-icons/fa6";
 import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
 import { IoClose } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchPendingRequestList, setCurrentPage, setError, setLoading } from "../../redux/pendingRequestSlice";
 
 // Proptypes frpm API
-interface PendingRequestsProps {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  salon_id: number;
-  salon_name: string;
-  email: string;
-  mobile: string;
-  owner_name: string | null;
-  location: string | null;
-}
+// interface PendingRequestsProps {
+//   count: number;
+//   next: string | null;
+//   previous: string | null;
+//   salon_id: number;
+//   salon_name: string;
+//   email: string;
+//   mobile: string;
+//   owner_name: string | null;
+//   location: string | null;
+// }
 
 export const PendingRequests = () => {
 
-  const [pendingRequestsData, setPendingRequestsData] = useState<PendingRequestsProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [pendingRequestsData, setPendingRequestsData] = useState<PendingRequestsProps[]>([]);
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<string | null>(null);
 
-  const [totalItems, setTotalItems] = useState(0);
+  // const [totalItems, setTotalItems] = useState(0);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
 
   // Fetching data from API
+  // useEffect(() => {
+  //   const fetchPendingRequestsData = async () => {
+  //     setLoading(true);
+
+  //     try {
+  //       const response = await fetchProvidersList("Pending", currentPage);
+  //       setPendingRequestsData(response.results.data);
+
+  //       setTotalItems(response.count);
+
+  //       console.log("Pending Requests Data log:", response);
+
+  //       console.log("Fetched Pending Request List pagination count data log :", response.count);
+
+
+  //     } catch (error: any) {
+  //       setError(error.message || "Unable to fetch pending requests data. Please try again later.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   fetchPendingRequestsData();
+  // }, [currentPage, itemsPerPage]);
+
+
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Redux state
+  const { pendingRequestData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.pendingRequest);
+
+  // Fetch pending request list on mount and when dependencies change
   useEffect(() => {
-    const fetchPendingRequestsData = async () => {
-      setLoading(true);
+    dispatch(setLoading(true)); // Ensure UI updates before fetching
+    dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage })).catch((error) => {
+      console.error("Error fetching pending request list:", error);
+      dispatch(setError(error.message))
+    });
+  }, [dispatch, searchQuery, currentPage]);
 
-      try {
-        const response = await fetchProvidersList("Pending", currentPage);
-        setPendingRequestsData(response.results.data);
-
-        setTotalItems(response.count);
-
-        console.log("Pending Requests Data log:", response);
-
-        console.log("Fetched Pending Request List pagination count data log :", response.count);
-
-
-      } catch (error: any) {
-        setError(error.message || "Unable to fetch pending requests data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchPendingRequestsData();
-  }, [currentPage, itemsPerPage]);
 
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    // setCurrentPage(page);
+    dispatch(setCurrentPage(page));
   };
 
   const handleItemsPerPageChange = (items: number) => {
@@ -88,17 +109,32 @@ export const PendingRequests = () => {
 
 
   // Refreshing the data on handleActionSubmit
+  // const refreshedData = async () => {
+  //   try {
+  //     const response = await fetchProvidersList("Pending", currentPage);
+  //     setPendingRequestsData(response.results.data);
+  //     setTotalItems(response.count);
+
+  //     console.log("Pending requests list data refreshed:", response);
+  //   } catch (error: any) {
+  //     console.error("Error refreshing pending request data:", error.message);
+  //   }
+  // }
+
+
+  // Refresh function call according to Redux state
   const refreshedData = async () => {
     try {
-      const response = await fetchProvidersList("Pending", currentPage);
-      setPendingRequestsData(response.results.data);
-      setTotalItems(response.count);
+      dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-      console.log("Pending requests list data refreshed:", response);
+      await dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage }));
+
+      console.log("Active Users list data refreshed.");
     } catch (error: any) {
-      console.error("Error refreshing pending request data:", error.message);
+      console.error("Error refreshing active users data:", error.message);
+      dispatch(setError(error.message)); // ✅ Handle errors correctly
     }
-  }
+  };
 
   return (
     <div>
@@ -138,8 +174,8 @@ export const PendingRequests = () => {
                         Error: {error}
                       </td>
                     </tr>
-                  ) : pendingRequestsData.length > 0 ? (
-                    pendingRequestsData.map((pendingData) => (
+                  ) : pendingRequestData.length > 0 ? (
+                    pendingRequestData.map((pendingData) => (
                       <tr key={pendingData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">
                         <td className="text-start px-2 py-5">{pendingData.salon_id}</td>
                         <td className="text-start px-2 py-5">{pendingData.salon_name}</td>

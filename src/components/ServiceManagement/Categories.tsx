@@ -12,6 +12,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { fetchCategoriesList } from "../../api/apiConfig";
 import { DeleteCategoryPopup } from "./Categories/DeleteCategoryPopup";
+import { AddCategoryPopup } from "./Categories/AddCategoryPopup";
+import { EditCategoryPopup } from "./Categories/EditCategoryPopup";
 // import { SelectField } from "@/common/SelectField";
 // import { Pagination } from "@/common/Pagination";
 
@@ -66,6 +68,7 @@ export const Categories = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [selectedCatID, setSelectedCatID] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
   // State declaration for Stylist Popup
   const [showStylistPopup, setShowStylistPopup] = useState(false);
@@ -101,15 +104,26 @@ export const Categories = () => {
   //   setShowStylistPopup(true);
   // };
 
-  // const [showEditServicePopup, setShowEditServicePopup] = useState(false);
+  const [showAddCategoryPopup, setShowAddCategoryPopup] = useState(false);
+  const [showEditCategoryPopup, setShowEditCategoryPopup] = useState(false);
 
-  // const openEditService = () => {
-  //   setShowEditServicePopup(!showEditServicePopup)
-  // }
 
-  // const closeEditService = () => {
-  //   setShowEditServicePopup(false)
-  // }
+  const openAddCategoryPopup = () => {
+    setShowAddCategoryPopup(true);
+  }
+
+  const closeAddCategoryPopup = () => {
+    setShowAddCategoryPopup(false)
+  }
+
+  const openEditCategoryPopup = (category: any) => {
+    setShowEditCategoryPopup(true);
+    setSelectedCategory(category);
+  }
+
+  const closeEditCategoryPopup = () => {
+    setShowEditCategoryPopup(false)
+  }
 
   useEffect(() => {
     const fetchCategoriesData = async () => {
@@ -117,7 +131,7 @@ export const Categories = () => {
 
       try {
         const response = await fetchCategoriesList();
-        setCategoriesData(response.data);
+        setCategoriesData(response.results.data);
 
         console.log("Categories Data log:", response);
 
@@ -160,6 +174,7 @@ export const Categories = () => {
             </div>
 
             <Button
+              onClick={openAddCategoryPopup}
               buttonType="button"
               buttonTitle="Add Category"
               className="bg-mindfulBlue text-mindfulWhite pl-2 cursor-pointer group-hover:bg-mindfulWhite group-hover:text-mindfulBlue"
@@ -203,7 +218,10 @@ export const Categories = () => {
                       <div className="flex items-center space-x-2">
 
                         {/* Edit Button */}
-                        <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                        <div
+                          onClick={() => openEditCategoryPopup(category)}
+                          className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200"
+                        >
                           <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                         </div>
 
@@ -257,7 +275,13 @@ export const Categories = () => {
       {/* {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />} */}
       {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />}
 
-      {showDeleteCategoryPopup && <DeleteCategoryPopup
+      {showAddCategoryPopup && <AddCategoryPopup closePopup={closeAddCategoryPopup} />}
+
+      {showEditCategoryPopup && selectedCategory && (
+        <EditCategoryPopup closePopup={closeEditCategoryPopup} editCategoryData={selectedCategory} />
+      )}
+
+      {showDeleteCategoryPopup && selectedCatID && <DeleteCategoryPopup
         closePopup={closeDeleteCategoryPopup}
         catID={Number(selectedCatID)}
       />}

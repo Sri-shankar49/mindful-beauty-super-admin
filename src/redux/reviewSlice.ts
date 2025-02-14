@@ -1,38 +1,29 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { cancelledList } from '../api/apiConfig';
+import { reviewsList } from '../api/apiConfig';
 
 // Define TypeScript types
-interface CancelledItem {
+interface ReviewRatingItem {
     count: number;
     next: string | null;
     previous: string | null;
-    id: string;
-    date: string;
-    time: string;
-    phone: string;
-    services: Service[];
-    amount: string;
-    status: string;
-    status_id?: string;
-    name: string;
-    modify_status: string;
-    location: string;
-    stylist: string;
-    stylist_id?: string;
-    payment_status: string;
-    provider_name: string;
-    cancellation_message: string;
+    review_id: number;
+    created_at: string;
+    order_id: string;
+    user_id: string;
+    customer_name: string;
+    rating: string | null;
+    comment: string | null;
+    service_objects: Services[];
 }
 
-interface Service {
+interface Services {
     service_id: number;
-    name: string;
-    price: number;
+    service_name: string;
 }
 
 // Define initial state
-interface CancelledState {
-    cancelledListData: CancelledItem[];
+interface ReviewRatingState {
+    reviewsListData: ReviewRatingItem[];
     loading: boolean;
     error: string | null;
     searchQuery: string;
@@ -40,8 +31,8 @@ interface CancelledState {
     totalItems: number;
 }
 
-const initialState: CancelledState = {
-    cancelledListData: [],
+const initialState: ReviewRatingState = {
+    reviewsListData: [],
     loading: false,
     error: null,
     searchQuery: '',
@@ -49,26 +40,26 @@ const initialState: CancelledState = {
     totalItems: 0,
 };
 
-// Async thunk for fetching cancelled list with pagination and search
-export const fetchCancelledList = createAsyncThunk(
-    'cancelled/fetchCancelledList',
+// Async thunk for fetching review list with pagination and search
+export const fetchReviewRatingsList = createAsyncThunk(
+    'review/fetchReviewRatingsList',
     async (
-        { status, searchQuery, currentPage }:
-            { status: number; searchQuery: string; currentPage: number },
+        { searchQuery, currentPage }:
+            { searchQuery: string; currentPage: number },
         { rejectWithValue }
     ) => {
         try {
-            const response = await cancelledList(status, searchQuery, currentPage);
+            const response = await reviewsList(searchQuery, currentPage);
             return response;
         } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch cancelled list');
+            return rejectWithValue(error.message || 'Failed to fetch review & ratings list');
         }
     }
 );
 
 // Create slice
-const cancelledSlice = createSlice({
-    name: 'cancelled',
+const reviewSlice = createSlice({
+    name: 'review',
     initialState,
     reducers: {
         setSearchQuery(state, action: PayloadAction<string>) {
@@ -88,21 +79,21 @@ const cancelledSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCancelledList.pending, (state) => {
+            .addCase(fetchReviewRatingsList.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchCancelledList.fulfilled, (state, action) => {
+            .addCase(fetchReviewRatingsList.fulfilled, (state, action) => {
                 state.loading = false;
-                state.cancelledListData = action.payload.results || [];
+                state.reviewsListData = action.payload.results.data || [];
                 state.totalItems = action.payload.count || 0;
             })
-            .addCase(fetchCancelledList.rejected, (state, action) => {
+            .addCase(fetchReviewRatingsList.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });
     },
 });
 
-export const { setSearchQuery, setCurrentPage, setLoading, setError } = cancelledSlice.actions;
-export default cancelledSlice.reducer;
+export const { setSearchQuery, setCurrentPage, setLoading, setError } = reviewSlice.actions;
+export default reviewSlice.reducer;

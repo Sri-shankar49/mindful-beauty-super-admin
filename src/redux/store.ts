@@ -5,11 +5,17 @@ import storage from "redux-persist/lib/storage";             // Use localStorage
 
 
 import loginReducer from "../redux/loginSlice";              // Adjust the path as needed
-import allbookingReducer from './allbookingSlice'
-import scheduleReducer from './scheduleSlice'
-import inprogressReducer from './inprogressSlice'
-import completedReducer from './completedSlice'
-import cancelledReducer from './cancelledSlice'
+import activeUserReducer from './activeUserSlice';
+import pendingRequestReducer from './pendingRequestSlice';
+import inactiveUserReducer from './inactiveUserSlice';
+
+
+import allbookingReducer from './allbookingSlice';
+import scheduleReducer from './scheduleSlice';
+import inprogressReducer from './inprogressSlice';
+import completedReducer from './completedSlice';
+import cancelledReducer from './cancelledSlice';
+import reviewRatingReducer from './reviewSlice';
 
 // Persist configuration
 const persistConfig = {
@@ -21,11 +27,17 @@ const persistConfig = {
 // Combine reducers
 const rootReducer = combineReducers({
     login: loginReducer,
+
+    activeUser: activeUserReducer,
+    pendingRequest: pendingRequestReducer,
+    inactiveUser: inactiveUserReducer,
+
     allbooking: allbookingReducer,
     schedule: scheduleReducer,
     inprogress: inprogressReducer,
     completed: completedReducer,
     cancelled: cancelledReducer,
+    review: reviewRatingReducer,
 });
 
 // Create persisted reducer

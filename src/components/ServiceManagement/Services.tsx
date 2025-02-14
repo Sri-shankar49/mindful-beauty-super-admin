@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
-import { SelectField } from "../../common/SelectField";
+// import { SelectField } from "../../common/SelectField";
 import { Pagination } from "../../common/Pagination";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { Button } from "../../common/Button";
-import { fetchServicesList } from "../../api/apiConfig";
+import { categories, fetchServicesList, subCategories } from "../../api/apiConfig";
+import { AddServicePopup } from "./Services/AddServicePopup";
 import { DeleteServicesPopup } from "./Services/DeleteServicesPopup";
 // import { SelectField } from "@/common/SelectField";
 // import { Pagination } from "@/common/Pagination";
@@ -42,6 +43,21 @@ interface Services {
   is_deleted: boolean;
 }
 
+interface categoriesDataProps {
+  category_id?: string;
+  category_name: string;
+  status: string;
+  image: string;
+}
+
+interface SubCategoriesDataProps {
+  subcategory_id?: string;
+  subcategory_name: string;
+  category?: number;
+  status: string;
+}
+
+
 export const Services = () => {
 
 
@@ -70,6 +86,15 @@ export const Services = () => {
 
 
   const [servicesData, setServicesData] = useState<Services[]>([]);
+  const [categoriesData, setcategoriesData] = useState<categoriesDataProps[]>([]);
+  const [subCategoriesData, setSubCategoriesData] = useState<SubCategoriesDataProps[]>([]);
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  console.log(setSelectedSubCategory, "Just logging");
+
+
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,6 +109,9 @@ export const Services = () => {
   // State declaration for Stylist Popup
   const [showStylistPopup, setShowStylistPopup] = useState(false);
 
+
+  const [showAddServicePopup, setShowAddServicepopup] = useState(false);
+
   const [selectedServiceID, setSelectedServiceID] = useState<number | null>(null);
   const [showDeleteServicePopup, setShowDeleteServicepopup] = useState(false);
 
@@ -97,6 +125,15 @@ export const Services = () => {
   const closeStylistPopup = () => {
     setShowStylistPopup(false);
   }
+
+  const openAddServicePopup = () => {
+    setShowAddServicepopup(true);
+  }
+
+  const closeAddServicePopup = () => {
+    setShowAddServicepopup(false);
+  }
+
 
 
   const openDeleteServicePopup = (serviceID: number) => {
@@ -136,13 +173,20 @@ export const Services = () => {
 
       try {
         const response = await fetchServicesList(currentPage);
+
+        const loadCategoriesData = await categories();
+
         setServicesData(response.results.data);
 
         setTotalItems(response.count);
 
+        setcategoriesData(loadCategoriesData.data)
+
         console.log("Services List Data log:", response);
 
         console.log("Fetched Services List pagination count data log :", response.count);
+
+        console.log("Categories List Data log:", loadCategoriesData);
 
       } catch (error: any) {
         setError(error.message || "Unable to fetch Services data. Please try again later.");
@@ -152,6 +196,26 @@ export const Services = () => {
     }
     fetchServicesData();
   }, [currentPage, itemsPerPage]);
+
+
+  // Function to handle category change and fetch subcategories
+  const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCategoryID = event.target.value; // Get the selected categoryId
+    setSelectedCategory(selectedCategoryID); // Update state
+
+    try {
+      const loadSubCategoriesData = await subCategories(selectedCategoryID); // Pass categoryId to API
+
+      setSubCategoriesData(loadSubCategoriesData.data); // Update subcategories
+
+      console.log("Sub Category List data log:", loadSubCategoriesData);
+
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
 
   const handlePageChange = (page: number) => {
@@ -178,7 +242,7 @@ export const Services = () => {
 
           {/* Main Category */}
           <div>
-            <SelectField
+            {/* <SelectField
               // onChange={openStylistPopup}
               label=""
               name="mainCategory"
@@ -190,12 +254,29 @@ export const Services = () => {
                 { value: "2", label: "Option 2" },
               ]}
             // error="This field is required."
-            />
+            /> */}
+
+            <select
+              // name=""
+              id=""
+              className="w-60 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
+              value={selectedCategory}
+              onChange={handleCategoryChange} // Call on change
+
+            >
+              <option value="" disabled>Main Category</option>
+
+              {categoriesData.map((category) => (
+                <option key={category.category_id} value={category.category_id}>
+                  {category.category_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Sub Category */}
           <div>
-            <SelectField
+            {/* <SelectField
               // onChange={openStylistPopup}
               label=""
               name="subCategory"
@@ -207,7 +288,25 @@ export const Services = () => {
                 { value: "2", label: "Option 2" },
               ]}
             // error="This field is required."
-            />
+            /> */}
+
+            <select
+              // name="subCategory"
+              id="subCategory"
+              className="w-72 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
+              value={selectedSubCategory}
+            // onChange={handleCheckboxList} // Call on change
+            >
+              <option value="" disabled>
+                {selectedCategory ? "Select Sub Category" : "Please select a category first"}
+              </option>
+
+              {subCategoriesData.map((subCategory) => (
+                <option key={subCategory.subcategory_id} value={subCategory.subcategory_id}>
+                  {subCategory.subcategory_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Add Service */}
@@ -221,6 +320,7 @@ export const Services = () => {
             </div>
 
             <Button
+              onClick={openAddServicePopup}
               buttonType="button"
               buttonTitle="Add Services"
               className="bg-mindfulBlue text-mindfulWhite pl-2 cursor-pointer group-hover:bg-mindfulWhite group-hover:text-mindfulBlue"
@@ -303,6 +403,7 @@ export const Services = () => {
       {/* {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />} */}
       {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />}
 
+      {showAddServicePopup && <AddServicePopup closePopup={closeAddServicePopup} />}
 
       {showDeleteServicePopup && <DeleteServicesPopup
         closePopup={closeDeleteServicePopup}

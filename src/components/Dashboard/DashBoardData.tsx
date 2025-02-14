@@ -36,6 +36,7 @@ interface DashBoardDataProps {
     branch_city: string;
     stylist_name: string;
     stylist_id: string;
+    provider_name: string;
 }
 
 interface Services {
@@ -214,15 +215,16 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                         <table className="w-full border-[1px] border-mindfulGreyTypeTwo rounded-lg px-2 py-2">
                             <thead className="bg-mindfulLightgrey border-b-[1px] border-mindfulGreyTypeTwo">
                                 <tr className="">
-                                    <th className="w- text-start px-2 py-3">Booking ID</th>
-                                    <th className="w- px-2 py-3">Date</th>
-                                    <th className="w- px-2 py-3">Time</th>
-                                    <th className="w- px-2 py-3">Branch</th>
-                                    <th className="w- text-start px-2 py-3">Cust. Name</th>
-                                    <th className="w- text-start px-2 py-3">Cust. Mobile</th>
-                                    <th className="w- text-start px-2 py-3">Service</th>
-                                    <th className="w- text-start px-2 py-3">Assign Stylist</th>
-                                    {/* <th className="w- text-start px-2 py-3">Action</th> */}
+                                    <th className="text-start px-2 py-3">Booking ID</th>
+                                    <th className="text-start px-2 py-3">Date</th>
+                                    <th className="text-start px-2 py-3">Time</th>
+                                    <th className="text-start px-2 py-3">Salon / Specialist</th>
+                                    <th className="text-start px-2 py-3">Branch</th>
+                                    <th className="text-start px-2 py-3">Cust. Name</th>
+                                    <th className="text-start px-2 py-3">Cust. Mobile</th>
+                                    <th className="text-start px-2 py-3">Service</th>
+                                    <th className="text-start px-2 py-3">Assign Stylist</th>
+                                    {/* <th className="text-start px-2 py-3">Action</th> */}
                                 </tr>
                             </thead>
 
@@ -235,13 +237,13 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                 {/* Content & Checkbox */}
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={7} className="text-center py-5">
+                                        <td colSpan={9} className="text-center py-5">
                                             Loading...
                                         </td>
                                     </tr>
                                 ) : error ? (
                                     <tr>
-                                        <td colSpan={7} className="text-center py-5">
+                                        <td colSpan={9} className="text-center py-5">
                                             Error: {error}
                                         </td>
                                     </tr>
@@ -251,6 +253,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                             <td className="px-2 py-5">{data.appointment_id}</td>
                                             <td className="text-start px-2 py-5">{data.appointment_date}</td>
                                             <td className="text-start px-2 py-5">{data.appointment_time}</td>
+                                            <td className="text-start px-2 py-5">{data.provider_name}</td>
                                             <td className="text-start px-2 py-5">{data.branch_city}</td>
                                             <td className="text-start px-2 py-5">{data.user_name}</td>
                                             <td className="text-start px-2 py-5">{data.user_phone}</td>
@@ -301,7 +304,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                         </tr>
                                     ))) : (
                                     <tr>
-                                        <td colSpan={7} className="text-gray-500 text-center px-2 py-5">
+                                        <td colSpan={9} className="text-gray-500 text-center px-2 py-5">
                                             No Active Users Data available
                                         </td>
                                     </tr>

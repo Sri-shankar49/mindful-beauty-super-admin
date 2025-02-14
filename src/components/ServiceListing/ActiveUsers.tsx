@@ -6,30 +6,33 @@ import { Pagination } from "../../common/Pagination";
 import { EditServicePopup } from "./AddServices/EditServicePopup";
 import { fetchProvidersList, pendingAction } from "../../api/apiConfig";
 import { IoClose } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchActiveUserList, setCurrentPage, setError, setLoading } from "../../redux/activeUserSlice";
 
 // Proptypes frpm API
-interface ActiveUsersProps {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    salon_id: number;
-    salon_name: string;
-    email: string;
-    mobile: string;
-    owner_name: string | null;
-    location: string | null;
-}
+// interface ActiveUsersProps {
+//     count: number;
+//     next: string | null;
+//     previous: string | null;
+//     salon_id: number;
+//     salon_name: string;
+//     email: string;
+//     mobile: string;
+//     owner_name: string | null;
+//     location: string | null;
+// }
 
 export const ActiveUsers = () => {
 
-    const [activeUsersData, setActiveUsersData] = useState<ActiveUsersProps[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    // const [activeUsersData, setActiveUsersData] = useState<ActiveUsersProps[]>([]);
+    // const [loading, setLoading] = useState<boolean>(false);
+    // const [error, setError] = useState<string | null>(null);
 
-    const [totalItems, setTotalItems] = useState(0);
+    // const [totalItems, setTotalItems] = useState(0);
 
     // Pagination state
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    // const [currentPage, setCurrentPage] = useState<number>(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
     const [showEditServicePopup, setShowEditServicePopup] = useState(false);
@@ -43,38 +46,56 @@ export const ActiveUsers = () => {
     }
 
     // Fetching data from API
+    // useEffect(() => {
+    //     const fetchActiveUsersData = async () => {
+    //         setLoading(true);
+
+    //         try {
+    //             const response = await fetchProvidersList("Active", currentPage);
+
+    //             setActiveUsersData(response.results.data);
+    //             setTotalItems(response.count);
+
+    //             console.log("Active Users Data log:", response);
+
+    //             console.log("Fetched Active Users List pagination count data log :", response.count);
+
+    //         } catch (error: any) {
+    //             setError(error.message || "Unable to fetch active users data. Please try again later.");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+    //     fetchActiveUsersData();
+    // }, [currentPage, itemsPerPage]);
+
+
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    // Redux state
+    const { activeUserData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.activeUser);
+
+    // Fetch active Users list on mount and when dependencies change
     useEffect(() => {
-        const fetchActiveUsersData = async () => {
-            setLoading(true);
-
-            try {
-                const response = await fetchProvidersList("Active", currentPage);
-
-                setActiveUsersData(response.results.data);
-                setTotalItems(response.count);
-
-                console.log("Active Users Data log:", response);
-
-                console.log("Fetched Active Users List pagination count data log :", response.count);
-
-            } catch (error: any) {
-                setError(error.message || "Unable to fetch active users data. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchActiveUsersData();
-    }, [currentPage, itemsPerPage]);
+        dispatch(setLoading(true)); // Ensure UI updates before fetching
+        dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage })).catch((error) => {
+            console.error("Error fetching active users list:", error);
+            dispatch(setError(error.message))
+        });
+    }, [dispatch, searchQuery, currentPage]);
 
 
     const handlePageChange = (page: number) => {
-        setCurrentPage(page);
+        // setCurrentPage(page);
+        dispatch(setCurrentPage(page));
     };
 
     const handleItemsPerPageChange = (items: number) => {
         setItemsPerPage(items);
         setCurrentPage(1); // Reset to the first page when items per page changes
     };
+
 
 
     // Function for handling the pending requests
@@ -97,17 +118,31 @@ export const ActiveUsers = () => {
     }
 
     // Refreshing the data on handleActionSubmit
+    // const refreshedData = async () => {
+    //     try {
+    //         const response = await fetchProvidersList("Active", currentPage);
+    //         setActiveUsersData(response.results.data);
+    //         setTotalItems(response.count);
+
+    //         console.log("Active Users list data refreshed:", response);
+    //     } catch (error: any) {
+    //         console.error("Error refreshing active users data:", error.message);
+    //     }
+    // }
+
+    // Refresh function call according to Redux state
     const refreshedData = async () => {
         try {
-            const response = await fetchProvidersList("Active", currentPage);
-            setActiveUsersData(response.results.data);
-            setTotalItems(response.count);
+            dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-            console.log("Active Users list data refreshed:", response);
+            await dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage }));
+
+            console.log("Active Users list data refreshed.");
         } catch (error: any) {
             console.error("Error refreshing active users data:", error.message);
+            dispatch(setError(error.message)); // ✅ Handle errors correctly
         }
-    }
+    };
 
 
 
@@ -148,8 +183,8 @@ export const ActiveUsers = () => {
                                         Error: {error}
                                     </td>
                                 </tr>
-                            ) : activeUsersData.length > 0 ? (
-                                activeUsersData.map((activeData) => (
+                            ) : activeUserData.length > 0 ? (
+                                activeUserData.map((activeData) => (
 
                                     <tr key={activeData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">
                                         <td className="text-start px-2 py-5">{activeData.salon_id}</td>
