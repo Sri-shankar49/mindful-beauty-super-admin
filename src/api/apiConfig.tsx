@@ -86,6 +86,38 @@ export const fetchProvidersList = async (status: string, searchQuery: string, pa
 
 
 
+
+
+
+// Service Provider Page -- --> Active, Pending and Inactive
+export const deleteProvider = async (providerID: number) => {
+  try {
+    // Using axios.delete is more semantically correct for deletion,
+    // but if your backend expects a GET request for deletion, you can change it accordingly.
+    const response = await apiAxios.delete('/provider-api/delete-service-provider/', {
+      params: {
+        provider_id: providerID,
+      },
+    });
+
+    console.log("Delete Provider Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to delete the provider");
+    }
+
+    return response.data; // Expected to be: { "status": "success", "message": "Category deleted successfully" }
+
+  } catch (error: any) {
+    console.error("Error deleting the provider:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error deleting provider");
+  }
+};
+
+
+
+
+
 // Service Provider Page --> Pending Requests
 export const pendingAction = async (providerID: number, action: string) => {
   try {
@@ -143,9 +175,13 @@ export const fetchDashboardList = async () => {
 
 // Service Management Page -- --> Categories Tab
 // GET Method from the API
-export const fetchCategoriesList = async () => {
+export const fetchCategoriesList = async (pageNumber: number) => {
   try {
-    const response = await apiAxios.get('/provider-api/category/');
+    const response = await apiAxios.get("/provider-api/category/", {
+      params: {
+        page: pageNumber,
+      }
+    });
 
     console.log("Category List Response:", response.data);
 
@@ -297,11 +333,13 @@ export const deleteSubcategory = async (subcategoryID: number) => {
 
 
 // Service Management Page -- --> Services Tab
-export const fetchServicesList = async (pageNumber: number) => {
+export const fetchServicesList = async (pageNumber: number, category: number, subcategory: number) => {
   try {
     const response = await apiAxios.get('/provider-api/get_services/', {
       params: {
         page: pageNumber,
+        category: category,
+        subcategory: subcategory,
       }
     });
 
@@ -400,6 +438,44 @@ export const addService = async (
     throw new Error(error.response?.data?.message || "Error adding service");
   }
 };
+
+
+
+// Service Management Page -- --> Services Tab
+export const editService = async (
+  serviceID: number,
+  serviceName: string,
+  category: number,
+  subcategory: number,
+  price: string,
+  description: string,
+  serviceTime: string
+) => {
+  try {
+    const response = await apiAxios.put(`/provider-api/edit_service/`, {
+      service_id: serviceID,
+      service_name: serviceName,
+      category: category,
+      subcategory: subcategory,
+      price: price,
+      description: description,
+      service_time: serviceTime,
+    });
+
+    console.log("Edit Service Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to edit service");
+    }
+
+    return response.data;
+
+  } catch (error: any) {
+    console.error("Error editing service:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error editing service");
+  }
+};
+
 
 
 

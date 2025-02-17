@@ -1,14 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { IoCloseCircle } from "react-icons/io5";
 import { Button } from "../../../common/Button";
 import { InputField } from "../../../common/InputField";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
-import { addService, categories, subCategories } from "../../../api/apiConfig";
+import { categories, editService, subCategories } from '../../../api/apiConfig';
 
-interface AddServicePopupProps {
+interface EditServicePopupProps {
     closePopup: () => void;
+    editServiceData: {
+        count: number;
+        next: string | null;
+        previous: string | null;
+        service_id: number;
+        service_name: string;
+        category: number;
+        category_name: string;
+        subcategory: number;
+        subcategory_name: string;
+        price: string;
+        status: string;
+        sku_value: string;
+        description: string;
+        service_time: string;
+        is_deleted: boolean;
+    }
     refreshData: () => void;
 }
 
@@ -26,41 +43,37 @@ interface SubCategoriesDataProps {
     status: string;
 }
 
-const addServiceSchema = zod.object({
+const editServiceSchema = zod.object({
     category: zod.string().min(1, "Category is required"),
     subcategory: zod.string().min(1, "Subcategory is required"),
     services: zod.string().min(1, "Service name is required"),
     price: zod.string().min(1, "Price is required"),
     duration: zod.string().min(1, "Duration is required"),
+    description: zod.string().min(1, "Description is required"),
 });
 
-type AddServiceFormData = zod.infer<typeof addServiceSchema>;
+type EditServiceFormData = zod.infer<typeof editServiceSchema>;
 
-export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, refreshData }) => {
+export const EditServicePopup: React.FC<EditServicePopupProps> = ({ closePopup, editServiceData, refreshData }) => {
 
     const [categoryList, setCategoryList] = useState<categoriesDataProps[]>([]);
     const [subcategoryList, setSubCategoryList] = useState<SubCategoriesDataProps[]>([]);
-
-    const [selectedCategory, setSelectedCategory] = useState("");
-
-
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(editServiceData.category);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const [submitting, setSubmitting] = useState<boolean>(false); // For form submission
-
     // ✅ React Hook Form setup with Zod validation
-    const { register, handleSubmit, formState: { errors }, reset, setValue, clearErrors } = useForm<AddServiceFormData>({
-        resolver: zodResolver(addServiceSchema),
+    const { register, handleSubmit, formState: { errors } } = useForm<EditServiceFormData>({
+        resolver: zodResolver(editServiceSchema),
         defaultValues: {
-            category: "",       // Ensures fields start empty
-            subcategory: "",
-            services: "",
-            price: "",
-            duration: "",
+            category: String(editServiceData.category),
+            subcategory: String(editServiceData.subcategory),
+            services: editServiceData.service_name,
+            price: editServiceData.price,
+            duration: editServiceData.service_time,
+            description: editServiceData.description,
         },
     });
-
 
     // Fetch categories when the popup opens
     useEffect(() => {
@@ -88,63 +101,52 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
     }, []);
 
 
-    // Function to handle category change and fetch subcategories
-    const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedCategoryID = event.target.value; // Get the selected categoryId
-        setSelectedCategory(selectedCategoryID); // Update state
+    // Funtion handler for loading the Sub Categories on initial Load
+    useEffect(() => {
+        if (selectedCategory) {
+            const fetchSubcategories = async () => {
+                try {
+                    const response = await subCategories(String(selectedCategory));
+                    if (response.status === "success") {
+                        setSubCategoryList(response.data);
+                    } else {
+                        setError("Failed to fetch subcategories.");
+                    }
+                } catch (error: any) {
+                    setError(error.message || "Unable to fetch subcategories.");
+                }
+            };
 
-        // Set value and trigger validation
-        setValue("category", selectedCategoryID, { shouldValidate: true });
-
-        // ✅ Explicitly clear the error
-        clearErrors("category");
-
-        try {
-            const response = await subCategories(selectedCategoryID); // Pass categoryId to API
-
-            setSubCategoryList(response.data); // Update subcategories
-
-            console.log("Sub Category List data log:", response);
-
-        } catch (error: any) {
-            console.error("Error fetching subcategories:", error);
-            setError(error.message || "Unable to fetch Sub Categories List. Please try again later.");
-        } finally {
-            setLoading(false);
+            fetchSubcategories();
         }
-    }
+    }, [selectedCategory]);
 
+    const onSubmit = async (data: EditServiceFormData) => {
+        setLoading(true); // Show loading on submit button only
 
-    const onSubmit = async (data: AddServiceFormData) => {
-        setSubmitting(true); // Show loading on submit button only
-
-        console.log("Add Services Form Data log:", data);
         try {
-            // Since our form doesn't include a description, we pass an empty string.
-            const response = await addService(
-                data.services,              // maps to service_name
-                parseInt(data.category),    // convert string to number for category
-                parseInt(data.subcategory), // convert string to number for subcategory
-                data.price,
-                "Services",                 // description (adjust this if you decide to add a description field)
-                data.duration               // maps to service_time
+            const response = await editService(
+                editServiceData.service_id, // Pass the service_id
+                data.services,              // Pass the updated service name
+                Number(data.category),      // Pass the updated category
+                Number(data.subcategory),   // Pass the updated subcategory
+                data.price,                 // Pass the updated price
+                data.services,              // Pass the updated description
+                data.duration               // Pass the updated service time
             );
 
-            console.log("Service added successfully:", response);
+            console.log("Service updated successfully:", response);
 
             if (response?.status === "success") {
-                reset();            // Reset form after submission
-                closePopup(); // Close the popup on success
-                refreshData();
+                closePopup(); // Close the popup after successful update
+                refreshData(); // Refresh the data
             }
-
+            // Call fetchservices to refresh the service list after the update
         } catch (error: any) {
-            console.error("Error adding service:", error);
-            setError(error.message || "Unable to add Service. Please try again later.");
-
-            // Optionally, handle the error (e.g., display an error message to the user)
+            console.error("Error updating service:", error);
+            setError(error.message || "Unable to update Service. Please try again later.");
         } finally {
-            setSubmitting(false); // Stop button loading state
+            setLoading(false);
         }
     };
 
@@ -157,7 +159,7 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
                         <div className="relative bg-white rounded-[5px] w-7/12 mx-auto px-10 py-10">
                             <div className="relative mb-10">
                                 <h5 className="text-2xl text-mindfulBlack font-semibold">
-                                    Add Service
+                                    Edit Service
                                 </h5>
                                 <div className="absolute inset-x-0 bottom-[-20px] mx-auto bg-mindfulgrey rounded-md w-full h-0.5"></div>
                             </div>
@@ -192,10 +194,12 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
                                                     <select
                                                         id="category"
                                                         // name="category"
-                                                        className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus:outline-none"
+                                                        className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus:outline-none cursor-not-allowed"
                                                         {...register("category")}
-                                                        onChange={handleCategoryChange}
-                                                        value={selectedCategory} // ✅ Ensures it's controlled
+                                                        onChange={(e) => setSelectedCategory(Number(e.target.value))}
+                                                        disabled
+                                                    // onChange={handleCategoryChange}
+                                                    // value={selectedCategory} // ✅ Ensures it's controlled
                                                     >
 
                                                         <option value="" disabled>Select Category</option>
@@ -205,6 +209,7 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
                                                                 {category.category_name}
                                                             </option>
                                                         ))}
+
                                                     </select>
 
                                                     {errors.category && <p className="text-sm text-red-500">{errors.category.message}</p>}
@@ -222,13 +227,16 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
                                                     <select
                                                         id="subcategory"
                                                         // name="subcategory"
-                                                        className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
+                                                        className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none cursor-not-allowed"
                                                         {...register("subcategory")}
+                                                        disabled
                                                     >
 
                                                         <option value="" disabled>
-                                                            {selectedCategory ? "Select Subcategory" : "Please select a category first"}
+                                                            {/* {selectedCategory ? "Select Subcategory" : "Please select a category first"} */}
+                                                            Select Subcategory
                                                         </option>
+
 
                                                         {subcategoryList.map((subcategory) => (
                                                             <option
@@ -267,7 +275,7 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
 
                                             </div>
 
-                                            <div className="flex items-start space-x-5">
+                                            <div className="flex items-start space-x-5 mb-5">
                                                 {/* Category Field - 3/4 Width */}
                                                 <div className="w-3/4">
                                                     <label
@@ -310,6 +318,29 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
                                                     {errors.duration && <p className="text-sm text-red-500">{errors.duration.message}</p>}
                                                 </div>
                                             </div>
+
+                                            {/* Services Field */}
+                                            <div className="mb-5">
+                                                <label
+                                                    htmlFor="services"
+                                                    className="text-md text-mindfulBlack font-semibold mb-1"
+                                                >
+                                                    Description
+                                                </label>
+
+                                                <InputField
+                                                    label=""
+                                                    type="text"
+                                                    // name="services"
+                                                    id="description"
+                                                    placeholder="Enter service name"
+                                                    className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus:outline-none"
+                                                    {...register("description")}
+                                                />
+
+                                                {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
+
+                                            </div>
                                         </div>
 
                                         {/* Error response from the API */}
@@ -330,9 +361,9 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
                                                 <Button
                                                     buttonType="submit"
                                                     // buttonTitle="Save"
-                                                    buttonTitle={submitting ? "Adding..." : "Add Service"}
+                                                    buttonTitle={loading ? "Saving..." : "Save"}
                                                     // className="bg-mindfulBlue text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer"
-                                                    className={`bg-mindfulBlue text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer ${submitting ? 'opacity-50' : ''}`}
+                                                    className={`bg-mindfulBlue text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer ${loading ? 'opacity-50' : ''}`}
                                                 />
                                             </div>
                                         </div>
@@ -344,5 +375,5 @@ export const AddServicePopup: React.FC<AddServicePopupProps> = ({ closePopup, re
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}

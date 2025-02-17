@@ -1,39 +1,48 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '../../../common/Button';
+import { Button } from '../../common/Button';
 import { IoCloseCircle } from 'react-icons/io5';
-import { deleteCategory } from '../../../api/apiConfig';
+import { deleteProvider } from '../../api/apiConfig';
 
-interface DeleteCategoryPopupProps {
-    catID: number; // Pass the selected Category ID
+interface DeleteProviderPopupProps {
     closePopup: () => void;
+    // providerData: number; // Pass the selected Provider ID
+    providerData: {
+        count: number;
+        next: string | null;
+        previous: string | null;
+        salon_id: number;
+        salon_name: string;
+        email: string;
+        mobile: string;
+        owner_name: string | null;
+        location: string | null;
+    };
+    refreshData: () => void;
 }
 
-export const DeleteCategoryPopup: React.FC<DeleteCategoryPopupProps> = ({ closePopup, catID }) => {
+export const DeleteProviderPopup: React.FC<DeleteProviderPopupProps> = ({ closePopup, providerData, refreshData }) => {
 
-    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleCategoryDelete = async () => {
+    const handleProviderDelete = async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const data = await deleteCategory((catID)); // Call API with staffID
-            console.log("Category Data deleted successfully:", data);
+            const data = await deleteProvider((providerData.salon_id)); // Call API with staffID
+            console.log("Provider Data deleted successfully:", data);
 
             // Optionally show a success message or trigger a re-fetch
             // closePopup(); // Close popup after deletion
             if (data?.status === "success") {
                 closePopup(); // Close popup after deletion
-                navigate(0);
-                // refreshData(); // Refresh data after deletion
+                refreshData(); // Refresh data after deletion
             }
 
         } catch (error: any) {
-            setError(error.message || "Failed to delete Catgory. Please try again.");
+            setError(error.message || "Failed to delete Provider. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -50,7 +59,7 @@ export const DeleteCategoryPopup: React.FC<DeleteCategoryPopupProps> = ({ closeP
 
 
                             <div className="relative mb-10">
-                                <h2 className="text-2xl text-mindfulBlack font-semibold">Delete Category</h2>
+                                <h2 className="text-2xl text-mindfulBlack font-semibold">Delete Provider</h2>
                                 <div className="absolute inset-x-0 bottom-[-20px] mx-auto bg-mindfulgrey rounded-md w-full h-0.5">
                                 </div>
                             </div>
@@ -65,7 +74,7 @@ export const DeleteCategoryPopup: React.FC<DeleteCategoryPopupProps> = ({ closeP
 
                             {/* Content */}
                             <div className="text-center">
-                                <p className="text-lg text-mindfulBlack">Are you sure you want to delete this Category?</p>
+                                <p className="text-lg text-mindfulBlack">Are you sure you want to delete this Provider?</p>
 
                                 {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -82,7 +91,7 @@ export const DeleteCategoryPopup: React.FC<DeleteCategoryPopupProps> = ({ closeP
 
                                         {/* Submit Button */}
                                         <Button
-                                            onClick={handleCategoryDelete}
+                                            onClick={handleProviderDelete}
                                             buttonType="submit"
                                             buttonTitle={loading ? "Deleting..." : "Delete"}
                                             disabled={loading}

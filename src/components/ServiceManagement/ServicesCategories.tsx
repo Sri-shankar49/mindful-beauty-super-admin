@@ -10,9 +10,7 @@ export const ServicesCategories = () => {
                 <div className="bg-mindfulWhite px-5 py-5">
 
                     <div>
-                        {/* <NavLink to="ServiceList"> */}
                         <h5 className="text-3xl font-semibold pb-5">Services</h5>
-                        {/* </NavLink> */}
                     </div>
 
                     <div className="border-b-2 border-b-mindfulgrey pb-2">
@@ -43,22 +41,6 @@ export const ServicesCategories = () => {
                                 >
                                     <li>Services</li>
                                 </NavLink>
-
-                                {/* <NavLink
-                                    to="Completed"
-                                    className="active-sub-nav"
-                                    aria-current="page"
-                                >
-                                    <li>Completed</li>
-                                </NavLink> */}
-
-                                {/* <NavLink
-                                    to="Cancelled"
-                                    className="active-sub-nav"
-                                    aria-current="page"
-                                >
-                                    <li>Cancelled</li>
-                                </NavLink> */}
                             </ul>
 
                             <div>
@@ -69,6 +51,7 @@ export const ServicesCategories = () => {
                                             id=""
                                             className=''
                                         /> */}
+                                        
                                     {/* <InputField
                                         label={''}
                                         placeholder="Search"

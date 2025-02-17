@@ -173,7 +173,7 @@ export const Schedule = () => {
                     <td className="text-start px-2 py-5">{schedule.amount}</td>
 
                     <td className="text-start px-2 py-5">
-                      {schedule.status === "Completed" ? (
+                      {schedule.status === "completed" ? (
                         <div>
                           <Button
                             buttonType="button"
@@ -181,7 +181,7 @@ export const Schedule = () => {
                             className="bg-[#e5ffec] text-md text-mindfulGreen font-semibold rounded-sm px-3 py-1"
                           />
                         </div>
-                      ) : schedule.status === "Inprogress" ? (
+                      ) : schedule.status === "inprogress" ? (
                         <div>
                           <Button
                             buttonType="button"
@@ -189,7 +189,7 @@ export const Schedule = () => {
                             className="bg-[#e6f2ff] text-md text-mindfulSecondaryBlue font-semibold rounded-sm px-3 py-1"
                           />
                         </div>
-                      ) : schedule.status === "Schedule" ? (
+                      ) : schedule.status === "schedule" ? (
                         <div>
                           <Button
                             buttonType="button"
@@ -197,7 +197,7 @@ export const Schedule = () => {
                             className="bg-[#fff8e5] text-md text-mindfulYellow font-semibold rounded-sm px-3 py-1"
                           />
                         </div>
-                      ) : schedule.status === "Cancelled" ? (
+                      ) : schedule.status === "cancelled" ? (
                         <div>
                           <Button
                             buttonType="button"

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-// import deleteButton from "../../assets/icons/deleteButton.png"
-// import rectangleBlack from "../../assets/images/rectangleBlack.png"
+// import deleteButton from "../../assets/icons/deleteButton.png";
+// import rectangleBlack from "../../assets/images/rectangleBlack.png";
 // import { Button } from "@/common/Button";
 // import Select, { SingleValue } from 'react-select';
-// import stylist from "../../assets/images/stylist.png"
+// import stylist from "../../assets/images/stylist.png";
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { Button } from "../../common/Button";
-// import { Pagination } from "../../common/Pagination";
+import { Pagination } from "../../common/Pagination";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -14,8 +14,6 @@ import { fetchCategoriesList } from "../../api/apiConfig";
 import { DeleteCategoryPopup } from "./Categories/DeleteCategoryPopup";
 import { AddCategoryPopup } from "./Categories/AddCategoryPopup";
 import { EditCategoryPopup } from "./Categories/EditCategoryPopup";
-// import { SelectField } from "@/common/SelectField";
-// import { Pagination } from "@/common/Pagination";
 
 // Define the type for each option
 // interface StylistOption {
@@ -75,6 +73,11 @@ export const Categories = () => {
   const [showDeleteCategoryPopup, setShowDeleteCategorypopup] = useState(false);
 
 
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // const openStylistPopup = () => {
   //   setShowStylistPopup(true);
@@ -130,10 +133,14 @@ export const Categories = () => {
       setLoading(true);
 
       try {
-        const response = await fetchCategoriesList();
+        const response = await fetchCategoriesList(currentPage);
         setCategoriesData(response.results.data);
 
+        setTotalItems(response.count);
+
         console.log("Categories Data log:", response);
+
+        console.log("Fetched Categories List pagination count data log :", response.count);
 
       } catch (error: any) {
         setError(error.message || "Unable to fetch categories users data. Please try again later.");
@@ -142,14 +149,17 @@ export const Categories = () => {
       }
     }
     fetchCategoriesData();
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
-
-
-
-
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
 
 
   return (
@@ -289,7 +299,13 @@ export const Categories = () => {
 
       {/* Pagination */}
       <div>
-        {/* <Pagination /> */}
+        <Pagination
+          currentPage={currentPage}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div >
   )

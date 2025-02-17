@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { BiEditAlt } from "react-icons/bi";
+// import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
 import { FaCheck } from "react-icons/fa6";
@@ -9,6 +9,7 @@ import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchPendingRequestList, setCurrentPage, setError, setLoading } from "../../redux/pendingRequestSlice";
+import { DeleteProviderPopup } from "./DeleteProviderPopup";
 
 // Proptypes frpm API
 // interface PendingRequestsProps {
@@ -35,6 +36,20 @@ export const PendingRequests = () => {
   // const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+
+  const [showDeleteProviderPopup, setShowDeleteProviderPopup] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<any>(null);
+
+  const openDeleteProviderPopup = (providerDetails: any) => {
+    setSelectedProvider(providerDetails);
+    setShowDeleteProviderPopup(true);
+    console.log("Deleting the Provider Details", providerDetails);
+
+  }
+
+  const closeDeleteProviderPopup = () => {
+    setShowDeleteProviderPopup(false);
+  }
 
   // Fetching data from API
   // useEffect(() => {
@@ -193,13 +208,15 @@ export const PendingRequests = () => {
                             </div>
 
                             {/* Edit Button */}
-                            <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                            {/* <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
                               <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
-                            </div>
+                            </div> */}
 
                             {/* Delete Button */}
                             <div
                               // onClick={openEditService}
+                              title="Delete Provider"
+                              onClick={() => openDeleteProviderPopup(pendingData)}
                               className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
                               <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
                             </div>
@@ -275,6 +292,15 @@ export const PendingRequests = () => {
             </div>
 
             {/* {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />} */}
+
+            {showDeleteProviderPopup && selectedProvider &&
+              <DeleteProviderPopup
+                closePopup={closeDeleteProviderPopup}
+                providerData={selectedProvider}
+                refreshData={refreshedData}
+              />}
+
+
             {/* Pagination */}
             <div>
               <Pagination

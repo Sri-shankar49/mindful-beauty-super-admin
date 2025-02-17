@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { BiEditAlt } from "react-icons/bi";
+// import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Pagination } from "../../common/Pagination";
-import { EditServicePopup } from "./AddServices/EditServicePopup";
+// import { EditServicePopup } from "./AddServices/EditServicePopup";
 import { pendingAction } from "../../api/apiConfig";
 import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchActiveUserList, setCurrentPage, setError, setLoading } from "../../redux/activeUserSlice";
+import { DeleteProviderPopup } from "./DeleteProviderPopup";
 
 // Proptypes frpm API
 // interface ActiveUsersProps {
@@ -35,14 +36,28 @@ export const ActiveUsers = () => {
     // const [currentPage, setCurrentPage] = useState<number>(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
-    const [showEditServicePopup, setShowEditServicePopup] = useState(false);
+    // const [showEditServicePopup, setShowEditServicePopup] = useState(false);
 
-    const openEditService = () => {
-        setShowEditServicePopup(!showEditServicePopup)
+    const [showDeleteProviderPopup, setShowDeleteProviderPopup] = useState(false);
+    const [selectedProvider, setSelectedProvider] = useState<any>(null);
+
+    // const openEditService = () => {
+    //     setShowEditServicePopup(!showEditServicePopup)
+    // }
+
+    // const closeEditService = () => {
+    //     setShowEditServicePopup(false)
+    // }
+
+    const openDeleteProviderPopup = (providerDetails: any) => {
+        setSelectedProvider(providerDetails);
+        setShowDeleteProviderPopup(true);
+        console.log("Deleting the Provider Details", providerDetails);
+
     }
 
-    const closeEditService = () => {
-        setShowEditServicePopup(false)
+    const closeDeleteProviderPopup = () => {
+        setShowDeleteProviderPopup(false);
     }
 
     // Fetching data from API
@@ -203,13 +218,15 @@ export const ActiveUsers = () => {
                                                 </div>
 
                                                 {/* Edit Button */}
-                                                <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                                                {/* <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
                                                     <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
-                                                </div>
+                                                </div> */}
 
                                                 {/* Delete Button */}
                                                 <div
-                                                    onClick={openEditService}
+                                                    // onClick={openEditService}
+                                                    title="Delete Provider"
+                                                    onClick={() => openDeleteProviderPopup(activeData)}
                                                     className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
                                                     <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
                                                 </div>
@@ -279,7 +296,15 @@ export const ActiveUsers = () => {
                     </table>
                 </div>
 
-                {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />}
+                {/* {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />} */}
+
+                {showDeleteProviderPopup && selectedProvider &&
+                    <DeleteProviderPopup
+                        closePopup={closeDeleteProviderPopup}
+                        providerData={selectedProvider}
+                        refreshData={refreshedData}
+                    />}
+
                 {/* Pagination */}
                 <div>
                     <Pagination

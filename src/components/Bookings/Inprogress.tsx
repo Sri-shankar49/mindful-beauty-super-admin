@@ -171,7 +171,7 @@ export const Inprogress = () => {
                     <td className="text-start px-2 py-5">{inprogress.amount}</td>
 
                     <td className="text-start px-2 py-5">
-                      {inprogress.status === "Completed" ? (
+                      {inprogress.status === "completed" ? (
                         <div>
                           <Button
                             buttonType="button"
@@ -179,7 +179,7 @@ export const Inprogress = () => {
                             className="bg-[#e5ffec] text-md text-mindfulGreen font-semibold rounded-sm px-3 py-1"
                           />
                         </div>
-                      ) : inprogress.status === "Inprogress" ? (
+                      ) : inprogress.status === "inprogress" ? (
                         <div>
                           <Button
                             buttonType="button"
@@ -187,7 +187,7 @@ export const Inprogress = () => {
                             className="bg-[#e6f2ff] text-md text-mindfulSecondaryBlue font-semibold rounded-sm px-3 py-1"
                           />
                         </div>
-                      ) : inprogress.status === "Schedule" ? (
+                      ) : inprogress.status === "schedule" ? (
                         <div>
                           <Button
                             buttonType="button"
@@ -195,7 +195,7 @@ export const Inprogress = () => {
                             className="bg-[#fff8e5] text-md text-mindfulYellow font-semibold rounded-sm px-3 py-1"
                           />
                         </div>
-                      ) : inprogress.status === "Cancelled" ? (
+                      ) : inprogress.status === "cancelled" ? (
                         <div>
                           <Button
                             buttonType="button"

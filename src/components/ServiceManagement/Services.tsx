@@ -13,6 +13,7 @@ import { Button } from "../../common/Button";
 import { categories, fetchServicesList, subCategories } from "../../api/apiConfig";
 import { AddServicePopup } from "./Services/AddServicePopup";
 import { DeleteServicesPopup } from "./Services/DeleteServicesPopup";
+import { EditServicePopup } from "./Services/EditServicePopup";
 // import { SelectField } from "@/common/SelectField";
 // import { Pagination } from "@/common/Pagination";
 
@@ -91,7 +92,6 @@ export const Services = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  console.log(setSelectedSubCategory, "Just logging");
 
 
 
@@ -111,6 +111,9 @@ export const Services = () => {
 
 
   const [showAddServicePopup, setShowAddServicepopup] = useState(false);
+  const [showEditServicePopup, setShowEditServicepopup] = useState(false);
+  const [selectedService, setSelectedService] = useState<any>(null);
+
 
   const [selectedServiceID, setSelectedServiceID] = useState<number | null>(null);
   const [showDeleteServicePopup, setShowDeleteServicepopup] = useState(false);
@@ -132,6 +135,16 @@ export const Services = () => {
 
   const closeAddServicePopup = () => {
     setShowAddServicepopup(false);
+  }
+
+  const openEditServicePopup = (service: any) => {
+    setShowEditServicepopup(true);
+    setSelectedService(service);
+    console.log("Edit the selected service with ID:", service);
+  }
+
+  const closeEditServicePopup = () => {
+    setShowEditServicepopup(false);
   }
 
 
@@ -167,12 +180,15 @@ export const Services = () => {
   // }
 
 
+
+
+  // Function call for loading the data initially
   useEffect(() => {
     const fetchServicesData = async () => {
       setLoading(true);
 
       try {
-        const response = await fetchServicesList(currentPage);
+        const response = await fetchServicesList(currentPage, 0, 0);
 
         const loadCategoriesData = await categories();
 
@@ -202,6 +218,7 @@ export const Services = () => {
   const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategoryID = event.target.value; // Get the selected categoryId
     setSelectedCategory(selectedCategoryID); // Update state
+    setSelectedSubCategory(""); // Reset subcategory when category changes
 
     try {
       const loadSubCategoriesData = await subCategories(selectedCategoryID); // Pass categoryId to API
@@ -218,6 +235,50 @@ export const Services = () => {
   }
 
 
+  const handleSubCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSubCategory(event.target.value);
+  };
+
+
+
+  // Function after handling the Category & Sub Category
+  useEffect(() => {
+    const fetchFilteredData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await fetchServicesList(currentPage, Number(selectedCategory), Number(selectedSubCategory));
+
+        const loadCategoriesData = await categories();
+
+        setServicesData(response.results.data);
+
+        setTotalItems(response.count);
+
+        setcategoriesData(loadCategoriesData.data)
+
+        console.log("Services List Data log:", response);
+
+        console.log("Fetched Services List pagination count data log :", response.count);
+
+        console.log("Categories List Data log:", loadCategoriesData);
+
+      } catch (error: any) {
+        setError(error.message || "Unable to fetch Services data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Fetch only if a category is selected
+    if (selectedCategory || selectedSubCategory) {
+      fetchFilteredData();
+    }
+
+    // }, [currentPage, itemsPerPage]);
+  }, [selectedCategory, selectedSubCategory]);
+
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -226,6 +287,20 @@ export const Services = () => {
     setItemsPerPage(items);
     setCurrentPage(1); // Reset to the first page when items per page changes
   };
+
+  // Refreshing the data on handleActionSubmit
+  const refreshedData = async () => {
+    try {
+      const response = await fetchServicesList(currentPage, Number(selectedCategory), Number(selectedSubCategory));
+      setServicesData(response.results.data);
+
+      setTotalItems(response.count);
+
+      console.log("Services List Data refreshed:", response);
+    } catch (error: any) {
+      console.error("Error refreshing services list data:", error.message);
+    }
+  }
 
 
   return (
@@ -295,7 +370,7 @@ export const Services = () => {
               id="subCategory"
               className="w-72 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
               value={selectedSubCategory}
-            // onChange={handleCheckboxList} // Call on change
+              onChange={handleSubCategoryChange}
             >
               <option value="" disabled>
                 {selectedCategory ? "Select Sub Category" : "Please select a category first"}
@@ -310,8 +385,8 @@ export const Services = () => {
           </div>
 
           {/* Add Service */}
-          {/* <Link to="/ServiceListing/PackagesList/AddPackages"> */}
           <div
+            onClick={openAddServicePopup}
             // onClick={openBranchPopup}
             className="w-fit flex items-center bg-mindfulBlue border-[1px] border-mindfulBlue rounded-[5px] px-3 py-1.5 cursor-pointer hover:bg-mindfulWhite hover:border-mindfulBlue group"
           >
@@ -320,13 +395,11 @@ export const Services = () => {
             </div>
 
             <Button
-              onClick={openAddServicePopup}
               buttonType="button"
               buttonTitle="Add Services"
               className="bg-mindfulBlue text-mindfulWhite pl-2 cursor-pointer group-hover:bg-mindfulWhite group-hover:text-mindfulBlue"
             />
           </div>
-          {/* </Link> */}
         </div>
 
         <div className="py-5">
@@ -361,8 +434,8 @@ export const Services = () => {
                 </tr>
               ) : servicesData?.length > 0 ? ( // ✅ Added optional chaining (?.)
                 servicesData.map((service) => (
-                  <tr className="border-b-2 border-mindfulGreyTypeTwo">
-                    <td className="text-start px-2 py-5">{service.service_id}</td>
+                  <tr key={service.service_id} className="border-b-2 border-mindfulGreyTypeTwo">
+                    <td className="text-start px-2 py-5">{service.sku_value}</td>
                     <td className="text-start px-2 py-5">{service.service_name}</td>
                     <td className="text-start px-2 py-5">{service.category_name}</td>
                     <td className="text-start px-2 py-5">{service.subcategory_name}</td>
@@ -373,7 +446,10 @@ export const Services = () => {
                       <div className="flex items-center space-x-2">
 
                         {/* Edit Button */}
-                        <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                        <div
+                          onClick={() => openEditServicePopup(service)}
+                          className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200"
+                        >
                           <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                         </div>
 
@@ -403,7 +479,14 @@ export const Services = () => {
       {/* {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />} */}
       {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />}
 
-      {showAddServicePopup && <AddServicePopup closePopup={closeAddServicePopup} />}
+      {showAddServicePopup && <AddServicePopup closePopup={closeAddServicePopup} refreshData={refreshedData} />}
+
+      {showEditServicePopup && selectedService &&
+        <EditServicePopup
+          closePopup={closeEditServicePopup}
+          editServiceData={selectedService}
+          refreshData={refreshedData}
+        />}
 
       {showDeleteServicePopup && <DeleteServicesPopup
         closePopup={closeDeleteServicePopup}

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 // import stylist from "../../assets/images/stylist.png"
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 // import { SelectField } from "@/common/SelectField";
-// import { Pagination } from "../../common/Pagination";
+import { Pagination } from "../../common/Pagination";
 import { BiEditAlt } from "react-icons/bi";
 // import { RiDeleteBinLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
@@ -67,6 +67,12 @@ export const Subcategories = () => {
   const [error, setError] = useState<string | null>(null);
 
 
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   // State declaration for Stylist Popup
   const [showStylistPopup, setShowStylistPopup] = useState(false);
 
@@ -108,7 +114,11 @@ export const Subcategories = () => {
         const response = await fetchSubcategoriesList();
         setSubcategoriesData(response.results.data);
 
+        setTotalItems(response.count);
+
         console.log("Sub categories Data log:", response);
+
+        console.log("Fetched Sub Categories List pagination count data log :", response.count);
 
       } catch (error: any) {
         setError(error.message || "Unable to fetch Sub categories users data. Please try again later.");
@@ -117,8 +127,17 @@ export const Subcategories = () => {
       }
     }
     fetchSubcategoriesData();
-  }, []);
+  }, [currentPage, itemsPerPage ]);
 
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
 
   return (
     <div>
@@ -234,7 +253,13 @@ export const Subcategories = () => {
 
       {/* Pagination */}
       <div>
-        {/* <Pagination /> */}
+        <Pagination
+          currentPage={currentPage}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div>
   )

@@ -16,7 +16,7 @@ export const DeleteServicesPopup: React.FC<DeleteServicesPopupProps> = ({ closeP
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleStaffDelete = async () => {
+    const handleServiceDelete = async () => {
         setLoading(true);
         setError(null);
 
@@ -82,7 +82,7 @@ export const DeleteServicesPopup: React.FC<DeleteServicesPopupProps> = ({ closeP
 
                                         {/* Submit Button */}
                                         <Button
-                                            onClick={handleStaffDelete}
+                                            onClick={handleServiceDelete}
                                             buttonType="submit"
                                             buttonTitle={loading ? "Deleting..." : "Delete"}
                                             disabled={loading}
