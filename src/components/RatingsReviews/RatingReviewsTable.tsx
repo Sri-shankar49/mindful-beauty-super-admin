@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 // import { InputField } from '@/common/InputField'
-import { MdSearch } from 'react-icons/md'
+// import { MdSearch } from 'react-icons/md'
 import { FaSort } from "react-icons/fa";
 import { Pagination } from '../../common/Pagination';
 import { InputField } from '../../common/InputField';
@@ -108,15 +107,13 @@ export const RatingReviewsTable = () => {
             <div className="pb-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <NavLink to="ServiceList">
-                    <h5 className="text-3xl font-semibold">Ratings & Reviews</h5>
-                  </NavLink>
+                  <h5 className="text-3xl font-semibold">Ratings & Reviews</h5>
                 </div>
 
                 {/* Select, Add Service & Search */}
                 <div className="">
                   {/* Search Field */}
-                  <div className="flex items-center relative">
+                  <div className="flex items-center">
                     <InputField
                       label={''}
                       placeholder="Search"
@@ -124,7 +121,7 @@ export const RatingReviewsTable = () => {
                       onChange={handleSearch}
                       className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
                     />
-                    <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" />
+                    {/* <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" /> */}
                   </div>
                 </div>
 

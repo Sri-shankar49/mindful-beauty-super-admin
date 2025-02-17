@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FaBell } from "react-icons/fa6";
 import { FaUserLarge } from "react-icons/fa6";
 import mindfulBeautyLogoSmall from "../assets/icons/mindfulBeautyLogoSmall.png";
@@ -6,6 +7,27 @@ import { Link, NavLink } from "react-router-dom";
 import { FiMoreVertical } from "react-icons/fi";
 
 export const Header = () => {
+
+    const [profileHover, setProfileHover] = useState(false);
+    const [moreHover, setMoreHover] = useState(false);
+
+
+    const handleMouseEnter = () => {
+        setProfileHover(true);
+    };
+
+    const handleMouseLeave = () => {
+        setProfileHover(false);
+    }
+
+    const handleMoreMouseEnter = () => {
+        setMoreHover(true);
+    };
+
+    const handleMoreMouseLeave = () => {
+        setMoreHover(false);
+    };
+
     return (
         <header>
 
@@ -110,21 +132,88 @@ export const Header = () => {
                         </nav>
                     </div>
 
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-5">
 
                         {/* Notification Bell Icon */}
-                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
+                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-12 h-12 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
                             <FaBell className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
                         </div>
 
                         {/* User Profile Icon */}
-                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
-                            <FaUserLarge className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
+                        <div
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            className="cursor-pointer"
+                        >
+                            <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-12 h-12 flex items-center justify-center hover:bg-white transition-colors duration-200">
+                                <FaUserLarge className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
+
+                                <div>
+                                    {profileHover && (
+                                        <div className="absolute bottom-[-7.7rem] right-10 mt-2 w-40 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
+                                            <Link
+                                                to="/MyAccount"
+                                                aria-current="page"
+                                            // className="active-nav"
+                                            >
+                                                <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
+                                                    My Profile
+                                                </div>
+                                            </Link>
+
+                                            {/* <Link to=""> */}
+                                            <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
+                                                Password Reset
+                                            </div>
+                                            {/* </Link> */}
+
+                                            {/* <Link to=""> */}
+                                            <div
+                                                // onClick={handleLogout}
+                                                className="px-4 py-3 text-mindfulBlack hover:bg-gray-100"
+                                            >
+                                                Sign Out
+                                            </div>
+                                            {/* </Link> */}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                         {/* More Details Icon */}
-                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
-                            <FiMoreVertical className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
+                        <div
+                            onMouseEnter={handleMoreMouseEnter}
+                            onMouseLeave={handleMoreMouseLeave}
+                            className="cursor-pointer"
+                        >
+                            <div
+                                className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-12 h-12 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
+                                <FiMoreVertical className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
+
+                                <div>
+                                    {moreHover && (
+                                        <div className="absolute bottom-[-4.7rem] right-10 mt-2 w-48 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
+                                            <Link
+                                                to="/MyAccount"
+                                                aria-current="page"
+                                            // className="active-nav"
+                                            >
+                                                <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
+                                                    Credit Management
+                                                </div>
+                                            </Link>
+
+                                            {/* <Link to=""> */}
+                                            <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
+                                                Coupons
+                                            </div>
+                                            {/* </Link> */}
+
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                     </div>

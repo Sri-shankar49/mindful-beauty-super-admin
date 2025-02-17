@@ -690,6 +690,47 @@ export const salesTransactionsList = async (pageNumber: number) => {
 }
 
 
+
+
+// Sales & Transactions Page - Sales & Transactions List includes Search Functionality
+// GET Method from the API
+export const fetchSalesTransactionsByFilters = async (
+  payID: string,
+  providerName: string,
+  providerMobile: string,
+  startDate: string,
+  endDate: string,
+) => {
+  try {
+    const response = await apiAxios.get(`/provider-api/get-sales-transactions/`, {
+      params: {
+        pay_id: payID,
+        provider_name: providerName,
+        mobile_number: providerMobile,
+        start_date: startDate,
+        end_date: endDate,
+      },
+    });
+
+    console.log("Sales Transactions by Filters response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch sales transactions by filters");
+    }
+
+    return response.data;
+
+  } catch (error: any) {
+    console.error("Error fetching sales transactions by filters:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch sales transactions by filters. Please try again later.");
+  }
+};
+
+
+
+
+
+
 // Ratings & Reviews Page
 // GET Method from the API
 export const reviewsList = async (searchQuery: string, pageNumber: number) => {

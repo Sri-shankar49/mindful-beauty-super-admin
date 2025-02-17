@@ -15,7 +15,7 @@ import { InputField } from "../../common/InputField";
 import { Button } from "../../common/Button";
 import { Pagination } from "../../common/Pagination";
 import { InvoicePopup } from "../Bookings/Completed/InvoicePopup";
-import { salesTransactionsList } from "../../api/apiConfig";
+import { fetchSalesTransactionsByFilters, salesTransactionsList } from "../../api/apiConfig";
 
 // Proptypes from API
 interface SalesTransactionProps {
@@ -53,6 +53,14 @@ export const SalesTransactionsTable = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
 
+    // Add state variables to hold the input values
+    const [orderID, setOrderID] = useState<string>("");
+    const [providerName, setProviderName] = useState<string>("");
+    const [providerMobile, setProviderMobile] = useState<string>("");
+    const [startDate, setStartDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
+
+
     // State Declaration for Invoice Popup
     const [showInvoicePopup, setShowInvoicePopup] = useState(false);
 
@@ -65,7 +73,7 @@ export const SalesTransactionsTable = () => {
     }
 
 
-
+    // Function Handler for loading data in initial Load
     useEffect(() => {
         // Fetch data from API
         const fetchSalesTransactionsListData = async () => {
@@ -100,6 +108,45 @@ export const SalesTransactionsTable = () => {
     };
 
 
+    // Add the handleOnSubmit method
+    const onSubmit = async () => {
+        try {
+            setLoading(true);
+            const response = await fetchSalesTransactionsByFilters(
+                orderID,
+                providerName,
+                providerMobile,
+                startDate,
+                endDate,
+            );
+            console.log("Filtered Sales Transactions:", response);
+            setSalesTransactionsData(response.results || []);
+        } catch (error: any) {
+            setError(error.message || "Failed to fetch filtered sales transactions.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // Function Handler for clearing the search input fields
+    const handleClearFields = async () => {
+        setOrderID("");
+        setProviderName("");
+        setProviderMobile("");
+        setStartDate("");
+        setEndDate("");
+        // Fetch default sales transactions without filters
+        try {
+            setLoading(true);
+            const response = await salesTransactionsList(currentPage);
+            setSalesTransactionsData(response.results || []);
+        } catch (error: any) {
+            setError(error.message || "Failed to fetch default sales transactions.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
 
     return (
@@ -130,38 +177,44 @@ export const SalesTransactionsTable = () => {
                                                 name="orderID"
                                                 id="orderID"
                                                 className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
+                                                value={orderID}
+                                                onChange={(e) => setOrderID(e.target.value)}
                                             />
                                         </div>
 
-                                        {/* Customer Name / Mobile */}
+                                        {/* Salon / Freelancer Name */}
                                         <div>
                                             <label
-                                                htmlFor="customerMobile"
+                                                htmlFor="salonFreelancerName"
                                                 className="text-lg text-mindfulBlack font-semibold">
-                                                Customer Name / Mobile
+                                                Salon / Freelancer Name
                                             </label>
 
                                             <InputField
                                                 label=""
-                                                id="customerMobile"
-                                                name="customerMobile"
+                                                id="salonFreelancerName"
+                                                name="salonFreelancerName"
                                                 className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
+                                                value={providerName}
+                                                onChange={(e) => setProviderName(e.target.value)}
                                             />
                                         </div>
 
-                                        {/* Provider Name / Mobile */}
+                                        {/* Mobile Number */}
                                         <div>
                                             <label
-                                                htmlFor="providerName"
+                                                htmlFor="providerMobile"
                                                 className="text-lg text-mindfulBlack font-semibold">
-                                                Provider Name / Mobile
+                                                Mobile Number
                                             </label>
 
                                             <InputField
                                                 label=""
-                                                id="providerName"
-                                                name="providerName"
+                                                id="providerMobile"
+                                                name="providerMobile"
                                                 className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
+                                                value={providerMobile}
+                                                onChange={(e) => setProviderMobile(e.target.value)}
                                             />
                                         </div>
 
@@ -173,15 +226,18 @@ export const SalesTransactionsTable = () => {
                                                 Start Date
                                             </label>
 
-                                            <div className="relative">
-                                                <InputField
-                                                    label=""
-                                                    id="startDate"
-                                                    name="startDate"
-                                                    className="w-40 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
-                                                />
-                                                <BiCalendar className="text-[20px] text-mindfulBlack absolute top-2 right-1.5 cursor-pointer" />
-                                            </div>
+                                            {/* <div className="relative"> */}
+                                            <InputField
+                                                label=""
+                                                type="date"
+                                                id="startDate"
+                                                name="startDate"
+                                                className="w-40 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
+                                                value={startDate}
+                                                onChange={(e) => setStartDate(e.target.value)}
+                                            />
+                                            {/* <BiCalendar className="text-[20px] text-mindfulBlack absolute top-2 right-1.5 cursor-pointer" /> */}
+                                            {/* </div> */}
                                         </div>
 
                                         {/* End Date */}
@@ -192,26 +248,31 @@ export const SalesTransactionsTable = () => {
                                                 End Date
                                             </label>
 
-                                            <div className="relative">
-                                                <InputField
-                                                    label=""
-                                                    id="endDate"
-                                                    name="endDate"
-                                                    className="w-40 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
-                                                />
-                                                <BiCalendar className="text-[20px] text-mindfulBlack absolute top-2 right-1.5 cursor-pointer" />
+                                            {/* <div className="relative"> */}
+                                            <InputField
+                                                label=""
+                                                type="date"
+                                                id="endDate"
+                                                name="endDate"
+                                                className="w-40 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
+                                                value={endDate}
+                                                onChange={(e) => setEndDate(e.target.value)}
+                                            />
+                                            {/* <BiCalendar className="text-[20px] text-mindfulBlack absolute top-2 right-1.5 cursor-pointer" /> */}
 
-                                            </div>
+                                            {/* </div> */}
                                         </div>
 
                                         <div className="">
                                             <div className="flex items-center space-x-3">
                                                 <Button
+                                                    onClick={onSubmit}
                                                     buttonType="button"
                                                     buttonTitle="Show Orders"
                                                     className="bg-mindfulBlue text-mindfulWhite border-[1px] border-mindfulBlue rounded-[5px] px-5 py-1.5 cursor-pointer hover:bg-mindfulWhite hover:border-mindfulBlue hover:text-mindfulBlue"
                                                 />
                                                 <Button
+                                                    onClick={handleClearFields}
                                                     buttonType="button"
                                                     buttonTitle="Clear"
                                                     className="bg-mindfulWhite text-mindfulBlack border-[1px] border-mindfulBlack rounded-[5px] px-5 py-1.5 cursor-pointer hover:bg-mindfulBlack hover:border-mindfulBlack hover:text-mindfulWhite"
@@ -283,7 +344,7 @@ export const SalesTransactionsTable = () => {
                                     salesTransactionsData.map((transaction) => (
                                         <tr key={transaction.id} className="border-b-2 border-mindfulGreyTypeTwo">
                                             <td className="text-start px-2 py-5">{transaction.id}</td>
-                                            <td className="text-start px-2 py-5">{transaction.order_id}</td>
+                                            <td className="text-start px-2 py-5">{transaction.pay_id}</td>
                                             <td className="text-start px-2 py-5">{transaction.date}</td>
                                             <td className="text-start px-2 py-5">{transaction.provider_name}</td>
                                             <td className="text-start px-2 py-5">{transaction.owner_name || "N/A"}</td>

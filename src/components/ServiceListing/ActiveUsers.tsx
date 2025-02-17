@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchActiveUserList, setCurrentPage, setError, setLoading } from "../../redux/activeUserSlice";
 import { DeleteProviderPopup } from "./DeleteProviderPopup";
+import { ViewProvider } from "./ViewProvider";
 
 // Proptypes frpm API
 // interface ActiveUsersProps {
@@ -38,6 +39,8 @@ export const ActiveUsers = () => {
 
     // const [showEditServicePopup, setShowEditServicePopup] = useState(false);
 
+    const [showViewProviderPopup, setShowViewProviderPopup] = useState(false);
+
     const [showDeleteProviderPopup, setShowDeleteProviderPopup] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<any>(null);
 
@@ -48,6 +51,17 @@ export const ActiveUsers = () => {
     // const closeEditService = () => {
     //     setShowEditServicePopup(false)
     // }
+
+    const openViewProviderPopup = (providerDetails: any) => {
+        setSelectedProvider(providerDetails);
+        setShowViewProviderPopup(true);
+        console.log("Viewing the Provider Details", providerDetails);
+
+    }
+
+    const closeViewProviderPopup = () => {
+        setShowViewProviderPopup(false);
+    }
 
     const openDeleteProviderPopup = (providerDetails: any) => {
         setSelectedProvider(providerDetails);
@@ -213,6 +227,8 @@ export const ActiveUsers = () => {
                                             <div className="flex items-center space-x-2">
                                                 {/* Eye Button */}
                                                 <div
+                                                    title="View Provider Details"
+                                                    onClick={() => openViewProviderPopup(activeData)}
                                                     className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e6f2ff] transition-colors duration-200">
                                                     <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack group-hover:text-mindfulSecondaryBlue" />
                                                 </div>
@@ -297,6 +313,13 @@ export const ActiveUsers = () => {
                 </div>
 
                 {/* {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />} */}
+
+                {showViewProviderPopup && selectedProvider &&
+                    <ViewProvider
+                        closePopup={closeViewProviderPopup}
+                        providerData={selectedProvider}
+                    />
+                }
 
                 {showDeleteProviderPopup && selectedProvider &&
                     <DeleteProviderPopup

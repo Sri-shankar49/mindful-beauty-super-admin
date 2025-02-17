@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchPendingRequestList, setCurrentPage, setError, setLoading } from "../../redux/pendingRequestSlice";
 import { DeleteProviderPopup } from "./DeleteProviderPopup";
+import { ViewProvider } from "./ViewProvider";
 
 // Proptypes frpm API
 // interface PendingRequestsProps {
@@ -36,9 +37,23 @@ export const PendingRequests = () => {
   // const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  const [showViewProviderPopup, setShowViewProviderPopup] = useState(false);
 
   const [showDeleteProviderPopup, setShowDeleteProviderPopup] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<any>(null);
+
+
+  const openViewProviderPopup = (providerDetails: any) => {
+    setSelectedProvider(providerDetails);
+    setShowViewProviderPopup(true);
+    console.log("Viewing the Provider Details", providerDetails);
+
+  }
+
+  const closeViewProviderPopup = () => {
+    setShowViewProviderPopup(false);
+  }
+
 
   const openDeleteProviderPopup = (providerDetails: any) => {
     setSelectedProvider(providerDetails);
@@ -203,6 +218,8 @@ export const PendingRequests = () => {
                           <div className="flex items-center space-x-2">
                             {/* Eye Button */}
                             <div
+                              title="View Provider Details"
+                              onClick={() => openViewProviderPopup(pendingData)}
                               className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e6f2ff] transition-colors duration-200">
                               <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack group-hover:text-mindfulSecondaryBlue" />
                             </div>
@@ -292,6 +309,14 @@ export const PendingRequests = () => {
             </div>
 
             {/* {showEditServicePopup && <EditServicePopup closePopup={closeEditService} />} */}
+
+            {showViewProviderPopup && selectedProvider &&
+              <ViewProvider
+                closePopup={closeViewProviderPopup}
+                providerData={selectedProvider}
+              />
+            }
+
 
             {showDeleteProviderPopup && selectedProvider &&
               <DeleteProviderPopup
