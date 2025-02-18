@@ -204,11 +204,11 @@ export const Header = () => {
                                                 </div>
                                             </Link>
 
-                                            {/* <Link to=""> */}
-                                            <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
-                                                Coupons
-                                            </div>
-                                            {/* </Link> */}
+                                            <Link to="/Coupons">
+                                                <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
+                                                    Coupons
+                                                </div>
+                                            </Link>
 
                                         </div>
                                     )}

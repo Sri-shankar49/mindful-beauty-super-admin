@@ -49,6 +49,10 @@ import { TaxInfoForm } from './pages/TaxInfoForm';
 import { GeneralInfoFreelanceForm } from './pages/GeneralInfoFreelanceForm';
 import { BankAccInfoFreelanceForm } from './pages/BankAccInfoFreelanceForm';
 import { TaxInfoFreelanceForm } from './pages/TaxInfoFreelanceForm';
+import { Coupons } from './pages/Coupons';
+import { ListCoupons } from './components/Coupons/ListCoupons';
+import { AddCoupons } from './components/Coupons/AddCoupons';
+import { ExpiredCoupons } from './components/Coupons/ExpiredCoupons';
 
 
 
@@ -205,6 +209,19 @@ function App() {
             <Route path="/SalesTransactions" element={<SalesTransactions />} />
             <Route path="/RatingsReviews" element={<RatingsReviews />} />
             <Route path="/Reports" element={<Reports />} />
+
+
+            <Route path="/Coupons" element={<Coupons />} >
+
+              {/* Redirect to ListCoupons when /Coupons is accessed */}
+              <Route index element={<Navigate to="ListCoupons" replace />} />
+
+              {/* Sub-routes */}
+              <Route path="ListCoupons" element={<ListCoupons />} />
+              <Route path="AddCoupons" element={<AddCoupons />} />
+              <Route path="ExpiredCoupons" element={<ExpiredCoupons />} />
+            </Route>
+            
           </Route>
         </Routes>
 

@@ -531,7 +531,7 @@ export const bookingsList = async (searchQuery: string, pageNumber: number) => {
 
   }
   catch (error: any) {
-    console.error("Error fetching booking list:", error.message || error);
+    console.error("Error fetching booking list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch booking list. Please try again later.");
   }
 }
@@ -563,7 +563,7 @@ export const scheduleList = async (status: number, searchQuery: string, pageNumb
 
   }
   catch (error: any) {
-    console.error("Error fetching schedule booking list:", error.message || error);
+    console.error("Error fetching schedule booking list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch schedule booking list. Please try again later.");
   }
 }
@@ -592,7 +592,7 @@ export const inprogressList = async (status: number, searchQuery: string, pageNu
 
   }
   catch (error: any) {
-    console.error("Error fetching inprogress booking list:", error.message || error);
+    console.error("Error fetching inprogress booking list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch inprogress list. Please try again later.");
   }
 }
@@ -623,7 +623,7 @@ export const completedList = async (status: number, searchQuery: string, pageNum
 
   }
   catch (error: any) {
-    console.error("Error fetching completed booking list:", error.message || error);
+    console.error("Error fetching completed booking list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch completed booking list. Please try again later.");
   }
 }
@@ -654,7 +654,7 @@ export const cancelledList = async (status: number, searchQuery: string, pageNum
 
   }
   catch (error: any) {
-    console.error("Error fetching cancelled booking list:", error.message || error);
+    console.error("Error fetching cancelled booking list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch cancelled booking list. Please try again later.");
   }
 }
@@ -684,7 +684,7 @@ export const salesTransactionsList = async (pageNumber: number) => {
 
   }
   catch (error: any) {
-    console.error("Error fetching sales & transactions list:", error.message || error);
+    console.error("Error fetching sales & transactions list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions list. Please try again later.");
   }
 }
@@ -721,7 +721,7 @@ export const fetchSalesTransactionsByFilters = async (
     return response.data;
 
   } catch (error: any) {
-    console.error("Error fetching sales transactions by filters:", error.message || error);
+    console.error("Error fetching sales transactions by filters:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch sales transactions by filters. Please try again later.");
   }
 };
@@ -753,7 +753,95 @@ export const reviewsList = async (searchQuery: string, pageNumber: number) => {
 
   }
   catch (error: any) {
-    console.error("Error fetching reviews list:", error.message || error);
+    console.error("Error fetching reviews list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Unable to fetch reviews list. Please try again later.");
+  }
+}
+
+
+
+
+
+
+// Coupon Page -- --> List Coupons Tab
+// GET Method from the API
+export const couponList = async (pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/get-coupons/`, {
+      params: {
+        page: pageNumber,
+      },
+    });
+
+    console.log("Coupons list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Coupons list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching Coupons list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch Coupons list. Please try again later.");
+  }
+}
+
+
+
+
+// Coupon Page
+export const deleteCoupon = async (couponID: number) => {
+  try {
+    // Using axios.delete is more semantically correct for deletion,
+    // but if your backend expects a GET request for deletion, you can change it accordingly.
+    const response = await apiAxios.delete('/provider-api/coupons/delete/', {
+      params: {
+        id: couponID,
+      },
+    });
+
+    console.log("Delete Coupon Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to delete Coupon");
+    }
+
+    return response.data; // Expected to be: { "status": "success", "message": "Category deleted successfully" }
+
+  } catch (error: any) {
+    console.error("Error deleting Coupon:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error deleting Coupon");
+  }
+};
+
+
+
+
+// Coupon Page -- --> List Coupons Tab
+// GET Method from the API
+export const expiredCouponList = async (pageNumber: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/coupons/expired/`, {
+      params: {
+        page: pageNumber,
+      },
+    });
+
+    console.log("Expired Coupons list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Expired Coupons list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching Expired Coupons list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch Expired Coupons list. Please try again later.");
   }
 }
