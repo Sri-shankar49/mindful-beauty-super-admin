@@ -765,12 +765,14 @@ export const reviewsList = async (searchQuery: string, pageNumber: number) => {
 
 // Coupon Page -- --> List Coupons Tab
 // GET Method from the API
-export const couponList = async (pageNumber: number) => {
+export const couponList = async (pageNumber: number, byStatus: number, byMonth: string) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/get-coupons/`, {
       params: {
         page: pageNumber,
+        status: byStatus,
+        month: byMonth,
       },
     });
 
@@ -788,6 +790,67 @@ export const couponList = async (pageNumber: number) => {
     throw new Error(error.response?.data?.message || "Unable to fetch Coupons list. Please try again later.");
   }
 }
+
+
+
+
+
+// Coupon Page -- --> Add Coupons Tab
+export const addCoupon = async (statusID: number, validFrom: string, validUntil: string, couponCode: string, couponLimit: number, discountValue: number,) => {
+  try {
+    const response = await apiAxios.post('/provider-api/coupons/add/',
+      {
+        status: statusID,
+        valid_from: validFrom,
+        valid_until: validUntil,
+        coupon_code: couponCode,
+        coupon_limit: couponLimit,
+        discount_value: discountValue,
+      }
+    );
+
+    console.log("Add Coupon List Response:", response.data);
+
+    if (!response.data || response.status !== 201) {
+      throw new Error("Failed to Add Coupon");
+    }
+
+    return response.data; // Extracting the category data
+
+  } catch (error: any) {
+    console.error("Error adding coupon:", error.response?.data.message || error);
+    throw new Error(error.response?.data.message || "Error adding coupon. Please try again later.");
+  }
+};
+
+
+
+
+// Coupon Page -- --> List Coupons Tab
+export const editCoupon = async (couponID: number, couponCode: string, couponLimit: number, validUntil: string, discountValue: string) => {
+  try {
+    const response = await apiAxios.put('/provider-api/coupons/edit/', {
+      id: couponID,
+      coupon_code: couponCode,
+      coupon_limit: couponLimit,
+      valid_until: validUntil,
+      discount_value: discountValue,
+    });
+
+    console.log("Edit Coupon Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to edit Coupon");
+    }
+
+    return response.data; // Extracting the Coupon data
+
+  } catch (error: any) {
+    console.error("Error Editing coupon:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error Editing coupon list");
+  }
+}
+
 
 
 
@@ -822,12 +885,14 @@ export const deleteCoupon = async (couponID: number) => {
 
 // Coupon Page -- --> List Coupons Tab
 // GET Method from the API
-export const expiredCouponList = async (pageNumber: number) => {
+export const expiredCouponList = async (pageNumber: number, byStatus: number, byMonth: string) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/coupons/expired/`, {
       params: {
         page: pageNumber,
+        status: byStatus,
+        month: byMonth,
       },
     });
 

@@ -49,9 +49,11 @@ import { TaxInfoForm } from './pages/TaxInfoForm';
 import { GeneralInfoFreelanceForm } from './pages/GeneralInfoFreelanceForm';
 import { BankAccInfoFreelanceForm } from './pages/BankAccInfoFreelanceForm';
 import { TaxInfoFreelanceForm } from './pages/TaxInfoFreelanceForm';
+
+
 import { Coupons } from './pages/Coupons';
 import { ListCoupons } from './components/Coupons/ListCoupons';
-import { AddCoupons } from './components/Coupons/AddCoupons';
+import { AddCoupon } from './components/Coupons/AddCoupon';
 import { ExpiredCoupons } from './components/Coupons/ExpiredCoupons';
 
 
@@ -218,7 +220,7 @@ function App() {
 
               {/* Sub-routes */}
               <Route path="ListCoupons" element={<ListCoupons />} />
-              <Route path="AddCoupons" element={<AddCoupons />} />
+              <Route path="AddCoupon" element={<AddCoupon />} />
               <Route path="ExpiredCoupons" element={<ExpiredCoupons />} />
             </Route>
             

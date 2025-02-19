@@ -5,10 +5,11 @@ import { ViewCoupon } from './ViewCoupon'
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { BiEditAlt } from 'react-icons/bi';
-import { SelectField } from '../../common/SelectField';
+// import { SelectField } from '../../common/SelectField';
 import { Pagination } from '../../common/Pagination';
 import { expiredCouponList } from '../../api/apiConfig';
 import { DeleteCouponPopup } from './DeleteCouponPopup';
+import { EditCoupon } from './EditCoupon';
 
 // Proptypes from API
 interface ExpiredCouponsProps {
@@ -23,6 +24,7 @@ interface ExpiredCouponsProps {
     discount_type: string;
     discount_value: string;
     status: string;
+    status_id: number;
     created_datetime: string;
     provider: number | null;
 }
@@ -40,6 +42,7 @@ export const ExpiredCoupons = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
     const [showViewCouponPopup, setShowViewCouponPopup] = useState(false);
+    const [showEditCouponPopup, setShowEditCouponPopup] = useState(false);
 
 
     const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
@@ -54,6 +57,16 @@ export const ExpiredCoupons = () => {
 
     const closeViewCouponPopup = () => {
         setShowViewCouponPopup(false);
+    }
+
+    const openEditCouponPopup = (couponDetails: any) => {
+        setSelectedCoupon(couponDetails);
+        setShowEditCouponPopup(true);
+        console.log("Editing the coupon", couponDetails);
+    }
+
+    const closeEditCouponPopup = () => {
+        setShowEditCouponPopup(false);
     }
 
 
@@ -74,12 +87,14 @@ export const ExpiredCoupons = () => {
             setLoading(true);
 
             try {
-                const response = await expiredCouponList(currentPage);
+                const response = await expiredCouponList(currentPage, 0, "");
 
                 setExpiredCouponData(response.results.data);
                 setTotalItems(response.count);
 
                 console.log("Expired Coupons Data log:", response);
+
+                console.log("Fetched Expired Coupons Data List pagination count data log :", response.count);
 
             } catch (error: any) {
                 setError(error.message || "Unable to fetch expired coupons data. Please try again later.");
@@ -90,6 +105,55 @@ export const ExpiredCoupons = () => {
 
         fetchExpiredCouponsData();
     }, [currentPage, itemsPerPage]);
+
+
+    // Filter the Coupon Data by Status
+    const [status, setStatus] = useState<number>(0); // Default to "Active"
+
+    const handleStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedStatus = Number(event.target.value); // Convert to number
+        setStatus(selectedStatus);
+    };
+
+    // Filter the Coupon Data by Month
+    const [month, setMonth] = useState<string>(""); // Default to "Active"
+
+    const handleMonth = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedMonth = event.target.value;
+        setMonth(selectedMonth);
+    };
+
+
+
+    // Function after handling the Status & Month
+    useEffect(() => {
+        const fetchFilteredData = async () => {
+            setLoading(true);
+
+            try {
+                const response = await expiredCouponList(currentPage, status, month);
+
+                setExpiredCouponData(response.results.data);
+                setTotalItems(response.count);
+
+                console.log("Expired Coupon Data log:", response);
+
+                console.log("Fetched Expired Coupons Data List pagination count data log :", response.count);
+
+            } catch (error: any) {
+                setError(error.message || "Unable to fetch expired coupons data. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Fetch only if a status is selected
+        if (status || month) {
+            fetchFilteredData();
+        }
+
+    }, [status, month, currentPage]);
+
 
 
     const handlePageChange = (page: number) => {
@@ -105,7 +169,7 @@ export const ExpiredCoupons = () => {
     // Refreshing the data on handleActionSubmit
     const refreshedData = async () => {
         try {
-            const response = await expiredCouponList(currentPage);
+            const response = await expiredCouponList(currentPage, status, month);
             setExpiredCouponData(response.results.data);
             setTotalItems(response.count);
 
@@ -123,7 +187,7 @@ export const ExpiredCoupons = () => {
 
                 {/* Main Category */}
                 <div>
-                    <SelectField
+                    {/* <SelectField
                         // onChange={openStylistPopup}
                         label=""
                         name="status"
@@ -131,33 +195,30 @@ export const ExpiredCoupons = () => {
                         className="w-40 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
                         options={[
                             { value: "byStatus", label: "By Status" },
-                            { value: "1", label: "Option 1" },
-                            { value: "2", label: "Option 2" },
+                            { value: "1", label: "Active" },
+                            { value: "2", label: "Inactive" },
                         ]}
+                        onChange={handleStatus} // Handle status change
                     // error="This field is required."
-                    />
+                    /> */}
 
-                    {/* <select
+                    <select
                         // name=""
                         id=""
-                        className="w-60 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
-                        value={selectedCategory}
-                        onChange={handleCategoryChange} // Call on change
-
+                        className="w-40 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
+                        value={status}
+                        onChange={handleStatus} // Call on change
                     >
-                        <option value="" disabled>Main Category</option>
-
-                        {categoriesData.map((category) => (
-                            <option key={category.category_id} value={category.category_id}>
-                                {category.category_name}
-                            </option>
-                        ))}
-                    </select> */}
+                        <option value="0" disabled>By Status</option>
+                        <option value="1">Active</option>
+                        <option value="2">Inactive</option>
+                        {/* <option value="expired">Expired</option> */}
+                    </select>
                 </div>
 
                 {/* Sub Category */}
                 <div>
-                    <SelectField
+                    {/* <SelectField
                         // onChange={openStylistPopup}
                         label=""
                         name="month"
@@ -165,29 +226,43 @@ export const ExpiredCoupons = () => {
                         className="w-40 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
                         options={[
                             { value: "byMonth", label: "By Month" },
-                            { value: "1", label: "Option 1" },
-                            { value: "2", label: "Option 2" },
+                            { value: "jan", label: "Jan" },
+                            { value: "feb", label: "Feb" },
+                            { value: "mar", label: "Mar" },
+                            { value: "apr", label: "Apr" },
+                            { value: "may", label: "May" },
+                            { value: "jun", label: "Jun" },
+                            { value: "jul", label: "Jul" },
+                            { value: "aug", label: "Aug" },
+                            { value: "sep", label: "Sep" },
+                            { value: "oct", label: "Oct" },
+                            { value: "nov", label: "Nov" },
+                            { value: "dec", label: "Dec" },
                         ]}
                     // error="This field is required."
-                    />
+                    /> */}
 
-                    {/* <select
+                    <select
                         // name="subCategory"
                         id="subCategory"
-                        className="w-72 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
-                        value={selectedSubCategory}
-                        onChange={handleSubCategoryChange}
+                        className="w-40 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
+                        value={month}
+                        onChange={handleMonth}
                     >
-                        <option value="" disabled>
-                            {selectedCategory ? "Select Sub Category" : "Please select a category first"}
-                        </option>
-
-                        {subCategoriesData.map((subCategory) => (
-                            <option key={subCategory.subcategory_id} value={subCategory.subcategory_id}>
-                                {subCategory.subcategory_name}
-                            </option>
-                        ))}
-                    </select> */}
+                        <option value="" disabled>By Month</option>
+                        <option value="january">January</option>
+                        <option value="february">February</option>
+                        <option value="march">March</option>
+                        <option value="april">April</option>
+                        <option value="may">May</option>
+                        <option value="june">June</option>
+                        <option value="july">July</option>
+                        <option value="august">August</option>
+                        <option value="september">September</option>
+                        <option value="october">October</option>
+                        <option value="november">November</option>
+                        <option value="december">December</option>
+                    </select>
                 </div>
 
 
@@ -201,6 +276,7 @@ export const ExpiredCoupons = () => {
 
                             <th className="text-start px-2 py-3">Coupon Name</th>
                             <th className="text-start px-2 py-3">Discount Type</th>
+                            <th className="text-start px-2 py-3">Coupon Limit</th>
                             <th className="text-start px-2 py-3">Value</th>
                             <th className="text-start px-2 py-3">Start Date</th>
                             <th className="text-start px-2 py-3">End Date</th>
@@ -218,11 +294,11 @@ export const ExpiredCoupons = () => {
                         {/* Content & Checkbox */}
                         {loading ? (
                             <tr>
-                                <td colSpan={7} className="text-center py-5">Loading...</td>
+                                <td colSpan={8} className="text-center py-5">Loading...</td>
                             </tr>
                         ) : error ? (
                             <tr>
-                                <td colSpan={7} className="text-red-500 text-center py-5">Error: {error}</td>
+                                <td colSpan={8} className="text-red-500 text-center py-5">Error: {error}</td>
                             </tr>
                         ) : (
                             expiredCouponData.length > 0 ? (
@@ -231,10 +307,14 @@ export const ExpiredCoupons = () => {
 
                                         <td className="text-start px-2 py-5">{coupon.coupon_code}</td>
                                         <td className="text-start px-2 py-5">{coupon.discount_type}</td>
+                                        <td className="text-start px-2 py-5">{coupon.coupon_limit}</td>
                                         <td className="text-start px-2 py-5">{coupon.discount_value}</td>
                                         <td className="text-start px-2 py-5">{coupon.valid_from}</td>
                                         <td className="text-start px-2 py-5">{coupon.valid_until}</td>
-                                        <td className="text-start px-2 py-5">{coupon.status}</td>
+                                        <td className="text-start px-2 py-5">
+                                            {coupon.status}
+                                            {/* {coupon.status_id === 1 ? "Active" : "Inactive"} */}
+                                        </td>
 
                                         <td className="px-2 py-5">
                                             <div className="flex items-center space-x-2">
@@ -248,7 +328,10 @@ export const ExpiredCoupons = () => {
                                                 </div>
 
                                                 {/* Edit Button */}
-                                                <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                                                <div
+                                                    onClick={() => openEditCouponPopup(coupon)}
+                                                    className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200"
+                                                >
                                                     <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                                                 </div>
 
@@ -267,7 +350,7 @@ export const ExpiredCoupons = () => {
                                     </tr>
                                 ))) : (
                                 <tr>
-                                    <td colSpan={7} className="text-center py-5">No Expired Coupons Data Found</td>
+                                    <td colSpan={8} className="text-center py-5">No Expired Coupons Data Found</td>
                                 </tr>
 
                             ))}
@@ -277,6 +360,8 @@ export const ExpiredCoupons = () => {
             </div>
 
             {showViewCouponPopup && selectedCoupon && <ViewCoupon closePopup={closeViewCouponPopup} couponData={selectedCoupon} />}
+
+            {showEditCouponPopup && selectedCoupon && <EditCoupon closePopup={closeEditCouponPopup} couponData={selectedCoupon} refreshData={refreshedData} />}
 
             {showDeleteCouponPopup && selectedCoupon && <DeleteCouponPopup closePopup={closeDeleteCouponPopup} couponData={selectedCoupon} refreshData={refreshedData} />}
 

@@ -25,7 +25,7 @@ export const Coupons = () => {
                         </NavLink>
 
                         <NavLink
-                            to="AddCoupons"
+                            to="AddCoupon"
                             className={({ isActive }) =>
                                 isActive ? "active-sub-nav active" : undefined
                             }

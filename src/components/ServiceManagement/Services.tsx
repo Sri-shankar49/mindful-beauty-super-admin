@@ -276,7 +276,7 @@ export const Services = () => {
     }
 
     // }, [currentPage, itemsPerPage]);
-  }, [selectedCategory, selectedSubCategory]);
+  }, [selectedCategory, selectedSubCategory, currentPage]);
 
 
   const handlePageChange = (page: number) => {
