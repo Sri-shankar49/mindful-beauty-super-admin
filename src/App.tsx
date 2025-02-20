@@ -55,6 +55,7 @@ import { Coupons } from './pages/Coupons';
 import { ListCoupons } from './components/Coupons/ListCoupons';
 import { AddCoupon } from './components/Coupons/AddCoupon';
 import { ExpiredCoupons } from './components/Coupons/ExpiredCoupons';
+import { WalletManagement } from './pages/WalletManagement';
 
 
 
@@ -223,7 +224,9 @@ function App() {
               <Route path="AddCoupon" element={<AddCoupon />} />
               <Route path="ExpiredCoupons" element={<ExpiredCoupons />} />
             </Route>
-            
+
+            <Route path="/WalletManagement" element={<WalletManagement />} />
+
           </Route>
         </Routes>
 

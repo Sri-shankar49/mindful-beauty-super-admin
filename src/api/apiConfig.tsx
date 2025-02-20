@@ -730,6 +730,63 @@ export const fetchSalesTransactionsByFilters = async (
 
 
 
+// Sales & Transactions Page
+// GET Method from the API
+export const salesTransactionsCSV = async () => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/download-provider-transactions/`, {
+      responseType: 'blob', // Important for file downloads
+    });
+
+    console.log("Sales & Transactions CSV GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to download CSV");
+    }
+
+    return response.data;     // Returning the Blob response
+
+  }
+  catch (error: any) {
+    console.error("Error downloading CSV:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to download CSV. Please try again later.");
+  }
+}
+
+
+
+
+
+// Sales & Transactions Page
+// GET Method from the API
+export const salesTransactionsInvoice = async (transactionID: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/provider-invoice/`, {
+      params: {
+        id: transactionID,
+      },
+    });
+
+    console.log("Sales & Transactions Invoice GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to download sales & transactions Invoice");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching sales & transactions invoice:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions invoice. Please try again later.");
+  }
+}
+
+
+
+
 
 // Ratings & Reviews Page
 // GET Method from the API
@@ -910,3 +967,65 @@ export const expiredCouponList = async (pageNumber: number, byStatus: number, by
     throw new Error(error.response?.data?.message || "Unable to fetch Expired Coupons list. Please try again later.");
   }
 }
+
+
+
+
+
+// Wallet Management Page -- -->
+// GET Method from the API
+export const walletList = async (pageNumber: number, byProvider: number, searchQuery: string) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/wallet-management/`, {
+      params: {
+        page: pageNumber,
+        status: byProvider,
+        search: searchQuery,
+      },
+    });
+
+    console.log("Expired Coupons list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Expired Coupons list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching Expired Coupons list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch Expired Coupons list. Please try again later.");
+  }
+}
+
+
+
+
+// Wallet Management Page -- -->
+// GET Method from the API
+export const addCredit = async (providerID: number, amount: number, paymentDate: string, paymentMode: string) => {
+  try {
+    const response = await apiAxios.post('/provider-api/add-credits/',
+      {
+        provider_id: providerID,
+        amount: amount,
+        payment_date: paymentDate,
+        payment_mode: paymentMode,
+      }
+    );
+
+    console.log("Add Credit Response:", response.data);
+
+    if (!response.data || response.status !== 201) {
+      throw new Error("Failed to Add Credits.");
+    }
+
+    return response.data; // Extracting the category data
+
+  } catch (error: any) {
+    console.error("Error adding credits:", error.response?.data.message || error);
+    throw new Error(error.response?.data.message || "Error adding credits. Please try again later.");
+  }
+};

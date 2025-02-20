@@ -195,12 +195,12 @@ export const Header = () => {
                                     {moreHover && (
                                         <div className="absolute bottom-[-4.7rem] right-10 mt-2 w-48 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
                                             <Link
-                                                to="/MyAccount"
+                                                to="/WalletManagement"
                                                 aria-current="page"
                                             // className="active-nav"
                                             >
                                                 <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
-                                                    Credit Management
+                                                    Wallet Management
                                                 </div>
                                             </Link>
 

@@ -15,7 +15,7 @@ import { InputField } from "../../common/InputField";
 import { Button } from "../../common/Button";
 import { Pagination } from "../../common/Pagination";
 import { InvoicePopup } from "../Bookings/Completed/InvoicePopup";
-import { fetchSalesTransactionsByFilters, salesTransactionsList } from "../../api/apiConfig";
+import { fetchSalesTransactionsByFilters, salesTransactionsCSV, salesTransactionsInvoice, salesTransactionsList } from "../../api/apiConfig";
 
 // Proptypes from API
 interface SalesTransactionProps {
@@ -147,6 +147,67 @@ export const SalesTransactionsTable = () => {
         }
     };
 
+
+    // Function Handler for downloading the sales transactions CSV
+    const handleDownloadCSV = async () => {
+
+        try {
+            const blob = await salesTransactionsCSV();
+
+            // Create a link and trigger the download
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "sales_transactions.csv");
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            console.log("CSV file downloaded successfully.");
+
+        }
+        catch (error: any) {
+            setError(error.message || "Failed to download CSV file.");
+        }
+        finally {
+            setLoading(false);// Reset the loading state
+        }
+    }
+
+
+
+    // Function Handler for downloading the sales transactions invoice
+    const handleDownloadInvoice = async (transactionID: number) => {
+
+        try {
+            // setLoading(true);
+            const blob = await salesTransactionsInvoice(transactionID);
+
+            // Create a link element and trigger download
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `invoice_${transactionID}.pdf`); // Assuming it's a PDF
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            console.log("Sales & transactions invoice downloaded successfully.");
+
+        }
+        catch (error: any) {
+            setError(error.message || "Failed to download sales & transactions Invoice.");
+        }
+        finally {
+            setLoading(false);// Reset the loading state
+        }
+    }
 
 
     return (
@@ -296,9 +357,10 @@ export const SalesTransactionsTable = () => {
                             {/* Download CSV Button */}
                             <div>
                                 <Button
+                                    onClick={handleDownloadCSV}
                                     buttonType="button"
                                     buttonTitle="Download CSV"
-                                    className="bg-main text-lg text-mindfulWhite rounded-sm px-8 py-2"
+                                    className="bg-main text-lg text-mindfulWhite border-[1px] rounded-sm px-8 py-2 cursor-pointer hover:bg-mindfulWhite hover:text-main hover:border-main"
                                 />
                             </div>
                         </div>
@@ -382,8 +444,10 @@ export const SalesTransactionsTable = () => {
                                                     </div>
 
                                                     {/* Download Button */}
-                                                    <div className="border-[1px] border-mindfulGreen rounded-sm px-2 py-1.5 cursor-pointer">
-                                                        <FiDownload className="text-[18px] text-mindfulGreen" />
+                                                    <div
+                                                        onClick={() => handleDownloadInvoice(transaction.id)}
+                                                        className="group border-[1px] border-mindfulGreen rounded-sm px-2 py-1.5 cursor-pointer hover:bg-mindfulGreen transition-all duration-200">
+                                                        <FiDownload className="text-[18px] text-mindfulGreen group-hover:text-mindfulWhite transition-all duration-200" />
                                                     </div>
                                                 </div>
                                             </td>

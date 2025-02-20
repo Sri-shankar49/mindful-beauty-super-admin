@@ -285,7 +285,7 @@ export const ListCoupons = () => {
                             <th colSpan={4} className="bg-mindfulLightgrey text-start px-2 py-4">Heading 1</th>
                         </tr> */}
 
-                        {/* Content & Checkbox */}
+                        {/* Content */}
                         {loading ? (
                             <tr>
                                 <td colSpan={8} className="text-center py-5">Loading...</td>
