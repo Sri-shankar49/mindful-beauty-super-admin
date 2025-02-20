@@ -1,4 +1,3 @@
-import React from 'react'
 import { WalletManagementTable } from '../components/WalletManagement/WalletManagementTable'
 
 export const WalletManagement = () => {
