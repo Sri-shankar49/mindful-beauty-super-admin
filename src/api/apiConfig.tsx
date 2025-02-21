@@ -977,7 +977,7 @@ export const expiredCouponList = async (pageNumber: number, byStatus: number, by
 export const walletList = async (pageNumber: number, byProvider: number, searchQuery: string) => {
 
   try {
-    const response = await apiAxios.get(`/provider-api/wallet-management/`, {
+    const response = await apiAxios.get(`/provider-api/provider-wallet/`, {
       params: {
         page: pageNumber,
         status: byProvider,

@@ -142,7 +142,7 @@ export const VerifyOtp: React.FC<VerifyOtpProps> = ({ onVerifyOtp }) => {
                     <Button
                         buttonType="submit"
                         buttonTitle={loading ? "Verifying..." : "Verify & Continue"}
-                        className="w-3/4 bg-mindfulgrey border-[1px] border-mindfulgrey text-mindfulWhite rounded-[5px] font-semibold px-2 py-2 focus-within:outline-none hover:bg-main hover:border-[1px] hover:border-mindfulWhite"
+                        className="w-3/4 bg-mindfulgrey border-[1px] border-mindfulgrey text-mindfulWhite rounded-[5px] font-semibold px-2 py-2 focus-within:outline-none cursor-pointer hover:bg-main hover:border-[1px] hover:border-mindfulWhite"
                         disabled={loading}
                     />
                     {/* </Link> */}

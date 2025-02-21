@@ -145,7 +145,7 @@ export const Register = () => {
             <Button
               onClick={handleRegistrationUser}
               buttonTitle={'Register'}
-              className="w-full bg-mindfulgrey border-[1px] border-mindfulgrey text-mindfulWhite rounded-[5px] font-semibold px-2 py-2 focus-within:outline-none hover:bg-main hover:border-[1px] hover:border-mindfulWhite"
+              className="w-full bg-mindfulgrey border-[1px] border-mindfulgrey text-mindfulWhite rounded-[5px] font-semibold px-2 py-2 focus-within:outline-none cursor-pointer hover:bg-main hover:border-[1px] hover:border-mindfulWhite"
             />
             {/* </Link> */}
 
