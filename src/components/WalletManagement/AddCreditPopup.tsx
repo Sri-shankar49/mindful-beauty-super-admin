@@ -24,13 +24,14 @@ interface AddCreditPopupProps {
         service_type_id: number;
         service_type_name: string;
     }
+    refreshData: () => void;
 }
 
 // ✅ Zod Schema for Validation
 const AddCreditPopupSchema = zod.object({
-    amount: zod.number().min(1, "Amount must be greater than 0"),
+    amount: zod.coerce.number().min(1, "Amount must be greater than 0").default(0),
     paymentDate: zod.string().min(1, "Payment Date is required"),
-    paymentMode: zod.enum(["online", "cash"], {
+    paymentMode: zod.enum(["UPI", "online", "cash"], {
         errorMap: () => ({ message: "Payment Mode is required" }),
     }),
 });
@@ -38,7 +39,7 @@ const AddCreditPopupSchema = zod.object({
 type AddCreditFormData = zod.infer<typeof AddCreditPopupSchema>;
 
 
-export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, providerData }) => {
+export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, providerData, refreshData }) => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -56,12 +57,23 @@ export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, prov
         setError(null);
 
         try {
+
+            // ✅ Convert "YYYY-MM-DD" to "21 Feb 2025"
+            const formattedDate = new Date(data.paymentDate).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+            });
+
+
             const response = await addCredit(
                 Number(providerData.provider_id),
                 data.amount,
-                data.paymentDate,
+                // data.paymentDate,
+                formattedDate,
                 data.paymentMode
             );
+
             console.log("Credits added successfully", response.data);
 
             if (response?.status === "success") {
@@ -69,14 +81,16 @@ export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, prov
                 // Update button UI to success state
                 setButtonState({ text: "Credits Added Successfully!", success: true });
 
+                refreshData();  // Refresh data after successful submission
+
                 reset();        // Reset form after submission
 
                 // Revert back to default state after 3 seconds
                 setTimeout(() => {
                     setButtonState({ text: "Submit", success: false });
+                    closePopup();
                 }, 3000);
 
-                closePopup();
             }
 
         } catch (error: any) {
@@ -115,20 +129,22 @@ export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, prov
 
 
                             <form onSubmit={handleSubmit(onSubmit)} method="post">
+
                                 <div>
+
                                     <div className="grid grid-cols-2 gap-5">
 
                                         <div className="space-y-5">
                                             {/* Available Credits */}
                                             <div>
                                                 <h5 className="text-md text-mindfulBlack font-semibold">Available Credits</h5>
-                                                <p className="text-2xl text-mindfulAsh">{providerData.available_credits}</p>
+                                                <p className="text-2xl text-mindfulAsh">{providerData.available_credits || 0}</p>
                                             </div>
 
                                             {/* Available Credits */}
                                             <div>
                                                 <h5 className="text-md text-mindfulBlack font-semibold">Used Credits</h5>
-                                                <p className="text-2xl text-mindfulAsh">{providerData.used_credits}</p>
+                                                <p className="text-2xl text-mindfulAsh">{providerData.used_credits || 0}</p>
                                             </div>
 
                                             {/* Payment Date */}
@@ -171,12 +187,12 @@ export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, prov
                                                     id="reqCreditValue"
                                                     placeholder="Enter the credit value"
                                                     className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-3 py-3 focus-within:outline-none"
-                                                    {...register("amount", { valueAsNumber: true })} // Convert string input to number
+                                                    {...register("amount")} // Convert string input to number
                                                 />
 
                                                 <p className="text-sm text-main italic mt-2">Add credit value, 1 credit equals to Rs. 1</p>
 
-                                                {errors.amount && <p className="text-sm text-red-500">{errors.amount.message}</p>}
+                                                {errors.amount && <p className="text-sm text-red-500 mt-2">{errors.amount.message}</p>}
                                             </div>
 
                                             {/* Payment Mode */}
@@ -192,6 +208,7 @@ export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, prov
                                                     // name="paymentMode"
                                                     id="paymentMode"
                                                     options={[
+                                                        { value: "UPI", label: "UPI" },
                                                         { value: "online", label: "Online" },
                                                         { value: "cash", label: "Cash" },
                                                     ]}
@@ -210,15 +227,17 @@ export const AddCreditPopup: React.FC<AddCreditPopupProps> = ({ closePopup, prov
                                     <div className="pt-10 text-center">
                                         {/* Submit Button */}
                                         <Button
-                                            buttonType="button"
+                                            type="submit"  // ✅ Change this from "button" to "submit"
                                             buttonTitle={loading ? "Submitting" : buttonState.text}
                                             // className="bg-mindfulBlue text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none"
-                                            className={`bg-mindfulBlue text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer
-                                                ${buttonState.success ? "bg-green-500" : ""}`}
+                                            className={`text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer
+                                                ${buttonState.success ? "bg-green-500" : "bg-mindfulBlue"}`}
                                             disabled={loading}
                                         />
                                     </div>
+
                                 </div>
+
                             </form>
 
                         </div>

@@ -980,23 +980,23 @@ export const walletList = async (pageNumber: number, byProvider: number, searchQ
     const response = await apiAxios.get(`/provider-api/provider-wallet/`, {
       params: {
         page: pageNumber,
-        status: byProvider,
+        service_type_id: byProvider,
         search: searchQuery,
       },
     });
 
-    console.log("Expired Coupons list GET Method response", response.data);
+    console.log("Provider Wallet list GET Method response", response.data);
 
     if (!response.data || response.status !== 200) {
-      throw new Error("Failed to fetch Expired Coupons list");
+      throw new Error("Failed to fetch provider wallet list");
     }
 
     return response.data;
 
   }
   catch (error: any) {
-    console.error("Error fetching Expired Coupons list:", error.response?.data?.message || error);
-    throw new Error(error.response?.data?.message || "Unable to fetch Expired Coupons list. Please try again later.");
+    console.error("Error fetching provider wallet list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch provider wallet list. Please try again later.");
   }
 }
 

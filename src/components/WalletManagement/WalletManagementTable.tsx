@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { InputField } from '../../common/InputField';
 import { MdSearch } from 'react-icons/md';
-import { Pagination } from '../../common/Pagination';
+import { Pagination } from "../../common/Pagination";
 import { walletList } from '../../api/apiConfig';
 import { AddCreditPopup } from './AddCreditPopup';
 import { Button } from '../../common/Button';
@@ -139,6 +139,22 @@ export const WalletManagementTable = () => {
     };
 
 
+    // Refreshing the data on handleActionSubmit
+    const refreshedData = async () => {
+        try {
+            const response = await walletList(currentPage, Number(provider), searchQuery);
+
+            setWalletData(response.results.data);
+            setTotalItems(response.count);
+
+            console.log("Wallet List Data refreshed:", response);
+
+        } catch (error: any) {
+            console.error("Error refreshing Wallet List data:", error.message);
+        }
+    }
+
+
     return (
         <div>
             <div>
@@ -201,7 +217,6 @@ export const WalletManagementTable = () => {
                             ) : walletData.length > 0 ? (
                                 walletData.map((wallet) => (
                                     <tr key={wallet.provider_id} className="border-b-2 border-mindfulGreyTypeTwo">
-
                                         <td className="text-start px-2 py-5">{wallet.provider_name}</td>
                                         <td className="text-start px-2 py-5">{wallet.phone || "N/A"}</td>
                                         <td className="text-start px-2 py-5">{wallet.city || "N/A"}</td>
@@ -211,10 +226,10 @@ export const WalletManagementTable = () => {
                                         <td className="text-start px-2 py-5">
                                             <div>
                                                 <Button
-                                                    onClick={() => openAddCreditPopup(wallet.provider_id)}
+                                                    onClick={() => openAddCreditPopup(wallet)}
                                                     buttonType="button"
                                                     buttonTitle={'Add Credit'}
-                                                    className="bg-mindfulWhite text-md text-mindfulBlack font-normal border-[1px] border-mindfulgrey rounded-md px-5 py-1"
+                                                    className="bg-mindfulWhite text-md text-mindfulBlack font-normal border-[1px] border-mindfulgrey rounded-md px-5 py-1 transition-all duration-200 cursor-pointer hover:bg-main hover:text-mindfulWhite hover:border-main"
                                                 />
                                             </div>
                                         </td>
@@ -229,7 +244,7 @@ export const WalletManagementTable = () => {
                 </div>
 
 
-                {showAddCreditPopup && selectedProviderWallet && <AddCreditPopup closePopup={closeAddCreditPopup} providerData={selectedProviderWallet} />}
+                {showAddCreditPopup && selectedProviderWallet && <AddCreditPopup closePopup={closeAddCreditPopup} providerData={selectedProviderWallet} refreshData={refreshedData} />}
 
                 {/* Pagination */}
                 <div>
