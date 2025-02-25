@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 // import { SelectField } from "../../common/SelectField";
 import { fetchDashboardList } from "../../api/apiConfig";
 import { NavLink } from "react-router-dom";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 // import { Button } from "../../common/Button";
 // import { DenialPopup } from "./DashBoardData/DenialPopup";
 // import { StylistPopup } from "./DashBoardData/StylistPopup";
@@ -107,7 +108,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
     const [dashboardData, setDashboardData] = useState<DashBoardDataProps[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -120,7 +121,8 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                 console.log("Dashboard Bookings Data log:", response);
 
             } catch (error: any) {
-                setError(error.message || "Unable to fetch dashboard bookings data. Please try again later.");
+                // setError(error.message || "Unable to fetch dashboard bookings data. Please try again later.");
+                NotifyError(error.message || "Unable to fetch dashboard bookings data. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -241,12 +243,12 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                             Loading...
                                         </td>
                                     </tr>
-                                ) : error ? (
-                                    <tr>
-                                        <td colSpan={9} className="text-center py-5">
-                                            Error: {error}
-                                        </td>
-                                    </tr>
+                                    // ) : error ? (
+                                    //     <tr>
+                                    //         <td colSpan={9} className="text-center py-5">
+                                    //             Error: {error}
+                                    //         </td>
+                                    //     </tr>
                                 ) : dashboardData.length > 0 ? (
                                     dashboardData.map((data) => (
                                         <tr key={data.appointment_id} className="border-b-2 border-mindfulGreyTypeTwo pb-2">

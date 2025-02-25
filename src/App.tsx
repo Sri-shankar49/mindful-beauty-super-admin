@@ -56,6 +56,7 @@ import { ListCoupons } from './components/Coupons/ListCoupons';
 import { AddCoupon } from './components/Coupons/AddCoupon';
 import { ExpiredCoupons } from './components/Coupons/ExpiredCoupons';
 import { WalletManagement } from './pages/WalletManagement';
+import { ToastMessage } from './common/Toast/ToastMessage';
 
 
 
@@ -88,6 +89,9 @@ function App() {
       <BrowserRouter>
         {/* ScrollToTop component */}
         <ScrollToTop />
+
+        {/* Toast Message */}
+        <ToastMessage />      {/* Keep this in the root of your app */}
 
         <Routes>
           <Route path="/" element={<SignIn />} />

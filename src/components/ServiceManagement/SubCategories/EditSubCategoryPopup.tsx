@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 import { categories, editSubCategory } from '../../../api/apiConfig';
 import { SelectField } from '../../../common/SelectField';
+import { useNavigate } from 'react-router-dom';
 
 interface EditSubCategoryPopupProps {
     closePopup: () => void;
@@ -56,7 +57,7 @@ const editubCategorySchema = zod.object({
 type EditSubCategoryFormData = zod.infer<typeof editubCategorySchema>;
 
 export const EditSubCategoryPopup: React.FC<EditSubCategoryPopupProps> = ({ closePopup, subCategoryData, refreshData }) => {
-
+    const navigate = useNavigate()
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -161,33 +162,58 @@ export const EditSubCategoryPopup: React.FC<EditSubCategoryPopupProps> = ({ clos
         setExistingImage(null); // Clear existing image on removal
     };
 
+    const fetchImageAsBlob = async (imageUrl: string): Promise<File | null> => {
+        try {
+            console.log("Fetching image from URL:", imageUrl);
+
+            const response = await fetch(imageUrl, { mode: "cors" }); // Ensure CORS is enabled
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            console.log("Blob received:", blob);
+
+            if (blob.size === 0) {
+                throw new Error("Fetched blob is empty.");
+            }
+
+            const file = new File([blob], "existing_image.jpg", { type: blob.type });
+            console.log("Converted File:", file);
+            return file;
+        } catch (error) {
+            console.error("Failed to fetch existing image:", error);
+            return null; // Ensure null is returned only in case of failure
+        }
+    };
 
     // ✅ Form Submit Handler
     const onSubmit = async (data: EditSubCategoryFormData) => {
         setLoading(true);
         setError(null);
-
+        console.log("data ==>", data);
         try {
             const formData = new FormData();
             formData.append("subcategory_id", String(data.subcategory_id));
             formData.append("category_id", data.categoryID);
             formData.append("subcategory_name", data.subCategoryName);
-
-            // if (selectedFile) {
-            //     formData.append("image", selectedFile);
-            // }
-
             if (selectedFile) {
                 formData.append("image", selectedFile); // Upload new file
             } else if (existingImage) {
-                formData.append("image", existingImage); // Keep existing image URL
+                const imageFile = await fetchImageAsBlob(existingImage);
+                if (imageFile) {
+                    formData.append("image", imageFile);
+                } else {
+                    console.warn("Skipping image upload as fetchImageAsBlob returned null.");
+                }
             }
-
+            console.log("Sub cat formdata ==>", JSON.stringify(formData), formData);
             const response = await editSubCategory(formData);
             if (response?.status === "success") {
                 reset();
                 closePopup();
                 refreshData();
+                navigate(0);
             }
         } catch (error: any) {
             setError(error.message || "Failed to update sub-category. Please try again.");
