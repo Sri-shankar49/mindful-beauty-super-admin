@@ -17,7 +17,7 @@ interface EditSubCategoryPopupProps {
         category_name: string;
         status: string;
         is_deleted: string;
-        image: File | null;
+        image: File | null;  // ✅ Ensure image is either a URL string, File, or null
     }                           // Pass the selected Category ID
     refreshData: () => void;
 }
@@ -62,8 +62,8 @@ export const EditSubCategoryPopup: React.FC<EditSubCategoryPopupProps> = ({ clos
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const [selectedFile, setSelectedFile] = useState<File | null>(subCategoryData.image);
-    const [fileName, setFileName] = useState<string>(subCategoryData.image ? subCategoryData.image.name : "");
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [fileName, setFileName] = useState<string>(subCategoryData.image ? subCategoryData.image.name || "" : "");
 
     // Preload existing image (File or URL)
     const [existingImage, setExistingImage] = useState<string | null>(
@@ -71,17 +71,36 @@ export const EditSubCategoryPopup: React.FC<EditSubCategoryPopupProps> = ({ clos
     );
 
 
+    // useEffect(() => {
+    //     if (subCategoryData.image) {
+    //         if (typeof subCategoryData.image === "string") {
+    //             setExistingImage(subCategoryData.image); // Set existing URL
+    //             setFileName(subCategoryData.image.split("/").pop() || "Existing Image"); // Extract file name
+    //         } else if (subCategoryData.image instanceof File) {
+    //             setSelectedFile(subCategoryData.image);
+    //             setFileName(subCategoryData.image.name);
+    //         }
+    //     }
+    // }, [subCategoryData.image]);
+
+
+    const isString = (value: unknown): value is string => typeof value === "string";
+
     useEffect(() => {
         if (subCategoryData.image) {
-            if (typeof subCategoryData.image === "string") {
-                setExistingImage(subCategoryData.image); // Set existing URL
-                setFileName(subCategoryData.image.split("/").pop() || "Existing Image"); // Extract file name
+            if (isString(subCategoryData.image)) {
+                setExistingImage(subCategoryData.image);
+                setFileName(subCategoryData.image.split("/").pop() ?? "Existing Image");
             } else if (subCategoryData.image instanceof File) {
                 setSelectedFile(subCategoryData.image);
                 setFileName(subCategoryData.image.name);
             }
         }
     }, [subCategoryData.image]);
+
+
+
+
     // ✅ Drag & Drop Handler
     // const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     //     event.preventDefault();
