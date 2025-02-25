@@ -282,9 +282,15 @@ export const deleteCategory = async (categoryID: number) => {
 
 
 // Service Management Page -- --> Sub Categories Tab
-export const fetchSubcategoriesList = async () => {
+export const fetchSubcategoriesList = async (categoryID: number, pageNumber: number) => {
   try {
-    const response = await apiAxios.get('/provider-api/subcategory/');
+    const response = await apiAxios.get('/provider-api/subcategory/', {
+      params: {
+        // Add any query parameters you need here
+        category_id: categoryID,
+        page: pageNumber
+      }
+    });
 
     console.log("Subcategory List Response:", response.data);
 
@@ -297,6 +303,61 @@ export const fetchSubcategoriesList = async () => {
   } catch (error: any) {
     console.error("Error fetching subcategories list:", error.response?.data?.message || error);
     throw new Error(error.response?.data?.message || "Error fetching subcategories list");
+  }
+};
+
+
+
+
+
+// Service Management Page -- --> Categories Tab
+export const addSubCategory = async (formData: FormData): Promise<any> => {
+  try {
+    const response = await apiAxios.post('/provider-api/subcategory/add/', formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // Ensures the server recognizes file uploads
+      },
+    });
+
+    console.log("Add Sub Category List Response:", response.data);
+
+    if (!response.data || response.status !== 201) {
+      throw new Error("Failed to Add Sub Category");
+    }
+
+    return response.data; // Extracting the category data
+
+  } catch (error: any) {
+    console.error("Error adding Sub category:", error.response?.data.message || error);
+    throw new Error(error.response?.data.message || "Error adding Sub category list");
+  }
+};
+
+
+
+
+
+
+// Service Management Page -- --> Categories Tab
+export const editSubCategory = async (formData: FormData): Promise<any> => {
+  try {
+    const response = await apiAxios.put('/provider-api/subcategory/edit/', formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // Ensures the server recognizes file uploads
+      },
+    });
+
+    console.log("Edit Sub Category List Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to Edit Sub Category");
+    }
+
+    return response.data; // Extracting the category data
+
+  } catch (error: any) {
+    console.error("Error editing Sub category:", error.response?.data.message || error);
+    throw new Error(error.response?.data.message || "Error editing Sub category");
   }
 };
 

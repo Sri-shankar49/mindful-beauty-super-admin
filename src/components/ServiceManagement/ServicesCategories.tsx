@@ -1,8 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom'
-// import { InputField } from '../../common/InputField';
-// import { MdSearch } from "react-icons/md";
+import { InputField } from '../../common/InputField'
+// import { MdSearch } from 'react-icons/md'
 
 export const ServicesCategories = () => {
+
+    // Add this to check if we're on the Service Management page
+    const showSearch = location.pathname.includes('ServiceManagement');
+
     return (
         <div>
             <div className="bg-mindfulLightPink h-dvh px-5 py-5" >
@@ -51,13 +55,13 @@ export const ServicesCategories = () => {
                                             id=""
                                             className=''
                                         /> */}
-                                        
-                                    {/* <InputField
+
+                                    <InputField
                                         label={''}
                                         placeholder="Search"
-                                        className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none"
+                                        className={`${showSearch ? "invisible" : ""} w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-1 focus-within:outline-none`}
                                     />
-                                    <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" /> */}
+                                    {/* <MdSearch className="text-[22px] text-mindfulBlack absolute top-2 right-1 cursor-pointer" /> */}
                                 </div>
                             </div>
                         </div>

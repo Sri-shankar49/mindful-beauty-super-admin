@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../common/Button';
 import { IoCloseCircle } from 'react-icons/io5';
 import { deleteSubcategory } from '../../../api/apiConfig';
 
 interface DeleteSubcategoryPopupProps {
-    subcatID: number; // Pass the selected Category ID
     closePopup: () => void;
+    subCategoryData: {
+        subcategory_id: number;
+        subcategory_name: string;
+        category_id: number;
+        category_name: string;
+        status: string;
+        is_deleted: string;
+        image: File | null;
+    }                           // Pass the selected Category ID
+    refreshData: () => void;
 }
 
-export const DeleteSubcategoryPopup: React.FC<DeleteSubcategoryPopupProps> = ({ closePopup, subcatID }) => {
-
-    const navigate = useNavigate();
+export const DeleteSubcategoryPopup: React.FC<DeleteSubcategoryPopupProps> = ({ closePopup, subCategoryData, refreshData }) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleStaffDelete = async () => {
+    const handleSubCategoryDelete = async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const data = await deleteSubcategory((subcatID)); // Call API with staffID
+            const data = await deleteSubcategory(subCategoryData.subcategory_id); // Call API with staffID
             console.log("Sub Category Data deleted successfully:", data);
 
             // Optionally show a success message or trigger a re-fetch
-            // closePopup(); // Close popup after deletion
             if (data?.status === "success") {
-                closePopup(); // Close popup after deletion
-                navigate(0);
-                // refreshData(); // Refresh data after deletion
+                closePopup();       // Close popup after deletion
+                refreshData();      // Refresh data after deletion
             }
 
         } catch (error: any) {
@@ -50,7 +54,7 @@ export const DeleteSubcategoryPopup: React.FC<DeleteSubcategoryPopupProps> = ({ 
 
 
                             <div className="relative mb-10">
-                                <h2 className="text-2xl text-mindfulBlack font-semibold">Delete Subcategory</h2>
+                                <h2 className="text-2xl text-mindfulBlack font-semibold">Delete Sub Category</h2>
                                 <div className="absolute inset-x-0 bottom-[-20px] mx-auto bg-mindfulgrey rounded-md w-full h-0.5">
                                 </div>
                             </div>
@@ -65,7 +69,7 @@ export const DeleteSubcategoryPopup: React.FC<DeleteSubcategoryPopupProps> = ({ 
 
                             {/* Content */}
                             <div className="text-center">
-                                <p className="text-lg text-mindfulBlack">Are you sure you want to delete this Subcategory?</p>
+                                <p className="text-lg text-mindfulBlack">Are you sure you want to delete this Sub Category?</p>
 
                                 {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -77,12 +81,12 @@ export const DeleteSubcategoryPopup: React.FC<DeleteSubcategoryPopupProps> = ({ 
                                             onClick={closePopup}
                                             buttonType="button"
                                             buttonTitle="Cancel"
-                                            className="bg-mindfulWhite text-md text-mindfulBlack rounded-sm px-4 py-1.5 focus-within:outline-none"
+                                            className="bg-mindfulWhite text-md text-mindfulBlack rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer"
                                         />
 
                                         {/* Submit Button */}
                                         <Button
-                                            onClick={handleStaffDelete}
+                                            onClick={handleSubCategoryDelete}
                                             buttonType="submit"
                                             buttonTitle={loading ? "Deleting..." : "Delete"}
                                             disabled={loading}

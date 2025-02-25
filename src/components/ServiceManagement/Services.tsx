@@ -196,7 +196,7 @@ export const Services = () => {
 
         setTotalItems(response.count);
 
-        setcategoriesData(loadCategoriesData.data)
+        setcategoriesData(loadCategoriesData.data);
 
         console.log("Services List Data log:", response);
 
@@ -216,7 +216,7 @@ export const Services = () => {
 
   // Function to handle category change and fetch subcategories
   const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategoryID = event.target.value; // Get the selected categoryId
+    const selectedCategoryID = event.target.value; // Get the selected categoryID
     setSelectedCategory(selectedCategoryID); // Update state
     setSelectedSubCategory(""); // Reset subcategory when category changes
 

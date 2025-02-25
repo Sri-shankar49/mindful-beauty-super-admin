@@ -7,11 +7,13 @@ import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 // import { SelectField } from "@/common/SelectField";
 import { Pagination } from "../../common/Pagination";
 import { BiEditAlt } from "react-icons/bi";
-// import { RiDeleteBinLine } from "react-icons/ri";
+import { RiDeleteBinLine } from "react-icons/ri";
 import { MdFormatListBulletedAdd } from "react-icons/md";
 import { Button } from "../../common/Button";
-import { fetchSubcategoriesList } from "../../api/apiConfig";
-// import { Pagination } from "@/common/Pagination";
+import { categories, fetchSubcategoriesList } from "../../api/apiConfig";
+import { AddSubCategoryPopup } from "./SubCategories/AddSubCategoryPopup";
+import { DeleteSubcategoryPopup } from "./SubCategories/DeleteSubcategoryPopup";
+import { EditSubCategoryPopup } from "./SubCategories/EditSubCategoryPopup";
 
 // Define the type for each option
 // interface StylistOption {
@@ -21,18 +23,23 @@ import { fetchSubcategoriesList } from "../../api/apiConfig";
 // }
 
 // Proptypes for API
-interface Category {
-  category_id: number;
-  category_name: string;
-  subcategories: Subcategory[];
-}
-
 interface Subcategory {
   subcategory_id: number;
   subcategory_name: number;
-  status: number;
-  is_deleted: number;
+  category_id: number;
+  category_name: string;
+  status: string;
+  is_deleted: string;
+  image: File | null;
 }
+
+interface categoriesDataProps {
+  category_id?: string;
+  category_name: string;
+  status: string;
+  image: string;
+}
+
 
 export const Subcategories = () => {
 
@@ -61,8 +68,9 @@ export const Subcategories = () => {
   // ];
 
 
+  const [categoriesData, setcategoriesData] = useState<categoriesDataProps[]>([]);
 
-  const [subcategoriesData, setSubcategoriesData] = useState<Category[]>([]);
+  const [subcategoriesData, setSubcategoriesData] = useState<Subcategory[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,8 +81,20 @@ export const Subcategories = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   // State declaration for Stylist Popup
   const [showStylistPopup, setShowStylistPopup] = useState(false);
+
+
+  const [showAddSubCategoriesPopup, setShowAddSubCategoriespopup] = useState(false);
+
+  const [selectedSubcategory, setSelectedSubcategory] = useState<any>(null);
+
+  const [showEditSubCategoryPopup, setShowEditSubCategorypopup] = useState(false);
+  const [showDeleteSubCategoryPopup, setShowDeleteSubCategorypopup] = useState(false);
+
+
 
 
   // const openStylistPopup = () => {
@@ -84,6 +104,38 @@ export const Subcategories = () => {
   const closeStylistPopup = () => {
     setShowStylistPopup(false);
   }
+
+
+
+  const openAddSubCategoriesPopup = () => {
+    setShowAddSubCategoriespopup(true);
+  }
+
+  const closeAddSubCategoriesPopup = () => {
+    setShowAddSubCategoriespopup(false);
+  }
+
+
+  const openEditSubCategoryPopup = (subCategory: any) => {
+    setSelectedSubcategory(subCategory);
+    setShowEditSubCategorypopup(true);
+    console.log("Edit the selected sub category with ID:", subCategory);
+  }
+
+  const closeEditSubCategoryPopup = () => {
+    setShowEditSubCategorypopup(false);
+  }
+
+  const openDeleteSubCategoryPopup = (subCategory: any) => {
+    setSelectedSubcategory(subCategory);
+    setShowDeleteSubCategorypopup(true);
+    console.log("Delete the selected sub category with ID:", subCategory);
+  }
+
+  const closeDeleteSubCategoryPopup = () => {
+    setShowDeleteSubCategorypopup(false);
+  }
+
   // const [selectedStylistOption, setSelectedStylistOption] = useState<SingleValue<StylistOption>>(null);
 
 
@@ -111,14 +163,22 @@ export const Subcategories = () => {
       setLoading(true);
 
       try {
-        const response = await fetchSubcategoriesList();
+        const response = await fetchSubcategoriesList(0, currentPage);
+
+        const loadCategoriesData = await categories();
+
         setSubcategoriesData(response.results.data);
 
         setTotalItems(response.count);
 
+        setcategoriesData(loadCategoriesData.data);
+
         console.log("Sub categories Data log:", response);
 
         console.log("Fetched Sub Categories List pagination count data log :", response.count);
+
+        console.log("Categories List Data log:", loadCategoriesData);
+
 
       } catch (error: any) {
         setError(error.message || "Unable to fetch Sub categories users data. Please try again later.");
@@ -127,7 +187,31 @@ export const Subcategories = () => {
       }
     }
     fetchSubcategoriesData();
-  }, [currentPage, itemsPerPage ]);
+  }, [currentPage, itemsPerPage]);
+
+
+  // Function to handle category change 
+  const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCategoryID = event.target.value; // Get the selected categoryID
+    setSelectedCategory(selectedCategoryID); // Update state
+    // setSelectedSubCategory(""); // Reset subcategory when category changes
+
+    try {
+      const response = await fetchSubcategoriesList(Number(selectedCategoryID), currentPage); // Pass categoryId to API
+
+      setSubcategoriesData(response.results.data)      // Update subcategories
+
+      setTotalItems(response.count);
+
+      console.log("Sub Category List data log:", response);
+      console.log("Fetched Sub Categories List pagination count data log :", response.count);
+
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
 
   const handlePageChange = (page: number) => {
@@ -139,6 +223,21 @@ export const Subcategories = () => {
     setCurrentPage(1); // Reset to the first page when items per page changes
   };
 
+  // Refreshing the data on handleActionSubmit
+  const refreshedData = async () => {
+    try {
+      const response = await fetchSubcategoriesList(0, currentPage);
+      setSubcategoriesData(response.results.data);
+
+      setTotalItems(response.count);
+
+      console.log("Sub Category List data refreshed:", response);
+    } catch (error: any) {
+      console.error("Error refreshing Sub Category List data:", error.message);
+    }
+  }
+
+
   return (
     <div>
 
@@ -149,12 +248,31 @@ export const Subcategories = () => {
 
       <div>
 
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end space-x-6 mt-5">
+
+          <div>
+            <select
+              // name=""
+              id=""
+              className="w-60 rounded-[5px] border-[1px] border-mindfulgrey px-2 py-2 focus-within:outline-none"
+              value={selectedCategory}
+              onChange={handleCategoryChange} // Call on change
+
+            >
+              <option value="" disabled>Main Category</option>
+
+              {categoriesData.map((category) => (
+                <option key={category.category_id} value={category.category_id}>
+                  {category.category_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Add Service */}
-          {/* <Link to="/ServiceListing/PackagesList/AddPackages"> */}
           <div
-            // onClick={openBranchPopup}
-            className="w-fit flex items-center bg-mindfulBlue border-[1px] border-mindfulBlue rounded-[5px] px-3 py-1.5 cursor-pointer mt-5 hover:bg-mindfulWhite hover:border-mindfulBlue group"
+            onClick={openAddSubCategoriesPopup}
+            className="w-fit flex items-center bg-mindfulBlue border-[1px] border-mindfulBlue rounded-[5px] px-3 py-1.5 cursor-pointer hover:bg-mindfulWhite hover:border-mindfulBlue group"
           >
             <div>
               <MdFormatListBulletedAdd className="text-[18px] text-mindfulWhite group-hover:text-mindfulBlue" />
@@ -166,7 +284,6 @@ export const Subcategories = () => {
               className="bg-mindfulBlue text-mindfulWhite pl-2 cursor-pointer group-hover:bg-mindfulWhite group-hover:text-mindfulBlue"
             />
           </div>
-          {/* </Link> */}
         </div>
 
         <div className="py-5">
@@ -197,45 +314,52 @@ export const Subcategories = () => {
               ) : (
                 subcategoriesData.length > 0 ? (
                   subcategoriesData.map((subCategory) => (
-                    <tr key={subCategory.category_id} className="border-b-2 border-mindfulGreyTypeTwo">
+                    <tr key={subCategory.subcategory_id} className="border-b-2 border-mindfulGreyTypeTwo">
                       <td className="text-start px-2 py-5">{subCategory.category_name}</td>
 
                       <td className="text-start px-2 py-5">
+                        {subCategory.subcategory_name}
+                        {/* {subCategory.subcategories.map((sub) => (
+                            <div key={sub.subcategory_id}>{sub.subcategory_name}</div>
+                          ))} */}
 
-                        <div>
+                        {/* <div>
                           <div className="grid grid-cols-4">
-                            {/* <div>Sub Category 1</div>
+                            <div>Sub Category 1</div>
                             <div>Sub Category 2</div>
                             <div>Sub Category 3</div>
-                            <div>Sub Category 4</div> */}
+                            <div>Sub Category 4</div>
                             {subCategory.subcategories.map((sub) => (
                               <div key={sub.subcategory_id}>{sub.subcategory_name}</div>
                             ))}
                           </div>
-                        </div>
+                        </div> */}
 
                       </td>
                       <td className="text-start px-2 py-5">
                         <div className="flex items-center space-x-2">
 
                           {/* Edit Button */}
-                          <div className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200">
+                          <div
+                            onClick={() => openEditSubCategoryPopup(subCategory)}
+                            className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#e5ffec] transition-colors duration-200"
+                          >
                             <BiEditAlt className="text-[20px] text-mindfulBlack group-hover:text-mindfulGreen" />
                           </div>
 
                           {/* Delete Button */}
-                          {/* <div
-                            // onClick={openEditService}
+                          <div
+                            onClick={() => openDeleteSubCategoryPopup(subCategory)}
                             className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200">
                             <RiDeleteBinLine className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
-                          </div> */}
+                          </div>
                         </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={2} className="text-center py-5">
+                    <td colSpan={3} className="text-center py-5">
                       No Sub categories Data available
                     </td>
                   </tr>
@@ -249,6 +373,12 @@ export const Subcategories = () => {
 
       {/* {showDenialPopup && <DenialPopup closePopup={closeDenialPopup} />} */}
       {showStylistPopup && <StylistPopup closePopup={closeStylistPopup} />}
+
+      {showAddSubCategoriesPopup && <AddSubCategoryPopup closePopup={closeAddSubCategoriesPopup} />}
+
+      {showEditSubCategoryPopup && selectedSubcategory && <EditSubCategoryPopup closePopup={closeEditSubCategoryPopup} subCategoryData={selectedSubcategory} refreshData={refreshedData} />}
+
+      {showDeleteSubCategoryPopup && selectedSubcategory && <DeleteSubcategoryPopup closePopup={closeDeleteSubCategoryPopup} subCategoryData={selectedSubcategory} refreshData={refreshedData} />}
 
 
       {/* Pagination */}
