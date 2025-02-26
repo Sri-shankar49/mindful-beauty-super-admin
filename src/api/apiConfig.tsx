@@ -59,13 +59,14 @@ export const verifyOTP = async (phoneNumber: string, otp: number) => {
 
 
 // Service Provider Page -- > Active, Pending and Inactive
-export const fetchProvidersList = async (status: string, searchQuery: string, pageNumber: number) => {
+export const fetchProvidersList = async (status: string, searchQuery: string, pageNumber: number, serviceTypeID: number) => {
   try {
     const response = await apiAxios.get('/provider-api/providers_list/', {
       params: {
         status: status,  // Active, Pending, Inactive
         search: searchQuery,// Search query
-        page: pageNumber
+        page: pageNumber,
+        service_type_id: serviceTypeID// Service type id
       },
     });
 
@@ -945,7 +946,7 @@ export const addCoupon = async (statusID: number, validFrom: string, validUntil:
 
 
 // Coupon Page -- --> List Coupons Tab
-export const editCoupon = async (couponID: number, couponCode: string, couponLimit: number, validUntil: string, discountValue: string) => {
+export const editCoupon = async (couponID: number, couponCode: string, couponLimit: number, validUntil: string, discountValue: string, couponStatus: number) => {
   try {
     const response = await apiAxios.put('/provider-api/coupons/edit/', {
       id: couponID,
@@ -953,6 +954,7 @@ export const editCoupon = async (couponID: number, couponCode: string, couponLim
       coupon_limit: couponLimit,
       valid_until: validUntil,
       discount_value: discountValue,
+      status: couponStatus,
     });
 
     console.log("Edit Coupon Response:", response.data);

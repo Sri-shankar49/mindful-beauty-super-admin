@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import mindfulBeautyGirl from "../assets/images/mindfulBeautyGirl.png"
+import mindfulBeautyGirl from "../assets/images/mindfulBeautyGirl.webp"
 import mindfulBeautyLogo from "../assets/icons/mindfulBeautyLogo.svg"
 import { Login } from '../components/SignIn/Login';
 import { Register } from '../components/SignIn/Register';

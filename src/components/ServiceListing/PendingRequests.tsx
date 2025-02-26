@@ -96,16 +96,16 @@ export const PendingRequests = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { pendingRequestData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.pendingRequest);
+  const { pendingRequestData, loading, error, searchQuery, currentPage, totalItems, serviceTypeID } = useSelector((state: RootState) => state.pendingRequest);
 
   // Fetch pending request list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
-    dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage })).catch((error) => {
+    dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
       console.error("Error fetching pending request list:", error);
       dispatch(setError(error.message))
     });
-  }, [dispatch, searchQuery, currentPage]);
+  }, [dispatch, searchQuery, currentPage, serviceTypeID]);
 
 
 
@@ -157,7 +157,7 @@ export const PendingRequests = () => {
     try {
       dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-      await dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage }));
+      await dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) }));
 
       console.log("Active Users list data refreshed.");
     } catch (error: any) {

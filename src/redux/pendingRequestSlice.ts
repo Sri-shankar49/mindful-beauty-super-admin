@@ -20,6 +20,7 @@ interface PendingRequestState {
     loading: boolean;
     error: string | null;
     searchQuery: string;
+    serviceTypeID: number; // Add serviceTypeID
     currentPage: number;
     totalItems: number;
 }
@@ -29,6 +30,7 @@ const initialState: PendingRequestState = {
     loading: false,
     error: null,
     searchQuery: '',
+    serviceTypeID: 0, // Default to "All"
     currentPage: 1,
     totalItems: 0,
 };
@@ -37,12 +39,12 @@ const initialState: PendingRequestState = {
 export const fetchPendingRequestList = createAsyncThunk(
     'pendingRequest/fetchPendingRequestList',
     async (
-        { status, searchQuery, currentPage }:
-            { status: string; searchQuery: string; currentPage: number },
+        { status, searchQuery, currentPage, serviceTypeID }:
+            { status: string; searchQuery: string; currentPage: number, serviceTypeID: number },
         { rejectWithValue }
     ) => {
         try {
-            const response = await fetchProvidersList(status, searchQuery, currentPage);
+            const response = await fetchProvidersList(status, searchQuery, currentPage, serviceTypeID);
             console.log("Pending Request Data log:", response);
 
             return response;
@@ -63,6 +65,9 @@ const pendingRequestSlice = createSlice({
         },
         setCurrentPage(state, action: PayloadAction<number>) {
             state.currentPage = action.payload;
+        },
+        setServiceTypeID(state, action: PayloadAction<number>) { // ✅ Add this
+            state.serviceTypeID = action.payload;
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
@@ -90,5 +95,5 @@ const pendingRequestSlice = createSlice({
     },
 });
 
-export const { setSearchQuery, setCurrentPage, setLoading, setError } = pendingRequestSlice.actions;
+export const { setSearchQuery, setServiceTypeID, setCurrentPage, setLoading, setError } = pendingRequestSlice.actions;
 export default pendingRequestSlice.reducer;

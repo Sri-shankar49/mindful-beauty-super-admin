@@ -1,4 +1,4 @@
-// import { useState } from "react"
+import { useState, useEffect } from "react";
 // import { SelectField } from "@/common/SelectField"
 // import { Button } from "@/common/Button"
 // import { AreaChart } from "@/components/Dashboard/DashBoardData/AreaChart"
@@ -8,7 +8,6 @@
 // import { StylistPopup } from "@/components/Dashboard/DashBoardData/StylistPopup"
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
-import { useEffect, useState } from "react";
 // import { SelectField } from "../../common/SelectField";
 import { fetchDashboardList } from "../../api/apiConfig";
 import { NavLink } from "react-router-dom";

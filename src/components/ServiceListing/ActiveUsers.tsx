@@ -8,9 +8,10 @@ import { pendingAction } from "../../api/apiConfig";
 import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { fetchActiveUserList, setCurrentPage, setError, setLoading } from "../../redux/activeUserSlice";
+import { fetchActiveUserList, setCurrentPage, setLoading } from "../../redux/activeUserSlice";
 import { DeleteProviderPopup } from "./DeleteProviderPopup";
 import { ViewProvider } from "./ViewProvider";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Proptypes frpm API
 // interface ActiveUsersProps {
@@ -102,17 +103,21 @@ export const ActiveUsers = () => {
 
     const dispatch = useDispatch<AppDispatch>();
 
+    // ✅ Get provider from Redux
+    // const provider = useSelector((state: RootState) => state.activeUser.serviceTypeID);
+
     // Redux state
-    const { activeUserData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.activeUser);
+    const { activeUserData, loading, searchQuery, currentPage, totalItems, serviceTypeID } = useSelector((state: RootState) => state.activeUser);
 
     // Fetch active Users list on mount and when dependencies change
     useEffect(() => {
         dispatch(setLoading(true)); // Ensure UI updates before fetching
-        dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage })).catch((error) => {
+        dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
             console.error("Error fetching active users list:", error);
-            dispatch(setError(error.message))
+            // dispatch(setError(error.message));
+            NotifyError(error.message || "Failed to fetch active users. Please try again."); // ✅ Show error via toast
         });
-    }, [dispatch, searchQuery, currentPage]);
+    }, [dispatch, searchQuery, currentPage, serviceTypeID]);  // ✅ Added provider as dependency
 
 
     const handlePageChange = (page: number) => {
@@ -130,7 +135,7 @@ export const ActiveUsers = () => {
     // Function for handling the pending requests
     const handleActionSubmit = async (providerID: number, action: string) => {
         setLoading(true);
-        setError(null);
+        // setError(null);
         try {
             const data = await pendingAction(providerID, action);
             console.log("Pending Action Data log based on Active Users:", data);
@@ -140,7 +145,8 @@ export const ActiveUsers = () => {
             }
 
         } catch (error: any) {
-            setError(error.message || 'An error occurred while processing your request.');
+            // setError(error.message || 'An error occurred while processing your request.');
+            NotifyError(error.message || 'An error occurred while processing your request.');
         } finally {
             setLoading(false);
         }
@@ -164,12 +170,13 @@ export const ActiveUsers = () => {
         try {
             dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-            await dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage }));
+            await dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) }));
 
             console.log("Active Users list data refreshed.");
         } catch (error: any) {
             console.error("Error refreshing active users data:", error.message);
-            dispatch(setError(error.message)); // ✅ Handle errors correctly
+            // dispatch(setError(error.message)); // ✅ Handle errors correctly
+            NotifyError("Failed to refresh data. Please try again."); // ✅ Show error via toast
         }
     };
 
@@ -206,12 +213,12 @@ export const ActiveUsers = () => {
                                         Loading...
                                     </td>
                                 </tr>
-                            ) : error ? (
-                                <tr>
-                                    <td colSpan={7} className="text-center py-5">
-                                        Error: {error}
-                                    </td>
-                                </tr>
+                                // ) : error ? (
+                                //     <tr>
+                                //         <td colSpan={7} className="text-center py-5">
+                                //             Error: {error}
+                                //         </td>
+                                //     </tr>
                             ) : activeUserData.length > 0 ? (
                                 activeUserData.map((activeData) => (
 

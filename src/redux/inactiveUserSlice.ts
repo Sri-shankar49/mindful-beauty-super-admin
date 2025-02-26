@@ -20,6 +20,7 @@ interface InactiveUserState {
     loading: boolean;
     error: string | null;
     searchQuery: string;
+    serviceTypeID: number; // Add serviceTypeID
     currentPage: number;
     totalItems: number;
 }
@@ -29,6 +30,7 @@ const initialState: InactiveUserState = {
     loading: false,
     error: null,
     searchQuery: '',
+    serviceTypeID: 0, // Default to "All"
     currentPage: 1,
     totalItems: 0,
 };
@@ -37,12 +39,12 @@ const initialState: InactiveUserState = {
 export const fetchInactiveUserList = createAsyncThunk(
     'inactiveUser/fetchInactiveUserList',
     async (
-        { status, searchQuery, currentPage }:
-            { status: string; searchQuery: string; currentPage: number },
+        { status, searchQuery, currentPage, serviceTypeID }:
+            { status: string; searchQuery: string; currentPage: number, serviceTypeID: number },
         { rejectWithValue }
     ) => {
         try {
-            const response = await fetchProvidersList(status, searchQuery, currentPage);
+            const response = await fetchProvidersList(status, searchQuery, currentPage, serviceTypeID);
             console.log("Inactive Users Data log:", response);
 
             return response;
@@ -67,6 +69,9 @@ const inactiveUserSlice = createSlice({
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
+        setServiceTypeID(state, action: PayloadAction<number>) { // ✅ Add this
+            state.serviceTypeID = action.payload;
+        },
         setError: (state, action) => {
             state.error = action.payload;
             state.loading = false; // Reset loading on error
@@ -90,5 +95,5 @@ const inactiveUserSlice = createSlice({
     },
 });
 
-export const { setSearchQuery, setCurrentPage, setLoading, setError } = inactiveUserSlice.actions;
+export const { setSearchQuery, setServiceTypeID, setCurrentPage, setLoading, setError } = inactiveUserSlice.actions;
 export default inactiveUserSlice.reducer;

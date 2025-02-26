@@ -3,10 +3,15 @@ import { FaBell } from "react-icons/fa6";
 import { FaUserLarge } from "react-icons/fa6";
 import mindfulBeautyLogoSmall from "../assets/icons/mindfulBeautyLogoSmall.png";
 // import ashtamudiLogo from "../assets/icons/ashtamudiLogo.png";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiMoreVertical } from "react-icons/fi";
+import { persistor, RootState } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/loginSlice";
 
 export const Header = () => {
+
+    const navigate = useNavigate();
 
     const [profileHover, setProfileHover] = useState(false);
     const [moreHover, setMoreHover] = useState(false);
@@ -27,6 +32,23 @@ export const Header = () => {
     const handleMoreMouseLeave = () => {
         setMoreHover(false);
     };
+
+
+    const dispatch = useDispatch();
+
+    const { phoneNumber } = useSelector((state: RootState) => state.login);
+
+    console.log("Just logging phone number from Redux", phoneNumber);
+
+
+    const handleLogout = async () => {
+        dispatch(logout()); // Logout and clear token
+        navigate("/");
+        sessionStorage.clear();
+
+        // Purge persisted state (this will remove Redux Persist data, i.e., localStorage data)
+        await persistor.purge();  // This clears the persisted Redux state from localStorage
+    }
 
     return (
         <header>
@@ -169,7 +191,7 @@ export const Header = () => {
 
                                             {/* <Link to=""> */}
                                             <div
-                                                // onClick={handleLogout}
+                                                onClick={handleLogout}
                                                 className="px-4 py-3 text-mindfulBlack hover:bg-gray-100"
                                             >
                                                 Sign Out

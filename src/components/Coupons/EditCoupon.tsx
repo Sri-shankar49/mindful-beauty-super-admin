@@ -22,6 +22,7 @@ interface EditCouponProps {
         valid_until: string;
         discount_type: string;
         discount_value: string;
+        status_id: number;
         status: string;
         created_datetime: string;
         provider: number | null;
@@ -93,7 +94,7 @@ export const EditCoupon: React.FC<EditCouponProps> = ({ closePopup, couponData, 
             // valid_until: couponData.valid_until,
             valid_from: formatDateForInput(couponData.valid_from),
             valid_until: formatDateForInput(couponData.valid_until),
-            status: couponData.status,
+            status: String(couponData.status_id),
         }, // ✅ Set correct default values
     });
 
@@ -114,7 +115,8 @@ export const EditCoupon: React.FC<EditCouponProps> = ({ closePopup, couponData, 
                 data.coupon_limit,
                 data.valid_until,
                 // data.discount_value
-                sanitizedDiscountValue
+                sanitizedDiscountValue,
+                Number(data.status)
             );
             console.log("Coupon edited successfully", response);
 
@@ -305,7 +307,7 @@ export const EditCoupon: React.FC<EditCouponProps> = ({ closePopup, couponData, 
                                                         Status
                                                     </label>
 
-                                                    <InputField
+                                                    {/* <InputField
                                                         label={''}
                                                         type="text"
                                                         // name="status"
@@ -315,12 +317,11 @@ export const EditCoupon: React.FC<EditCouponProps> = ({ closePopup, couponData, 
                                                         {...register("status")}
                                                         title='You cannot edit this field'
                                                         readOnly
-                                                    />
-
-                                                    {errors.status && <p className="text-red-500">{errors.status.message}</p>}
+                                                    /> */}
 
 
-                                                    {/* <select
+
+                                                    <select
                                                         // name=""
                                                         id=""
                                                         className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
@@ -330,8 +331,10 @@ export const EditCoupon: React.FC<EditCouponProps> = ({ closePopup, couponData, 
                                                     >
                                                         <option value="1">Active</option>
                                                         <option value="2">Inactive</option>
-                                                        <option value="expired">Expired</option>
-                                                    </select> */}
+                                                        {/* <option value="expired">Expired</option> */}
+                                                    </select>
+
+                                                    {errors.status && <p className="text-sm text-red-500">{errors.status.message}</p>}
 
                                                 </div>
 

@@ -100,16 +100,16 @@ export const InactiveUsers = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { inactiveUserData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.inactiveUser);
+  const { inactiveUserData, loading, error, searchQuery, currentPage, totalItems, serviceTypeID } = useSelector((state: RootState) => state.inactiveUser);
 
   // Fetch active Users list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
-    dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage })).catch((error) => {
+    dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
       console.error("Error fetching inactive users list:", error);
       dispatch(setError(error.message))
     });
-  }, [dispatch, searchQuery, currentPage]);
+  }, [dispatch, searchQuery, currentPage, serviceTypeID]);
 
 
 
@@ -162,7 +162,7 @@ export const InactiveUsers = () => {
     try {
       dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-      await dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage }));
+      await dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) }));
 
       console.log("Inactive Users list data refreshed.");
     } catch (error: any) {

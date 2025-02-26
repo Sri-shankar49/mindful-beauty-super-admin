@@ -10,9 +10,9 @@ import { InputField } from '../common/InputField';
 // import { Pagination } from '@/common/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
-import { setSearchQuery as setactiveUserSearchQuery } from '../redux/activeUserSlice';
-import { setSearchQuery as setpendingRequestSearchQuery } from '../redux/pendingRequestSlice';
-import { setSearchQuery as setInactiveUserSearchQuery } from '../redux/inactiveUserSlice';
+import { setSearchQuery as setactiveUserSearchQuery, setServiceTypeID as setActiveUserServiceTypeID } from '../redux/activeUserSlice';
+import { setSearchQuery as setpendingRequestSearchQuery, setServiceTypeID as setPendingRequestServiceTypeID } from '../redux/pendingRequestSlice';
+import { setSearchQuery as setInactiveUserSearchQuery, setServiceTypeID as setInactiveUserServiceTypeID } from '../redux/inactiveUserSlice';
 
 
 export const ServiceProvider = () => {
@@ -29,10 +29,16 @@ export const ServiceProvider = () => {
 
   // Get searchQuery from Redux state
   // const searchQuery = useSelector((state: RootState) => state.activeUser.searchQuery);
-  // Get search query from Redux state
+
+
+  // Get search query from Redux state & serviceTypeID from Redux state
   const activeUsersSearchQuery = useSelector((state: RootState) => state.activeUser.searchQuery);
   const pendingRequestSearchQuery = useSelector((state: RootState) => state.pendingRequest.searchQuery);
   const inactiveUsersSearchQuery = useSelector((state: RootState) => state.inactiveUser.searchQuery);
+
+  const activeUsersServiceTypeID = useSelector((state: RootState) => state.activeUser.serviceTypeID);
+  const pendingRequestServiceTypeID = useSelector((state: RootState) => state.pendingRequest.serviceTypeID);
+  const inactiveUsersServiceTypeID = useSelector((state: RootState) => state.inactiveUser.serviceTypeID);
 
 
   const searchQuery =
@@ -40,6 +46,13 @@ export const ServiceProvider = () => {
       isPendingRequestTab ? pendingRequestSearchQuery :
         isInactiveUsersTab ? inactiveUsersSearchQuery :
           '';
+
+
+  const serviceTypeID =
+    isActiveUsersTab ? activeUsersServiceTypeID :
+      isPendingRequestTab ? pendingRequestServiceTypeID :
+        isInactiveUsersTab ? inactiveUsersServiceTypeID :
+          "0";
 
 
 
@@ -57,6 +70,19 @@ export const ServiceProvider = () => {
   };
 
 
+  // ✅ Handle provider select change
+  const handleProviderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = Number(event.target.value); // ✅ Convert to number
+    if (isActiveUsersTab) {
+      dispatch(setActiveUserServiceTypeID(value));
+    } else if (isPendingRequestTab) {
+      dispatch(setPendingRequestServiceTypeID(value));
+    } else if (isInactiveUsersTab) {
+      dispatch(setInactiveUserServiceTypeID(value));
+    }
+  };
+
+
   return (
     <div>
       <div>
@@ -70,7 +96,26 @@ export const ServiceProvider = () => {
                 <h5 className="text-3xl font-semibold pb-5">Salons and Freelancers</h5>
               </div>
 
-              <div>
+
+              <div className="flex items-center space-x-5">
+
+                {/* Salon & Freelancer Select field */}
+                <div>
+                  <select
+                    // name=""
+                    id=""
+                    className="w-72 rounded-[5px] border-2 border-mindfulgrey px-2 py-[0.36rem] focus-within:outline-none"
+                    value={serviceTypeID} // ✅ Controlled by Redux
+                    onChange={handleProviderChange} // ✅ Updates Redux state
+                  >
+                    <option value="" disabled>Select an Option</option>
+                    <option value="0">All</option>
+                    <option value="1">Salon</option>
+                    <option value="2">Freelancer</option>
+                  </select>
+                </div>
+
+
                 <div className="">
                   {/* <input
                                 type="text"

@@ -42,6 +42,10 @@ const loginSlice = createSlice({
         setPhoneNumber: (state, action: PayloadAction<string>) => {
             state.phoneNumber = action.payload; // Set phone number in Redux state
         },
+        logout: state => {
+            state.phoneNumber = null;
+            sessionStorage.removeItem('EnteredPhoneNumber');
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -59,6 +63,6 @@ const loginSlice = createSlice({
     },
 });
 
-export const { setPhoneNumber } = loginSlice.actions;
+export const { setPhoneNumber, logout } = loginSlice.actions;
 export default loginSlice.reducer;
 
