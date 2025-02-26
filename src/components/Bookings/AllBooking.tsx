@@ -9,7 +9,8 @@ import { Button } from "../../common/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { Pagination } from "../../common/Pagination";
-import { fetchBookingList, setCurrentPage, setError, setLoading } from "../../redux/allbookingSlice";
+import { fetchBookingList, setCurrentPage, setLoading } from "../../redux/allbookingSlice";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Define the type for each option
 // interface StylistOption {
@@ -83,13 +84,14 @@ export const AllBooking = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { bookingListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.allbooking);
+  const { bookingListData, loading, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.allbooking);
 
   // Fetch allbooking list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
     dispatch(fetchBookingList({ searchQuery, currentPage })).catch((error) => {
-      dispatch(setError(error.message));
+      // dispatch(setError(error.message));
+      NotifyError(error.message || "Failed to fetch all bookings. Please try again."); // ✅ Show error via toast
     });;
   }, [dispatch, searchQuery, currentPage]);
 
@@ -139,13 +141,13 @@ export const AllBooking = () => {
                   Loading...
                 </td>
               </tr>
-            ) : error ? (
-              /* Error State */
-              <tr>
-                <td colSpan={12} className="text-center text-red-600 py-5">
-                  Error: {error}
-                </td>
-              </tr>
+              // ) : error ? (
+              //   /* Error State */
+              //   <tr>
+              //     <td colSpan={12} className="text-center text-red-600 py-5">
+              //       Error: {error}
+              //     </td>
+              //   </tr>
             ) :
               bookingListData.length > 0 ? (
                 bookingListData.map((bookingData) => (

@@ -7,7 +7,8 @@ import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 import { Pagination } from "../../common/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { fetchCancelledList, setCurrentPage, setError, setLoading } from "../../redux/cancelledSlice";
+import { fetchCancelledList, setCurrentPage, setLoading } from "../../redux/cancelledSlice";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 
 // Define the type for each option
@@ -84,13 +85,14 @@ export const Cancelled = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { cancelledListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.cancelled);
+  const { cancelledListData, loading, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.cancelled);
 
   // Fetch cancelled list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
     dispatch(fetchCancelledList({ status: 4, searchQuery, currentPage })).catch((error) => {
-      dispatch(setError(error.message));
+      // dispatch(setError(error.message));
+      NotifyError(error.message || "Failed to fetch cancelled list. Please try again."); // ✅ Show error via toast
     });
   }, [dispatch, searchQuery, currentPage]);
 
@@ -139,13 +141,13 @@ export const Cancelled = () => {
                   Loading...
                 </td>
               </tr>
-            ) : error ? (
-              /* Error State */
-              <tr>
-                <td colSpan={11} className="text-center text-red-600 py-5">
-                  Error: {error}
-                </td>
-              </tr>
+              // ) : error ? (
+              //   /* Error State */
+              //   <tr>
+              //     <td colSpan={11} className="text-center text-red-600 py-5">
+              //       Error: {error}
+              //     </td>
+              //   </tr>
             ) : (
               cancelledListData.length > 0 ? (
                 cancelledListData.map((cancelled) => (

@@ -14,6 +14,7 @@ import { fetchCategoriesList } from "../../api/apiConfig";
 import { DeleteCategoryPopup } from "./Categories/DeleteCategoryPopup";
 import { AddCategoryPopup } from "./Categories/AddCategoryPopup";
 import { EditCategoryPopup } from "./Categories/EditCategoryPopup";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Define the type for each option
 // interface StylistOption {
@@ -63,7 +64,7 @@ export const Categories = () => {
 
   const [categoriesData, setCategoriesData] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
   const [selectedCatID, setSelectedCatID] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
@@ -143,7 +144,8 @@ export const Categories = () => {
         console.log("Fetched Categories List pagination count data log :", response.count);
 
       } catch (error: any) {
-        setError(error.message || "Unable to fetch categories users data. Please try again later.");
+        // setError(error.message || "Unable to fetch categories users data. Please try again later.");
+        NotifyError(error.message || "Unable to fetch categories users data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -214,12 +216,12 @@ export const Categories = () => {
                     Loading...
                   </td>
                 </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan={2} className="text-center py-5">
-                    Error: {error}
-                  </td>
-                </tr>
+                // ) : error ? (
+                //   <tr>
+                //     <td colSpan={2} className="text-center py-5">
+                //       Error: {error}
+                //     </td>
+                //   </tr>
               ) : categoriesData?.length > 0 ? ( // ✅ Added optional chaining (?.)
                 categoriesData.map((category) => (
                   <tr key={category.category_id} className="border-b-2 border-mindfulGreyTypeTwo">

@@ -8,9 +8,10 @@ import { pendingAction } from "../../api/apiConfig";
 import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { fetchPendingRequestList, setCurrentPage, setError, setLoading } from "../../redux/pendingRequestSlice";
+import { fetchPendingRequestList, setCurrentPage, setLoading } from "../../redux/pendingRequestSlice";
 import { DeleteProviderPopup } from "./DeleteProviderPopup";
 import { ViewProvider } from "./ViewProvider";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Proptypes frpm API
 // interface PendingRequestsProps {
@@ -96,14 +97,15 @@ export const PendingRequests = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { pendingRequestData, loading, error, searchQuery, currentPage, totalItems, serviceTypeID } = useSelector((state: RootState) => state.pendingRequest);
+  const { pendingRequestData, loading, searchQuery, currentPage, totalItems, serviceTypeID } = useSelector((state: RootState) => state.pendingRequest);
 
   // Fetch pending request list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
     dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
       console.error("Error fetching pending request list:", error);
-      dispatch(setError(error.message))
+      // dispatch(setError(error.message));
+      NotifyError(error.message || "Failed to fetch Pending Request. Please try again."); // ✅ Show error via toast
     });
   }, [dispatch, searchQuery, currentPage, serviceTypeID]);
 
@@ -122,7 +124,7 @@ export const PendingRequests = () => {
   // Function for handling the pending requests
   const handleActionSubmit = async (providerID: number, action: string) => {
     setLoading(true);
-    setError(null);
+    // setError(null);
     try {
       const data = await pendingAction(providerID, action);
       console.log("Pending Action Data log based on Pending Requests:", data);
@@ -131,7 +133,8 @@ export const PendingRequests = () => {
         refreshedData();
       }
     } catch (error: any) {
-      setError(error.message || 'An error occurred while processing your request.');
+      // setError(error.message || 'An error occurred while processing your request.');
+      NotifyError(error.message || 'An error occurred while processing your request.');
     } finally {
       setLoading(false);
     }
@@ -159,10 +162,12 @@ export const PendingRequests = () => {
 
       await dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) }));
 
-      console.log("Active Users list data refreshed.");
+      console.log("Pending Request list data refreshed.");
     } catch (error: any) {
-      console.error("Error refreshing active users data:", error.message);
-      dispatch(setError(error.message)); // ✅ Handle errors correctly
+      console.error("Error refreshing Pending Request data:", error.message);
+      // dispatch(setError(error.message)); // ✅ Handle errors correctly
+      NotifyError(error.message || "Failed to fetch Pending Request. Please try again."); // ✅ Show error via toast
+
     }
   };
 
@@ -198,12 +203,12 @@ export const PendingRequests = () => {
                         Loading...
                       </td>
                     </tr>
-                  ) : error ? (
-                    <tr>
-                      <td colSpan={7} className="text-center py-5">
-                        Error: {error}
-                      </td>
-                    </tr>
+                    // ) : error ? (
+                    //   <tr>
+                    //     <td colSpan={7} className="text-center py-5">
+                    //       Error: {error}
+                    //     </td>
+                    //   </tr>
                   ) : pendingRequestData.length > 0 ? (
                     pendingRequestData.map((pendingData) => (
                       <tr key={pendingData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">

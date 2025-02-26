@@ -14,6 +14,7 @@ import { categories, fetchSubcategoriesList } from "../../api/apiConfig";
 import { AddSubCategoryPopup } from "./SubCategories/AddSubCategoryPopup";
 import { DeleteSubcategoryPopup } from "./SubCategories/DeleteSubcategoryPopup";
 import { EditSubCategoryPopup } from "./SubCategories/EditSubCategoryPopup";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Define the type for each option
 // interface StylistOption {
@@ -72,7 +73,7 @@ export const Subcategories = () => {
 
   const [subcategoriesData, setSubcategoriesData] = useState<Subcategory[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
 
   const [totalItems, setTotalItems] = useState(0);
@@ -181,7 +182,8 @@ export const Subcategories = () => {
 
 
       } catch (error: any) {
-        setError(error.message || "Unable to fetch Sub categories users data. Please try again later.");
+        // setError(error.message || "Unable to fetch Sub categories users data. Please try again later.");
+        NotifyError(error.message || "Unable to fetch Sub categories users data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -207,7 +209,8 @@ export const Subcategories = () => {
       console.log("Fetched Sub Categories List pagination count data log :", response.count);
 
     } catch (error: any) {
-      setError(error.message);
+      // setError(error.message);
+      NotifyError(error.message);
     } finally {
       setLoading(false);
     }
@@ -305,12 +308,12 @@ export const Subcategories = () => {
                     Loading...
                   </td>
                 </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan={3} className="text-center py-5">
-                    Error: {error}
-                  </td>
-                </tr>
+                // ) : error ? (
+                //   <tr>
+                //     <td colSpan={3} className="text-center py-5">
+                //       Error: {error}
+                //     </td>
+                //   </tr>
               ) : (
                 subcategoriesData.length > 0 ? (
                   subcategoriesData.map((subCategory) => (

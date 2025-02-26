@@ -9,9 +9,10 @@ import { useState, useEffect } from "react";
 // import Select, { SingleValue } from 'react-select';
 // import stylist from "../../assets/images/stylist.png"
 // import { SelectField } from "../../common/SelectField";
-import { fetchDashboardList } from "../../api/apiConfig";
-import { NavLink } from "react-router-dom";
+import { fetchCouponCount, fetchDashboardList, fetchWalletCount } from "../../api/apiConfig";
+import { Link, NavLink } from "react-router-dom";
 import { NotifyError } from "../../common/Toast/ToastMessage";
+import { Button } from "../../common/Button";
 // import { Button } from "../../common/Button";
 // import { DenialPopup } from "./DashBoardData/DenialPopup";
 // import { StylistPopup } from "./DashBoardData/StylistPopup";
@@ -25,6 +26,19 @@ import { NotifyError } from "../../common/Toast/ToastMessage";
 // }
 
 // Proptypes frpm API
+// interface WalletDataProps {
+//     total_credits_purchased: number;
+//     remaining_credits: number;
+// }
+
+// interface CouponDataProps {
+//     coupons_created: number;
+//     active_coupons: number;
+//     total_coupon_value: number;
+//     remaining_coupon_value: number;
+// }
+
+
 interface DashBoardDataProps {
     appointment_id: number;
     appointment_date: string;
@@ -106,6 +120,8 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
 
     const [dashboardData, setDashboardData] = useState<DashBoardDataProps[]>([]);
+    const [walletData, setwalletData] = useState<any>(null);
+    const [couponData, setCouponData] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
     // const [error, setError] = useState<string | null>(null);
 
@@ -115,19 +131,30 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
             try {
                 const response = await fetchDashboardList();
+                const walletResponse = await fetchWalletCount();
+                const couponResponse = await fetchCouponCount();
+
                 setDashboardData(response.bookings);
+
+                setwalletData(walletResponse);
+
+                setCouponData(couponResponse.data);
 
                 console.log("Dashboard Bookings Data log:", response);
 
+                console.log("Wallet Count Data log:", walletResponse);
+
+                console.log("Coupon Count Data log:", couponResponse);
+
             } catch (error: any) {
                 // setError(error.message || "Unable to fetch dashboard bookings data. Please try again later.");
-                NotifyError(error.message || "Unable to fetch dashboard bookings data. Please try again later.");
+                NotifyError(error.message);
             } finally {
                 setLoading(false);
             }
         }
         fetchDashboardData();
-    }, [])
+    }, []);
 
 
     return (
@@ -166,35 +193,130 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
 
             {/* Charts & Booking Table */}
-            <div className="grid grid-cols-1 gap-5">
+            <div className="grid grid-cols-3 gap-5 ">
 
                 {/* Grid Column One -- --> Charts  */}
-                {/* <div>
+                <div>
                     <div>
                         <h5 className="text-lg font-semibold py-5">Overview</h5>
                     </div>
 
 
-                    <div>
+                    <div className="space-y-5">
+
+                        <div>
+                            <div className="grid grid-cols-2 gap-2">
+
+                                {/* Wallet Management */}
+                                <div className="border-[1px] border-mindfulgrey rounded-md px-5 py-3">
+                                    <div>
+                                        <div className="border-b-[1px] border-mindfulgrey pb-1">
+                                            <h5 className="text-lg text-mindfulBlack font-semibold">Wallet Management</h5>
+                                        </div>
+
+                                        <div className="space-y-5 py-2">
+                                            <div>
+                                                <p className="text-xs text-mindfulBlack">Total credits purchased</p>
+                                                <h5 className="text-lg text-mindfulBlack font-semibold">
+                                                    {walletData?.total_credits_purchased?.toLocaleString() || "0"}
+                                                </h5>
+                                            </div>
+
+                                            <div>
+                                                <p className="text-xs text-mindfulBlack">Remaining across all salons.</p>
+                                                <h5 className="text-lg text-mindfulBlack font-semibold">
+                                                    {walletData?.remaining_credits?.toLocaleString() || "0"}
+                                                </h5>
+                                            </div>
+
+                                            <div>
+                                                <Link to="/WalletManagement">
+                                                    <Button
+                                                        buttonTitle={"Wallet"}
+                                                        className="bg-main text-[16px] border-[1px] rounded-md text-mindfulWhite font-normal px-5 py-1.5 transition-all duration-200 cursor-pointer hover:bg-mindfulWhite hover:text-main"
+                                                    />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                {/* Coupon Management */}
+                                <div className="border-[1px] border-mindfulgrey rounded-md px-5 py-3">
+                                    <div className="border-b-[1px] border-mindfulgrey pb-1">
+                                        <h5 className="text-lg text-mindfulBlack font-semibold">Coupon Management</h5>
+                                    </div>
+
+                                    <div className="space-y-5 py-2">
+                                        <div className="flex items-center space-x-3">
+                                            <div>
+                                                <p className="text-xs text-mindfulBlack">Coupons Created</p>
+                                                <h5 className="text-lg text-mindfulBlack font-semibold">
+                                                    {couponData?.coupons_created?.toLocaleString() || "0"}
+                                                </h5>
+                                            </div>
+
+                                            <div>
+                                                <p className="text-xs text-mindfulBlack">Active Coupons</p>
+                                                <h5 className="text-lg text-mindfulBlack font-semibold">
+                                                    {couponData?.active_coupons?.toLocaleString() || "0"}
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center space-x-3">
+                                            <div>
+                                                <p className="text-xs text-mindfulBlack">Total Coupon Value</p>
+                                                <h5 className="text-lg text-mindfulBlack font-semibold">
+                                                    {couponData?.total_coupon_value?.toLocaleString() || "0"}
+                                                </h5>
+                                            </div>
+
+                                            <div>
+                                                <p className="text-xs text-mindfulBlack">Remaining Coupon Value</p>
+                                                <h5 className="text-lg text-mindfulBlack font-semibold">
+                                                    {couponData?.remaining_coupon_value?.toLocaleString() || "0"}
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <Link to="/Coupons">
+                                                <Button
+                                                    buttonTitle={"Coupon"}
+                                                    className="bg-main text-[16px] border-[1px] rounded-md text-mindfulWhite font-normal px-5 py-1.5 transition-all duration-200 cursor-pointer hover:bg-mindfulWhite hover:text-main"
+                                                />
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        {/* Charts */}
                         <div className="grid grid-cols-2 gap-2">
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                <AreaChart />
+                                {/* <AreaChart /> */}
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                <BarChart />
+                                {/* <BarChart /> */}
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                <RangeChart />
+                                {/* <RangeChart /> */}
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                <BarChart />
+                                {/* <BarChart /> */}
                             </div>
                         </div>
+
                     </div>
-                </div> */}
+                </div>
 
 
                 {/* Grid Column Two -- --> Booking Table  */}

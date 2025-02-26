@@ -7,7 +7,8 @@ import { InputField } from '../../common/InputField';
 // import { reviewsList } from '../../api/apiConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { fetchReviewRatingsList, setCurrentPage, setError, setLoading, setSearchQuery } from '../../redux/reviewSlice';
+import { fetchReviewRatingsList, setCurrentPage, setLoading, setSearchQuery } from '../../redux/reviewSlice';
+import { NotifyError } from '../../common/Toast/ToastMessage';
 
 // Proptypes frpm API
 // interface RatingReviewsTableProps {
@@ -70,13 +71,14 @@ export const RatingReviewsTable = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { reviewsListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.review);
+  const { reviewsListData, loading, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.review);
 
   // Fetch cancelled list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
     dispatch(fetchReviewRatingsList({ searchQuery, currentPage })).catch((error) => {
-      dispatch(setError(error.message));
+      // dispatch(setError(error.message));
+      NotifyError(error.message || "Failed to fetch ratings & reviews list. Please try again."); // ✅ Show error via toast
     });
   }, [dispatch, searchQuery, currentPage]);
 
@@ -188,13 +190,13 @@ export const RatingReviewsTable = () => {
                           Loading...
                         </td>
                       </tr>
-                    ) : error ? (
-                      /* Error State */
-                      <tr>
-                        <td colSpan={7} className="text-center text-red-600 py-5">
-                          Error: {error}
-                        </td>
-                      </tr>
+                      // ) : error ? (
+                      //   /* Error State */
+                      //   <tr>
+                      //     <td colSpan={7} className="text-center text-red-600 py-5">
+                      //       Error: {error}
+                      //     </td>
+                      //   </tr>
                     ) : (
                       reviewsListData.length > 0 ? (
                         reviewsListData.map((review) => (

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 // import deleteButton from "../../assets/icons/deleteButton.png"
 // import rectangleBlack from "../../assets/images/rectangleBlack.png"
 // import Select, { SingleValue } from 'react-select';
-// import stylist from "../../assets/images/stylist.png"
+// import stylist from "../../assets/images/stylist.png";
 import { StylistPopup } from "../Dashboard/DashBoardData/StylistPopup";
 // import { SelectField } from "../../common/SelectField";
 import { Pagination } from "../../common/Pagination";
@@ -14,6 +14,7 @@ import { categories, fetchServicesList, subCategories } from "../../api/apiConfi
 import { AddServicePopup } from "./Services/AddServicePopup";
 import { DeleteServicesPopup } from "./Services/DeleteServicesPopup";
 import { EditServicePopup } from "./Services/EditServicePopup";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 // import { SelectField } from "@/common/SelectField";
 // import { Pagination } from "@/common/Pagination";
 
@@ -96,7 +97,7 @@ export const Services = () => {
 
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
 
   const [totalItems, setTotalItems] = useState(0);
@@ -205,7 +206,8 @@ export const Services = () => {
         console.log("Categories List Data log:", loadCategoriesData);
 
       } catch (error: any) {
-        setError(error.message || "Unable to fetch Services data. Please try again later.");
+        // setError(error.message || "Unable to fetch Services data. Please try again later.");
+        NotifyError(error.message);
       } finally {
         setLoading(false);
       }
@@ -228,7 +230,8 @@ export const Services = () => {
       console.log("Sub Category List data log:", loadSubCategoriesData);
 
     } catch (error: any) {
-      setError(error.message);
+      // setError(error.message);
+      NotifyError(error.message);
     } finally {
       setLoading(false);
     }
@@ -264,7 +267,8 @@ export const Services = () => {
         console.log("Categories List Data log:", loadCategoriesData);
 
       } catch (error: any) {
-        setError(error.message || "Unable to fetch Services data. Please try again later.");
+        // setError(error.message || "Unable to fetch Services data. Please try again later.");
+        NotifyError(error.message || "Unable to fetch Services data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -426,12 +430,12 @@ export const Services = () => {
                     Loading...
                   </td>
                 </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan={8} className="text-center py-5">
-                    Error: {error}
-                  </td>
-                </tr>
+                // ) : error ? (
+                //   <tr>
+                //     <td colSpan={8} className="text-center py-5">
+                //       Error: {error}
+                //     </td>
+                //   </tr>
               ) : servicesData?.length > 0 ? ( // ✅ Added optional chaining (?.)
                 servicesData.map((service) => (
                   <tr key={service.service_id} className="border-b-2 border-mindfulGreyTypeTwo">

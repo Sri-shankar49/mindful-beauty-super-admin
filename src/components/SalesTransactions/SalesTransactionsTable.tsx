@@ -16,6 +16,7 @@ import { Button } from "../../common/Button";
 import { Pagination } from "../../common/Pagination";
 import { InvoicePopup } from "../Bookings/Completed/InvoicePopup";
 import { fetchSalesTransactionsByFilters, salesTransactionsCSV, salesTransactionsInvoice, salesTransactionsList } from "../../api/apiConfig";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Proptypes from API
 interface SalesTransactionProps {
@@ -44,7 +45,7 @@ export const SalesTransactionsTable = () => {
 
     const [salesTransactionsData, setSalesTransactionsData] = useState<SalesTransactionProps[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
 
     const [totalItems, setTotalItems] = useState(0);
 
@@ -89,7 +90,8 @@ export const SalesTransactionsTable = () => {
                 console.log("Fetched Sales & Transactions List pagination count data log :", response.count);
 
             } catch (error: any) {
-                setError(error.message || "Failed to fetch Sales & Transactions list data.");
+                // setError(error.message || "Failed to fetch Sales & Transactions list data.");
+                NotifyError(error.message || "Failed to fetch Sales & Transactions list data.");
             } finally {
                 setLoading(false);
             }
@@ -122,7 +124,8 @@ export const SalesTransactionsTable = () => {
             console.log("Filtered Sales Transactions:", response);
             setSalesTransactionsData(response.results || []);
         } catch (error: any) {
-            setError(error.message || "Failed to fetch filtered sales transactions.");
+            // setError(error.message || "Failed to fetch filtered sales transactions.");
+            NotifyError(error.message || "Failed to fetch filtered sales transactions.");
         } finally {
             setLoading(false);
         }
@@ -141,7 +144,8 @@ export const SalesTransactionsTable = () => {
             const response = await salesTransactionsList(currentPage);
             setSalesTransactionsData(response.results || []);
         } catch (error: any) {
-            setError(error.message || "Failed to fetch default sales transactions.");
+            // setError(error.message || "Failed to fetch default sales transactions.");
+            NotifyError(error.message || "Failed to fetch default sales transactions.");
         } finally {
             setLoading(false);
         }
@@ -170,7 +174,8 @@ export const SalesTransactionsTable = () => {
 
         }
         catch (error: any) {
-            setError(error.message || "Failed to download CSV file.");
+            // setError(error.message || "Failed to download CSV file.");
+            NotifyError(error.message || "Failed to download CSV file.");
         }
         finally {
             setLoading(false);// Reset the loading state
@@ -202,7 +207,8 @@ export const SalesTransactionsTable = () => {
 
         }
         catch (error: any) {
-            setError(error.message || "Failed to download sales & transactions Invoice.");
+            // setError(error.message || "Failed to download sales & transactions Invoice.");
+            NotifyError(error.message || "Failed to download sales & transactions Invoice.");
         }
         finally {
             setLoading(false);// Reset the loading state
@@ -395,13 +401,13 @@ export const SalesTransactionsTable = () => {
                                             Loading...
                                         </td>
                                     </tr>
-                                ) : error ? (
-                                    /* Error State */
-                                    <tr>
-                                        <td colSpan={14} className="text-center text-red-600 py-5">
-                                            Error: {error}
-                                        </td>
-                                    </tr>
+                                    // ) : error ? (
+                                    //     /* Error State */
+                                    //     <tr>
+                                    //         <td colSpan={14} className="text-center text-red-600 py-5">
+                                    //             Error: {error}
+                                    //         </td>
+                                    //     </tr>
                                 ) : salesTransactionsData.length > 0 ? (
                                     salesTransactionsData.map((transaction) => (
                                         <tr key={transaction.id} className="border-b-2 border-mindfulGreyTypeTwo">

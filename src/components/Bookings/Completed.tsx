@@ -14,7 +14,8 @@ import { InvoicePopup } from "./Completed/InvoicePopup";
 import { PaymentDetailsPopup } from "./Completed/PaymentDetailsPopup";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { fetchCompletedList, setCurrentPage, setError, setLoading } from "../../redux/completedSlice";
+import { fetchCompletedList, setCurrentPage, setLoading } from "../../redux/completedSlice";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Define the type for each option
 // interface StylistOption {
@@ -82,7 +83,7 @@ export const Completed = () => {
   }
 
   console.log(openPaymentDetailsPopup, "just logging");
-  
+
   const closePaymentDetailsPopup = () => {
     setShowPaymentDetailsPopup(false)
   }
@@ -103,13 +104,14 @@ export const Completed = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { completedListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.completed);
+  const { completedListData, loading, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.completed);
 
   // Fetch completed list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
     dispatch(fetchCompletedList({ status: 3, searchQuery, currentPage })).catch((error) => {
-      dispatch(setError(error.message));
+      // dispatch(setError(error.message));
+      NotifyError(error.message || "Failed to fetch completed list. Please try again."); // ✅ Show error via toast
     });
   }, [dispatch, searchQuery, currentPage]);
 
@@ -159,13 +161,13 @@ export const Completed = () => {
                   Loading...
                 </td>
               </tr>
-            ) : error ? (
-              /* Error State */
-              <tr>
-                <td colSpan={10} className="text-center text-red-600 py-5">
-                  Error: {error}
-                </td>
-              </tr>
+              // ) : error ? (
+              //   /* Error State */
+              //   <tr>
+              //     <td colSpan={10} className="text-center text-red-600 py-5">
+              //       Error: {error}
+              //     </td>
+              //   </tr>
             ) : (
               completedListData.length > 0 ? (
                 completedListData.map((completed) => (

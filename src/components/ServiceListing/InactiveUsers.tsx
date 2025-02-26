@@ -7,9 +7,10 @@ import { pendingAction } from "../../api/apiConfig";
 import { FaCheck } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { fetchInactiveUserList, setCurrentPage, setError, setLoading } from "../../redux/inactiveUserSlice";
+import { fetchInactiveUserList, setCurrentPage, setLoading } from "../../redux/inactiveUserSlice";
 import { DeleteProviderPopup } from "./DeleteProviderPopup";
 import { ViewProvider } from "./ViewProvider";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 // import { EditServicePopup } from "./AddServices/EditServicePopup";
 
 
@@ -100,14 +101,15 @@ export const InactiveUsers = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { inactiveUserData, loading, error, searchQuery, currentPage, totalItems, serviceTypeID } = useSelector((state: RootState) => state.inactiveUser);
+  const { inactiveUserData, loading, searchQuery, currentPage, totalItems, serviceTypeID } = useSelector((state: RootState) => state.inactiveUser);
 
   // Fetch active Users list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
     dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
       console.error("Error fetching inactive users list:", error);
-      dispatch(setError(error.message))
+      // dispatch(setError(error.message));
+      NotifyError(error.message || "Failed to fetch inactive users. Please try again."); // ✅ Show error via toast
     });
   }, [dispatch, searchQuery, currentPage, serviceTypeID]);
 
@@ -127,7 +129,7 @@ export const InactiveUsers = () => {
   // Function for handling the pending requests
   const handleActionSubmit = async (providerID: number, action: string) => {
     setLoading(true);
-    setError(null);
+    // setError(null);
     try {
       const data = await pendingAction(providerID, action);
       console.log("Pending Action Data log based on Inactive Users:", data);
@@ -137,7 +139,8 @@ export const InactiveUsers = () => {
       }
 
     } catch (error: any) {
-      setError(error.message || 'An error occurred while processing your request.');
+      // setError(error.message || 'An error occurred while processing your request.');
+      NotifyError(error.message || 'An error occurred while processing your request.');
     } finally {
       setLoading(false);
     }
@@ -167,7 +170,8 @@ export const InactiveUsers = () => {
       console.log("Inactive Users list data refreshed.");
     } catch (error: any) {
       console.error("Error refreshing inactive users data:", error.message);
-      dispatch(setError(error.message)); // ✅ Handle errors correctly
+      // dispatch(setError(error.message)); // ✅ Handle errors correctly
+      NotifyError(error.message || "Failed to fetch inactive users. Please try again."); // ✅ Show error via toast
     }
   };
 
@@ -203,12 +207,12 @@ export const InactiveUsers = () => {
                       Loading...
                     </td>
                   </tr>
-                ) : error ? (
-                  <tr>
-                    <td colSpan={7} className="text-center py-5">
-                      Error: {error}
-                    </td>
-                  </tr>
+                  // ) : error ? (
+                  //   <tr>
+                  //     <td colSpan={7} className="text-center py-5">
+                  //       Error: {error}
+                  //     </td>
+                  //   </tr>
                 ) : inactiveUserData.length > 0 ? (
                   inactiveUserData.map((inactiveData) => (
                     <tr key={inactiveData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">

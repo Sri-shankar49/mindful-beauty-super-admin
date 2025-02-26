@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { fetchProvidersList } from '../api/apiConfig';
+import { NotifyError } from '../common/Toast/ToastMessage';
 
 // Define TypeScript types
 interface InactiveUserItem {
@@ -18,7 +19,7 @@ interface InactiveUserItem {
 interface InactiveUserState {
     inactiveUserData: InactiveUserItem[];
     loading: boolean;
-    error: string | null;
+    // error: string | null;
     searchQuery: string;
     serviceTypeID: number; // Add serviceTypeID
     currentPage: number;
@@ -28,7 +29,7 @@ interface InactiveUserState {
 const initialState: InactiveUserState = {
     inactiveUserData: [],
     loading: false,
-    error: null,
+    // error: null,
     searchQuery: '',
     serviceTypeID: 0, // Default to "All"
     currentPage: 1,
@@ -41,7 +42,7 @@ export const fetchInactiveUserList = createAsyncThunk(
     async (
         { status, searchQuery, currentPage, serviceTypeID }:
             { status: string; searchQuery: string; currentPage: number, serviceTypeID: number },
-        { rejectWithValue }
+        // { rejectWithValue }
     ) => {
         try {
             const response = await fetchProvidersList(status, searchQuery, currentPage, serviceTypeID);
@@ -49,7 +50,9 @@ export const fetchInactiveUserList = createAsyncThunk(
 
             return response;
         } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch inactive users list');
+            // return rejectWithValue(error.message || 'Failed to fetch inactive users list');
+            NotifyError(error.message || "Failed to fetch inactive users list"); // Show error via toast
+            throw error; // Throw error so it doesn't modify Redux state
         }
     }
 );
@@ -72,28 +75,31 @@ const inactiveUserSlice = createSlice({
         setServiceTypeID(state, action: PayloadAction<number>) { // ✅ Add this
             state.serviceTypeID = action.payload;
         },
-        setError: (state, action) => {
-            state.error = action.payload;
-            state.loading = false; // Reset loading on error
-        }
+        // setError: (state, action) => {
+        //     state.error = action.payload;
+        //     state.loading = false; // Reset loading on error
+        // }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchInactiveUserList.pending, (state) => {
                 state.loading = true;
-                state.error = null;
+                // state.error = null;
             })
             .addCase(fetchInactiveUserList.fulfilled, (state, action) => {
                 state.loading = false;
                 state.inactiveUserData = action.payload.results.data || [];
                 state.totalItems = action.payload.count || 0;
             })
-            .addCase(fetchInactiveUserList.rejected, (state, action) => {
+            // .addCase(fetchInactiveUserList.rejected, (state, action) => {
+            //     state.loading = false;
+            //     state.error = action.payload as string;
+            // });
+            .addCase(fetchInactiveUserList.rejected, (state) => {
                 state.loading = false;
-                state.error = action.payload as string;
             });
     },
 });
 
-export const { setSearchQuery, setServiceTypeID, setCurrentPage, setLoading, setError } = inactiveUserSlice.actions;
+export const { setSearchQuery, setServiceTypeID, setCurrentPage, setLoading } = inactiveUserSlice.actions;
 export default inactiveUserSlice.reducer;

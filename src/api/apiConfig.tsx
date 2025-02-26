@@ -58,6 +58,87 @@ export const verifyOTP = async (phoneNumber: string, otp: number) => {
 
 
 
+
+
+// Dashboard Page -- > 
+export const fetchWalletCount = async () => {
+  try {
+    const response = await apiAxios.get('/provider-api/wallet-counts/', {
+
+    });
+
+    console.log("Wallet Count Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Wallet Count");
+    }
+
+    // Accessing the correct data path
+    return response.data; // Correct path to the data
+
+  } catch (error: any) {
+    console.error("Error fetching Wallet Count:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error fetching Wallet Count");
+  }
+};
+
+
+
+
+
+// Dashboard Page -- > 
+export const fetchCouponCount = async () => {
+  try {
+    const response = await apiAxios.get('/provider-api/coupon_counts/', {
+
+    });
+
+    console.log("Coupon Count Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch Coupon Count ");
+    }
+
+    // Accessing the correct data path
+    return response.data; // Correct path to the data
+
+  } catch (error: any) {
+    console.error("Error fetching Coupon Count :", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error fetching Coupon Count ");
+  }
+};
+
+
+
+
+
+// Dashboard Page -- > 
+export const fetchDashboardList = async () => {
+  try {
+    const response = await apiAxios.get('/provider-api/getbookings/', {
+      // params: {
+      //   status: status,  // Active, Pending, Inactive
+      // },
+    });
+
+    console.log("Dashboard Booking List Response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch bashboard booking list");
+    }
+
+    // Accessing the correct data path
+    return response.data; // Correct path to the data
+
+  } catch (error: any) {
+    console.error("Error fetching bashboard booking list:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Error fetching bashboard booking list");
+  }
+};
+
+
+
+
 // Service Provider Page -- > Active, Pending and Inactive
 export const fetchProvidersList = async (status: string, searchQuery: string, pageNumber: number, serviceTypeID: number) => {
   try {
@@ -142,33 +223,6 @@ export const pendingAction = async (providerID: number, action: string) => {
     throw new Error(error.response.data.message || "Unable to fetch Login API. Please try again later.");
   }
 }
-
-
-
-
-// Service Provider Page -- > Active, Pending and Inactive
-export const fetchDashboardList = async () => {
-  try {
-    const response = await apiAxios.get('/provider-api/getbookings/', {
-      // params: {
-      //   status: status,  // Active, Pending, Inactive
-      // },
-    });
-
-    console.log("Dashboard Booking List Response:", response.data);
-
-    if (!response.data || response.status !== 200) {
-      throw new Error("Failed to fetch bashboard booking list");
-    }
-
-    // Accessing the correct data path
-    return response.data; // Correct path to the data
-
-  } catch (error: any) {
-    console.error("Error fetching bashboard booking list:", error.response?.data?.message || error);
-    throw new Error(error.response?.data?.message || "Error fetching bashboard booking list");
-  }
-};
 
 
 
@@ -841,8 +895,8 @@ export const salesTransactionsInvoice = async (transactionID: number) => {
 
   }
   catch (error: any) {
-    console.error("Error fetching sales & transactions invoice:", error.response?.data?.message || error);
-    throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions invoice. Please try again later.");
+    console.error("Error downloading sales & transactions invoice:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to download sales & transactions invoice. Please try again later.");
   }
 }
 

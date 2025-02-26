@@ -11,7 +11,8 @@ import { Pagination } from "../../common/Pagination";
 import { Button } from "../../common/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { fetchScheduleList, setCurrentPage, setError, setLoading } from "../../redux/scheduleSlice";
+import { fetchScheduleList, setCurrentPage, setLoading } from "../../redux/scheduleSlice";
+import { NotifyError } from "../../common/Toast/ToastMessage";
 
 // Define the type for each option
 // interface StylistOption {
@@ -85,14 +86,16 @@ export const Schedule = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state
-  const { scheduleListData, loading, error, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.schedule);
+  const { scheduleListData, loading, searchQuery, currentPage, totalItems } = useSelector((state: RootState) => state.schedule);
 
   // Fetch schedule list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
     dispatch(fetchScheduleList({ status: 1, searchQuery, currentPage })).catch((error) => {
       console.error("Error fetching schedule list:", error);
-      dispatch(setError(error.message))
+      // dispatch(setError(error.message));
+      NotifyError(error.message || "Failed to fetch schedule list. Please try again."); // ✅ Show error via toast
+
     });
   }, [dispatch, searchQuery, currentPage]);
 
@@ -143,13 +146,13 @@ export const Schedule = () => {
                   Loading...
                 </td>
               </tr>
-            ) : error ? (
-              /* Error State */
-              <tr>
-                <td colSpan={12} className="text-center text-red-600 py-5">
-                  Error: {error}
-                </td>
-              </tr>
+              // ) : error ? (
+              //   /* Error State */
+              //   <tr>
+              //     <td colSpan={12} className="text-center text-red-600 py-5">
+              //       Error: {error}
+              //     </td>
+              //   </tr>
             ) : (
               scheduleListData.length > 0 ? (
                 scheduleListData.map((schedule) => (

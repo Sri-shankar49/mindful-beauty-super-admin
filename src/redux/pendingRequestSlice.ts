@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { fetchProvidersList } from '../api/apiConfig';
+import { NotifyError } from '../common/Toast/ToastMessage';
 
 // Define TypeScript types
 interface PendingRequestItem {
@@ -18,7 +19,7 @@ interface PendingRequestItem {
 interface PendingRequestState {
     pendingRequestData: PendingRequestItem[];
     loading: boolean;
-    error: string | null;
+    // error: string | null;
     searchQuery: string;
     serviceTypeID: number; // Add serviceTypeID
     currentPage: number;
@@ -28,7 +29,7 @@ interface PendingRequestState {
 const initialState: PendingRequestState = {
     pendingRequestData: [],
     loading: false,
-    error: null,
+    // error: null,
     searchQuery: '',
     serviceTypeID: 0, // Default to "All"
     currentPage: 1,
@@ -41,7 +42,7 @@ export const fetchPendingRequestList = createAsyncThunk(
     async (
         { status, searchQuery, currentPage, serviceTypeID }:
             { status: string; searchQuery: string; currentPage: number, serviceTypeID: number },
-        { rejectWithValue }
+        // { rejectWithValue }
     ) => {
         try {
             const response = await fetchProvidersList(status, searchQuery, currentPage, serviceTypeID);
@@ -49,7 +50,9 @@ export const fetchPendingRequestList = createAsyncThunk(
 
             return response;
         } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch Pending Request list');
+            // return rejectWithValue(error.message || 'Failed to fetch Pending Request list');3
+            NotifyError(error.message || "Failed to fetch Pending Request list"); // Show error via toast
+            throw error; // Throw error so it doesn't modify Redux state
         }
     }
 );
@@ -72,28 +75,31 @@ const pendingRequestSlice = createSlice({
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
-        setError: (state, action) => {
-            state.error = action.payload;
-            state.loading = false; // Reset loading on error
-        }
+        // setError: (state, action) => {
+        //     state.error = action.payload;
+        //     state.loading = false; // Reset loading on error
+        // }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchPendingRequestList.pending, (state) => {
                 state.loading = true;
-                state.error = null;
+                // state.error = null;
             })
             .addCase(fetchPendingRequestList.fulfilled, (state, action) => {
                 state.loading = false;
                 state.pendingRequestData = action.payload.results.data || [];
                 state.totalItems = action.payload.count || 0;
             })
-            .addCase(fetchPendingRequestList.rejected, (state, action) => {
+            // .addCase(fetchPendingRequestList.rejected, (state, action) => {
+            //     state.loading = false;
+            //     state.error = action.payload as string;
+            // });
+            .addCase(fetchPendingRequestList.rejected, (state) => {
                 state.loading = false;
-                state.error = action.payload as string;
             });
     },
 });
 
-export const { setSearchQuery, setServiceTypeID, setCurrentPage, setLoading, setError } = pendingRequestSlice.actions;
+export const { setSearchQuery, setServiceTypeID, setCurrentPage, setLoading } = pendingRequestSlice.actions;
 export default pendingRequestSlice.reducer;

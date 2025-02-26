@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { completedList } from '../api/apiConfig';
+import { NotifyError } from '../common/Toast/ToastMessage';
 
 // Define TypeScript types
 interface CompletedItem {
@@ -33,7 +34,7 @@ interface Service {
 interface CompletedState {
     completedListData: CompletedItem[];
     loading: boolean;
-    error: string | null;
+    // error: string | null;
     searchQuery: string;
     currentPage: number;
     totalItems: number;
@@ -42,7 +43,7 @@ interface CompletedState {
 const initialState: CompletedState = {
     completedListData: [],
     loading: false,
-    error: null,
+    // error: null,
     searchQuery: '',
     currentPage: 1,
     totalItems: 0,
@@ -54,13 +55,15 @@ export const fetchCompletedList = createAsyncThunk(
     async (
         { status, searchQuery, currentPage }:
             { status: number; searchQuery: string; currentPage: number },
-        { rejectWithValue }
+        // { rejectWithValue }
     ) => {
         try {
             const response = await completedList(status, searchQuery, currentPage);
             return response;
         } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch completed list');
+            // return rejectWithValue(error.message || 'Failed to fetch completed list');
+            NotifyError(error.message || "Failed to fetch completed list"); // Show error via toast
+            throw error; // Throw error so it doesn't modify Redux state
         }
     }
 );
@@ -80,28 +83,31 @@ const completedSlice = createSlice({
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
-        setError: (state, action) => {
-            state.error = action.payload;
-            state.loading = false; // Reset loading on error
-        }
+        // setError: (state, action) => {
+        //     state.error = action.payload;
+        //     state.loading = false; // Reset loading on error
+        // }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchCompletedList.pending, (state) => {
                 state.loading = true;
-                state.error = null;
+                // state.error = null;
             })
             .addCase(fetchCompletedList.fulfilled, (state, action) => {
                 state.loading = false;
                 state.completedListData = action.payload.results || [];
                 state.totalItems = action.payload.count || 0;
             })
-            .addCase(fetchCompletedList.rejected, (state, action) => {
+            // .addCase(fetchCompletedList.rejected, (state, action) => {
+            //     state.loading = false;
+            //     state.error = action.payload as string;
+            // });
+            .addCase(fetchCompletedList.rejected, (state) => {
                 state.loading = false;
-                state.error = action.payload as string;
             });
     },
 });
 
-export const { setSearchQuery, setCurrentPage, setLoading, setError } = completedSlice.actions;
+export const { setSearchQuery, setCurrentPage, setLoading } = completedSlice.actions;
 export default completedSlice.reducer;
