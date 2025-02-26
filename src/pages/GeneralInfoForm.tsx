@@ -8,7 +8,7 @@ import { Button } from "../common/Button";
 export const GeneralInfoForm = () => {
     return (
         <div>
-            <div className="bg-[url('assets/images/signInBgImg.svg')] bg-cover bg-no-repeat h-dvh">
+            <div className="bg-[url('assets/images/signInBgImg.webp')] bg-cover bg-no-repeat h-dvh">
 
                 <div className="w-3/4 mx-auto h-dvh flex items-center">
                     <div className="w-full flex justify-center items-center bg-mindfulWhite rounded-lg shadow-lg z-0">
