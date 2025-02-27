@@ -251,7 +251,7 @@ export const Subcategories = () => {
 
       <div>
 
-        <div className="flex items-center justify-end space-x-6 mt-5">
+        <div className="flex items-center justify-end  space-x-6 mt-5">
 
           <div>
             <select
@@ -289,7 +289,7 @@ export const Subcategories = () => {
           </div>
         </div>
 
-        <div className="py-5">
+        <div className="py-5 max-2xl:overflow-x-auto">
           <table className="w-full">
             <thead className="bg-mindfulLightgrey">
               <tr className="">

@@ -133,7 +133,7 @@ export const RatingReviewsTable = () => {
 
             {/* Rating Table */}
             <div>
-              <div>
+              <div className="max-2xl:overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-mindfulLightgrey">
                     <tr className="">

@@ -9,9 +9,9 @@ export const InvoicePopup: React.FC<InvoicePopupProps> = ({ closePopup }) => {
     return (
         <div>
             <div className="fixed inset-0 bg-mindfulLightBlack flex justify-center items-center z-50">
-                <div className="container mx-auto">
+                {/* <div className="container mx-auto"> */}
 
-                    <div className="relative bg-white rounded-[5px] w-6/12 mx-auto px-20 py-10">
+                    <div className="relative bg-white rounded-[5px] w-6/12 mx-auto px-20 py-10 overflow-y-auto h-[95%]">
 
 
                         {/* <div className="relative mb-16">
@@ -214,7 +214,7 @@ export const InvoicePopup: React.FC<InvoicePopupProps> = ({ closePopup }) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            {/* </div> */}
         </div>
     )
 }

@@ -163,7 +163,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
             <div className="pb-5">
                 <div className="w-full flex items-center justify-between">
                     <div>
-                        <h5 className="text-3xl font-semibold">Dashboard</h5>
+                        <h5 className="text-3xl font-semibold max-lg:text-xl">Dashboard</h5>
                     </div>
 
                     <div>
@@ -193,7 +193,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
 
             {/* Charts & Booking Table */}
-            <div className="grid grid-cols-3 gap-5 ">
+            <div className="grid grid-cols-3 gap-5 max-xl:grid-cols-1">
 
                 {/* Grid Column One -- --> Charts  */}
                 <div>
@@ -334,7 +334,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                         </div>
                     </div>
 
-                    <div>
+                    <div className="max-2xl:overflow-x-auto">
                         <table className="w-full border-[1px] border-mindfulGreyTypeTwo rounded-lg px-2 py-2">
                             <thead className="bg-mindfulLightgrey border-b-[1px] border-mindfulGreyTypeTwo">
                                 <tr className="">

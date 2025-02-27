@@ -54,9 +54,9 @@ export const Header = () => {
         <header>
 
             <div className="backdrop-blur-lg bg-opacity-100 shadow-md px-10 py-5">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center max-2xl:flex-wrap max-2xl:gap-x-12 max-2xl:gap-y-5 max-2xl:justify-between">
                     {/* Admin Logo */}
-                    <div className="flex justify-center items-center space-x-3">
+                    <div className="flex justify-center items-center space-x-3 max-2xl:order-1">
                         {/* Mindful Beauty Logo */}
                         <Link to="/Dashboard">
                             <div>
@@ -74,87 +74,87 @@ export const Header = () => {
                     </div>
 
                     {/* Navbar Menu */}
-                    <div>
+                    <div className="max-2xl:order-3 max-2xl:mx-auto">
                         <nav className="">
-                            <ul className="flex items-center space-x-10">
+                            <ul className="flex items-center space-x-8 max-xl:space-x-6">
 
                                 {/* Dashboard */}
                                 <NavLink
                                     to="/Dashboard"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Dashboard</li>
+                                    <li className="text-md max-xl:text-sm">Dashboard</li>
                                 </NavLink>
 
                                 {/* Manage Role */}
                                 <NavLink
                                     to="/ManageRole"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Manage Role</li>
+                                    <li className="text-md max-xl:text-sm">Manage Role</li>
                                 </NavLink>
 
                                 {/* Service Listing */}
                                 <NavLink
                                     to="/ServiceProvider"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Service Provider</li>
+                                    <li className="text-md max-xl:text-sm">Service Provider</li>
                                 </NavLink>
 
                                 {/* Service Management */}
                                 <NavLink
                                     to="/ServiceManagement"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Service Management</li>
+                                    <li className="text-md max-xl:text-sm">Service Management</li>
                                 </NavLink>
 
                                 {/* Bookings */}
                                 <NavLink
                                     to="/Bookings"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Bookings</li>
+                                    <li className="text-md max-xl:text-sm">Bookings</li>
                                 </NavLink>
 
                                 {/* Sales & Transactions */}
                                 <NavLink
                                     to="/SalesTransactions"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Sales & Transactions</li>
+                                    <li className="text-md max-xl:text-sm">Sales & Transactions</li>
                                 </NavLink>
 
                                 {/* Ratings & Reviews */}
                                 <NavLink
                                     to="/RatingsReviews"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Ratings & Reviews</li>
+                                    <li className="text-md max-xl:text-sm">Ratings & Reviews</li>
                                 </NavLink>
 
                                 {/* Reports */}
                                 <NavLink
                                     to="/Reports"
-                                    className="active-nav"
+                                    className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
-                                    <li className="text-md">Reports</li>
+                                    <li className="text-md max-xl:text-sm">Reports</li>
                                 </NavLink>
 
                             </ul>
                         </nav>
                     </div>
 
-                    <div className="flex items-center space-x-5">
+                    <div className="flex items-center space-x-5 2xl:space-x-5 max-2xl:order-2">
 
                         {/* Notification Bell Icon */}
                         <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-12 h-12 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
@@ -173,15 +173,15 @@ export const Header = () => {
                                 <div>
                                     {profileHover && (
                                         <div className="absolute bottom-[-7.7rem] right-10 mt-2 w-40 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
-                                            <Link
+                                            {/* <Link
                                                 to="/MyAccount"
                                                 aria-current="page"
-                                            // className="active-nav"
-                                            >
+                                            // className="active-nav  max-2xl:before:!-bottom-5"
+                                            > */}
                                                 <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
                                                     My Profile
                                                 </div>
-                                            </Link>
+                                            {/* </Link> */}
 
                                             {/* <Link to=""> */}
                                             <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
@@ -219,7 +219,7 @@ export const Header = () => {
                                             <Link
                                                 to="/WalletManagement"
                                                 aria-current="page"
-                                            // className="active-nav"
+                                            // className="active-nav  max-2xl:before:!-bottom-5"
                                             >
                                                 <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
                                                     Wallet Management

@@ -317,7 +317,7 @@ export const Services = () => {
 
       <div>
 
-        <div className="flex items-center justify-end space-x-6 mt-5">
+        <div className="flex items-center justify-end space-x-6 mt-5 max-2xl:flex-wrap max-2xl:gap-x-10 max-2xl:justify-between">
 
           {/* Main Category */}
           <div>
@@ -406,7 +406,7 @@ export const Services = () => {
           </div>
         </div>
 
-        <div className="py-5">
+        <div className="py-5 max-2xl:overflow-x-auto">
           <table className="w-full">
             <thead className="bg-mindfulLightgrey">
               <tr className="">

@@ -154,9 +154,9 @@ export const EditServicePopup: React.FC<EditServicePopupProps> = ({ closePopup, 
         <div>
             <div>
                 <div className="fixed inset-0 bg-mindfulLightBlack bg-opacity-50 flex justify-center items-center z-0">
-                    <div className="container mx-auto">
+                    {/* <div className="container mx-auto"> */}
                         {/* <div className="relative bg-white rounded-[5px] w-4/12 mx-auto px-5 py-5"> */}
-                        <div className="relative bg-white rounded-[5px] w-7/12 mx-auto px-10 py-10">
+                        <div className="relative bg-white rounded-[5px] w-7/12 mx-auto px-10 py-10 max-2xl:overflow-y-auto max-2xl:h-[85%]">
                             <div className="relative mb-10">
                                 <h5 className="text-2xl text-mindfulBlack font-semibold">
                                     Edit Service
@@ -373,7 +373,7 @@ export const EditServicePopup: React.FC<EditServicePopupProps> = ({ closePopup, 
                         </div>
                     </div>
                 </div>
-            </div>
+            {/* </div> */}
         </div>
     )
 }

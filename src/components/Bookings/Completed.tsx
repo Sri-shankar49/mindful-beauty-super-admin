@@ -132,10 +132,10 @@ export const Completed = () => {
 
       {/* Sub Heading */}
       <div>
-        <h5 className="text-3xl font-semibold py-5">Completed</h5>
+        <h5 className="text-3xl font-semibold py-5  max-xl:text-xl">Completed</h5>
       </div>
 
-      <div>
+      <div className="max-2xl:overflow-x-auto">
         <table className="w-full">
           <thead className="bg-mindfulLightgrey">
             <tr className="">

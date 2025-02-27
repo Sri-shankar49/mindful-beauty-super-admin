@@ -269,7 +269,7 @@ export const ExpiredCoupons = () => {
             </div>
 
 
-            <div className="pt-5">
+            <div className="pt-5 max-2xl:overflow-x-auto">
                 <table className="w-full">
                     <thead className="bg-mindfulLightgrey">
                         <tr className="">

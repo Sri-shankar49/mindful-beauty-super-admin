@@ -199,9 +199,9 @@ export const AddSubCategoryPopup: React.FC<AddSubCategoryPopupProps> = ({ closeP
         <div>
             <div>
                 <div className="fixed inset-0 bg-mindfulLightBlack bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="container mx-auto">
+                    {/* <div className="container mx-auto"> */}
 
-                        <div className="relative bg-white rounded-[5px] w-4/12 mx-auto px-5 py-5">
+                        <div className="relative bg-white rounded-[5px] w-4/12 mx-auto px-5 py-5 max-2xl:overflow-y-auto max-2xl:h-[75%]">
 
                             <div className="relative mb-10">
                                 <h2 className="text-2xl text-mindfulBlack font-semibold">Add Sub Category</h2>
@@ -346,7 +346,7 @@ export const AddSubCategoryPopup: React.FC<AddSubCategoryPopupProps> = ({ closeP
                         </div>
                     </div>
                 </div >
-            </div >
+            {/* </div > */}
         </div >
     )
 }

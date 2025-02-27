@@ -218,18 +218,18 @@ export const SalesTransactionsTable = () => {
 
     return (
         <div>
-            <div className="bg-mindfulLightPink h-dvh px-5 py-5" >
+            <div className="bg-mindfulLightPink px-5 py-5" >
 
                 <div className="bg-mindfulWhite px-5 py-5">
 
                     {/* Search Tab */}
-                    <div>
+                    <div className="">
                         <form action="" method="post">
                             <div>
                                 <fieldset className="border-2 border-main rounded-[5px] px-5 py-5">
                                     <legend className="text-lg text-main font-semibold px-2">Search</legend>
                                     {/* <div className="border-2 border-main rounded-[5px] px-5 py-5"> */}
-                                    <div className="flex items-end space-x-10">
+                                    <div className="flex items-end space-x-10 flex-wrap gap-5 justify-start">
 
                                         {/* Order ID */}
                                         <div>
@@ -373,7 +373,7 @@ export const SalesTransactionsTable = () => {
                     </div>
 
 
-                    <div>
+                    <div className="max-2xl:overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-mindfulLightgrey">
                                 <tr className="">

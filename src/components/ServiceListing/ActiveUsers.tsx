@@ -191,7 +191,7 @@ export const ActiveUsers = () => {
                 {/* <div className="bg-mindfulWhite px-5 py-5"> */}
 
 
-                <div className="py-5">
+                <div className="py-5 max-2xl:overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-mindfulLightgrey">
                             <tr className="">

@@ -116,7 +116,7 @@ export const Cancelled = () => {
         <h5 className="text-3xl font-semibold py-5">Cancelled</h5>
       </div>
 
-      <div>
+      <div className="max-2xl:overflow-x-auto">
         <table className="w-full">
           <thead className="bg-mindfulLightgrey">
             <tr className="">

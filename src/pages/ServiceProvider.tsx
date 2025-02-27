@@ -91,9 +91,9 @@ export const ServiceProvider = () => {
 
           <div className="bg-mindfulWhite px-5 py-5">
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between ">
               <div>
-                <h5 className="text-3xl font-semibold pb-5">Salons and Freelancers</h5>
+                <h5 className="text-3xl font-semibold pb-5  max-xl:text-xl">Salons and Freelancers</h5>
               </div>
 
 

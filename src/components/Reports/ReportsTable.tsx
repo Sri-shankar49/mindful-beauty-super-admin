@@ -26,7 +26,7 @@ export const ReportsTable = () => {
 
     return (
         <div>
-            <div className="bg-mindfulLightPink h-dvh px-5 py-5" >
+            <div className="bg-mindfulLightPink px-5 py-5" >
 
                 <div className="bg-mindfulWhite px-5 py-5">
 
@@ -37,7 +37,7 @@ export const ReportsTable = () => {
                                 <fieldset className="border-2 border-main rounded-[5px] px-5 py-5">
                                     <legend className="text-lg text-main font-semibold px-2">Search</legend>
                                     {/* <div className="border-2 border-main rounded-[5px] px-5 py-5"> */}
-                                    <div className="flex items-end space-x-10">
+                                    <div className="flex items-end space-x-10 max-2xl:flex-wrap max-2xl:gap-5 max-2xl:justify-between">
 
                                         {/* Search by */}
                                         <div>
@@ -128,7 +128,7 @@ export const ReportsTable = () => {
                         <div className="flex items-center justify-between">
                             {/* Sub Heading */}
                             <div>
-                                <h5 className="text-3xl font-semibold py-5">Reports Details</h5>
+                                <h5 className="text-3xl font-semibold py-5  max-xl:text-xl">Reports Details</h5>
                             </div>
 
                             {/* Download CSV Button */}
@@ -143,7 +143,7 @@ export const ReportsTable = () => {
                     </div>
 
 
-                    <div>
+                    <div className="max-2xl:overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-mindfulLightgrey">
                                 <tr className="">

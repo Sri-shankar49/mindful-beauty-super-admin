@@ -160,7 +160,7 @@ export const WalletManagementTable = () => {
             <div>
 
                 {/* Select & Search Fields */}
-                <div className="flex items-start space-x-5 py-5">
+                <div className="flex items-start space-x-5 py-5 max-xl:flex-wrap max-xl:gap-4 max-xl:space-x-0">
 
                     {/* Salon & Freelancer Select field */}
                     <div>
@@ -191,7 +191,7 @@ export const WalletManagementTable = () => {
                 </div>
 
 
-                <div className="">
+                <div className="max-2xl:overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-mindfulLightgrey">
                             <tr className="">

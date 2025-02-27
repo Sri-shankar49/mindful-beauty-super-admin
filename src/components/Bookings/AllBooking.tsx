@@ -112,10 +112,10 @@ export const AllBooking = () => {
 
       {/* Sub Heading */}
       <div>
-        <h5 className="text-3xl font-semibold py-5">Booking List</h5>
+        <h5 className="text-3xl font-semibold py-5  max-xl:text-xl">Booking List</h5>
       </div>
 
-      <div>
+      <div className="max-2xl:overflow-x-auto">
         <table className="w-full">
           <thead className="bg-mindfulLightgrey">
             <tr className="">

@@ -64,7 +64,7 @@ export const BookingStatus = () => {
                 <div className="bg-mindfulWhite px-5 py-5">
 
                     <div className="border-b-2 border-b-mindfulgrey pb-2">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between max-2xl:flex-wrap max-2xl:gap-5 max-2xl:justify-between">
                             {/* Sub Menus */}
                             <ul className="flex items-center space-x-10">
                                 <NavLink
