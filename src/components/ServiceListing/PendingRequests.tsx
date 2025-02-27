@@ -187,6 +187,7 @@ export const PendingRequests = () => {
                   <tr className="">
                     <th className="text-start px-2 py-3">Salon ID</th>
                     <th className="text-start px-2 py-3">Salon Name</th>
+                    <th className="text-start px-2 py-3">Salon / Specialist</th>
                     <th className="text-start px-2 py-3">Email</th>
                     <th className="text-start px-2 py-3">Mobile</th>
                     <th className="text-start px-2 py-3">Owner</th>
@@ -214,6 +215,7 @@ export const PendingRequests = () => {
                       <tr key={pendingData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">
                         <td className="text-start px-2 py-5">{pendingData.salon_id}</td>
                         <td className="text-start px-2 py-5">{pendingData.salon_name}</td>
+                        <td className="text-start px-2 py-5">{pendingData.service_type_name}</td>
                         <td className="text-start px-2 py-5">{pendingData.email}</td>
                         <td className="text-start px-2 py-5">{pendingData.mobile}</td>
                         <td className="text-start px-2 py-5">{pendingData.owner_name}</td>

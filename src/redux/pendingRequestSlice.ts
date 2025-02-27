@@ -13,6 +13,8 @@ interface PendingRequestItem {
     mobile: string;
     owner_name: string | null;
     location: string | null;
+    service_type_id: number;
+    service_type_name: string;
 }
 
 // Define initial state

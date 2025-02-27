@@ -191,6 +191,7 @@ export const InactiveUsers = () => {
                 <tr className="">
                   <th className="text-start px-2 py-3">Salon ID</th>
                   <th className="text-start px-2 py-3">Salon Name</th>
+                  <th className="text-start px-2 py-3">Salon / Specialist</th>
                   <th className="text-start px-2 py-3">Email</th>
                   <th className="text-start px-2 py-3">Mobile</th>
                   <th className="text-start px-2 py-3">Owner</th>
@@ -218,6 +219,7 @@ export const InactiveUsers = () => {
                     <tr key={inactiveData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">
                       <td className="text-start px-2 py-5">{inactiveData.salon_id}</td>
                       <td className="text-start px-2 py-5">{inactiveData.salon_name}</td>
+                      <td className="text-start px-2 py-5">{inactiveData.service_type_name}</td>
                       <td className="text-start px-2 py-5">{inactiveData.email}</td>
                       <td className="text-start px-2 py-5">{inactiveData.mobile}</td>
                       <td className="text-start px-2 py-5">{inactiveData.owner_name}</td>

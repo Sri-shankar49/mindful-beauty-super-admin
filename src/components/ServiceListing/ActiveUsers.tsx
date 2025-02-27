@@ -197,10 +197,11 @@ export const ActiveUsers = () => {
                             <tr className="">
                                 <th className="text-start px-2 py-3">Salon ID</th>
                                 <th className="text-start px-2 py-3">Salon Name</th>
+                                <th className="text-start px-2 py-3">Salon / Specialist</th>
                                 <th className="text-start px-2 py-3">Email</th>
                                 <th className="text-start px-2 py-3">Mobile</th>
                                 <th className="text-start px-2 py-3">Owner</th>
-                                <th className="text-start px-2 py-3">Location</th>
+                                <th className="w-96 text-start px-2 py-3">Location</th>
                                 <th className="text-start px-2 py-3">Action</th>
                             </tr>
                         </thead>
@@ -225,6 +226,7 @@ export const ActiveUsers = () => {
                                     <tr key={activeData.salon_id} className="border-b-2 border-mindfulGreyTypeTwo">
                                         <td className="text-start px-2 py-5">{activeData.salon_id}</td>
                                         <td className="text-start px-2 py-5">{activeData.salon_name}</td>
+                                        <td className="text-start px-2 py-5">{activeData.service_type_name}</td>
                                         <td className="text-start px-2 py-5">{activeData.email}</td>
                                         <td className="text-start px-2 py-5">{activeData.mobile}</td>
                                         <td className="text-start px-2 py-5">{activeData.owner_name}</td>
