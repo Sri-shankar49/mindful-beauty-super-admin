@@ -341,7 +341,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                     <th className="text-start px-2 py-3">Booking ID</th>
                                     <th className="text-start px-2 py-3">Date</th>
                                     <th className="text-start px-2 py-3">Time</th>
-                                    <th className="text-start px-2 py-3">Salon / Specialist</th>
+                                    <th className="text-start px-2 py-3">Salon / Freelancer</th>
                                     <th className="text-start px-2 py-3">Branch</th>
                                     <th className="text-start px-2 py-3">Cust. Name</th>
                                     <th className="text-start px-2 py-3">Cust. Mobile</th>

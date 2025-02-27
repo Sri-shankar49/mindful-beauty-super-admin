@@ -139,6 +139,97 @@ export const fetchDashboardList = async () => {
 
 
 
+
+
+// Manage Role Page -- --> Role Management
+// GET Method from the API
+export const roleList = async () => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/provider_roles/`);
+
+    console.log("Role list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch role list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching role list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch role list. Please try again later.");
+  }
+}
+
+// Function to get provider permissions
+export const getProviderPermissions = async (providerId: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/provider_permissions/${providerId}/`);
+    console.log("Provider Permissions Response:", response.data);
+
+    if (response.status !== 200 || !response.data) {
+      throw new Error("Failed to retrieve provider permissions");
+    }
+
+    return response.data.data; // Return the permissions data
+  } catch (error: any) {
+    console.error("Error fetching provider permissions:", error.response?.data?.message || error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch permissions. Please try again later.");
+  }
+};
+
+
+// Manage Role Page -- --> Role Management
+// add permission
+export const addPermissions = async (
+  role: number,
+  provider: string,
+  permissions: {
+    dashboard: boolean,
+    manage_role: boolean,
+    roles_management: boolean,
+    staff_management: boolean,
+    branch_management: boolean,
+    service_listing: boolean,
+    service_management: boolean,
+    all_booking: boolean,
+    schedule: boolean,
+    inprogress: boolean,
+    completed: boolean,
+    cancelled: boolean,
+    sales_transactions: boolean,
+    ratings_reviews: boolean,
+    report_details: boolean,
+  }
+) => {
+  try {
+    const response = await apiAxios.post(`/provider-api/permissions/`, {
+      role: role,
+      provider: provider,
+      ...permissions
+    });
+
+    console.log("Permissions API response:", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to add permissions");
+    }
+
+    return response.data; // Return the API response for further use
+
+  } catch (error: any) {
+    console.error("Error adding permissions:", error.response?.data?.message || error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to add permissions. Please try again later.");
+  }
+};
+
+
+
+
+
 // Service Provider Page -- > Active, Pending and Inactive
 export const fetchProvidersList = async (status: string, searchQuery: string, pageNumber: number, serviceTypeID: number) => {
   try {

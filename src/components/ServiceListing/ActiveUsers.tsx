@@ -197,7 +197,7 @@ export const ActiveUsers = () => {
                             <tr className="">
                                 <th className="text-start px-2 py-3">Salon ID</th>
                                 <th className="text-start px-2 py-3">Salon Name</th>
-                                <th className="text-start px-2 py-3">Salon / Specialist</th>
+                                <th className="text-start px-2 py-3">Salon / Freelancer</th>
                                 <th className="text-start px-2 py-3">Email</th>
                                 <th className="text-start px-2 py-3">Mobile</th>
                                 <th className="text-start px-2 py-3">Owner</th>

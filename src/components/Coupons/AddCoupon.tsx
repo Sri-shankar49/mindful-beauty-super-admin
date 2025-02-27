@@ -34,7 +34,7 @@ type AddCouponFormData = zod.infer<typeof addCouponSchema>;
 
 export const AddCoupon = () => {
 
-    const [activeStatus, setActiveStatus] = useState<number>(1);
+    // const [activeStatus, setActiveStatus] = useState<number>(1);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -55,7 +55,8 @@ export const AddCoupon = () => {
         try {
             const response = await addCoupon(
                 // data.status,
-                activeStatus,
+                // activeStatus,
+                1,
                 data.valid_from,
                 data.valid_until,
                 data.coupon_code,
@@ -103,7 +104,7 @@ export const AddCoupon = () => {
 
                                     {/* Coupons Status */}
                                     <div>
-                                        <div className="bg-mindfulWhite border-[1px] border-mindfulGreyTypeTwo rounded-lg">
+                                        {/* <div className="bg-mindfulWhite border-[1px] border-mindfulGreyTypeTwo rounded-lg">
                                             <div className="border-b-2 border-mindfulGreyTypeTwo px-5 py-3">
                                                 <h5 className="text-lg text-mindfulBlack font-semibold">Coupons Status</h5>
                                             </div>
@@ -146,7 +147,7 @@ export const AddCoupon = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     {/* Date Schedule */}
