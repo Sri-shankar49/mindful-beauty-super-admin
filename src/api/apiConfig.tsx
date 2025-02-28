@@ -934,6 +934,9 @@ export const fetchSalesTransactionsByFilters = async (
 };
 
 
+
+
+
 // Service Management -- --> Completed --> InvoicePopup
 // GET Method from the API
 export const invoiceDetails = async (transactionID: number) => {
@@ -954,6 +957,8 @@ export const invoiceDetails = async (transactionID: number) => {
     throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions list. Please try again later.");
   }
 };
+
+
 
 
 // Sales & Transactions Page
@@ -1011,6 +1016,56 @@ export const salesTransactionsInvoice = async (transactionID: number) => {
 }
 
 
+
+
+
+
+// Sales & Transactions Page
+// GET Method from the API
+export const salesTransactionsCompletedInvoice = async (appointmentID: number) => {
+
+  try {
+    const response = await apiAxios.get(`/provider-api/generate-invoice-pdf/`, {
+      params: { appointment_id: appointmentID }, // Ensure appointmentID is passed correctly
+      responseType: 'blob', // Important for file downloads (PDF, CSV, etc.)
+    });
+
+    console.log("Sales & Transactions Invoice GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to download sales & transactions Invoice");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching sales & transactions invoice:", error.response?.data?.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions invoice. Please try again later.");
+  }
+}
+
+
+// Service Management -- --> Completed --> InvoicePopup
+// GET Method from the API
+export const invoiceDetailsCompleted = async (appointmentId: number) => {
+  try {
+    const response = await apiAxios.get(`/provider-api/invoice/?appointment_id=${appointmentId}`);
+
+    console.log("Sales & Transactions list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch sales & transactions list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching sales & transactions list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions list. Please try again later.");
+  }
+};
 
 
 

@@ -10,12 +10,14 @@ import { FiDownload } from "react-icons/fi";
 // import { InvoicePopup } from "./Completed/InvoicePopup";
 // import { SelectField } from "../../common/SelectField";
 import { Pagination } from "../../common/Pagination";
-import { InvoicePopup } from "./Completed/InvoicePopup";
+// import { InvoicePopup } from "./Completed/InvoicePopup";
 import { PaymentDetailsPopup } from "./Completed/PaymentDetailsPopup";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchCompletedList, setCurrentPage, setLoading } from "../../redux/completedSlice";
 import { NotifyError } from "../../common/Toast/ToastMessage";
+import { salesTransactionsCompletedInvoice } from "../../api/apiConfig";
+import { InvoiceCompletedPopup } from "./Completed/InvoiceCompletedPopup";
 
 // Define the type for each option
 // interface StylistOption {
@@ -76,6 +78,9 @@ export const Completed = () => {
   // State Declaration for Payment Details Popup
   const [showPaymentDetailsPopup, setShowPaymentDetailsPopup] = useState(false);
 
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null); // Store entire completed object
+
+
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const openPaymentDetailsPopup = () => {
@@ -91,7 +96,8 @@ export const Completed = () => {
   // State Declaration for Invoice Popup
   const [showInvoicePopup, setShowInvoicePopup] = useState(false);
 
-  const openInvoicePopup = () => {
+  const openInvoicePopup = (completed: any) => {
+    setSelectedTransaction(completed);
     setShowInvoicePopup(!showInvoicePopup)
   }
 
@@ -115,6 +121,37 @@ export const Completed = () => {
     });
   }, [dispatch, searchQuery, currentPage]);
 
+
+  // Function Handler for downloading the sales transactions invoice
+  const handleDownloadInvoice = async (transactionID: number) => {
+
+    try {
+      // setLoading(true);
+      const blob = await salesTransactionsCompletedInvoice(transactionID);
+
+      // Create a link element and trigger download
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `invoice_${transactionID}.pdf`); // Assuming it's a PDF
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      console.log("Sales & transactions invoice downloaded successfully.");
+
+    }
+    catch (error: any) {
+      // setError(error.message || "Failed to download sales & transactions Invoice.");
+      NotifyError(error.message || "Failed to download sales & transactions Invoice.");
+    }
+    finally {
+      setLoading(false);// Reset the loading state
+    }
+  }
 
 
   const handlePageChange = (page: number) => {
@@ -211,14 +248,17 @@ export const Completed = () => {
                       <div className="flex items-center space-x-2">
                         {/* Eye Button */}
                         <div
-                          onClick={openInvoicePopup}
+                          onClick={() => openInvoicePopup(completed)}
                           className="border-[1px] border-mindfulBlack rounded-sm px-2 py-1.5 cursor-pointer">
                           <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack" />
                         </div>
 
                         {/* Download Button */}
-                        <div className="border-[1px] border-mindfulGreen rounded-sm px-2 py-1.5 cursor-pointer">
-                          <FiDownload className="text-[18px] text-mindfulGreen" />
+                        <div
+                          onClick={() => handleDownloadInvoice(Number(completed.id))}
+                          className="group border-[1px] border-mindfulGreen rounded-sm px-2 py-1.5 cursor-pointer hover:bg-mindfulGreen transition-all duration-200"
+                        >
+                          <FiDownload className="text-[18px] text-mindfulGreen group-hover:text-mindfulWhite transition-all duration-200" />
                         </div>
                       </div>
                     </td>
@@ -242,7 +282,7 @@ export const Completed = () => {
 
       {showPaymentDetailsPopup && <PaymentDetailsPopup closePopup={closePaymentDetailsPopup} />}
 
-      {showInvoicePopup && <InvoicePopup closePopup={closeInvoicePopup} />}
+      {showInvoicePopup && <InvoiceCompletedPopup closePopup={closeInvoicePopup} appointmentId={selectedTransaction.id} />}
 
 
       {/* Pagination */}
