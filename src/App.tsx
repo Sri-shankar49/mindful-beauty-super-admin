@@ -57,6 +57,7 @@ import { AddCoupon } from './components/Coupons/AddCoupon';
 import { ExpiredCoupons } from './components/Coupons/ExpiredCoupons';
 import { WalletManagement } from './pages/WalletManagement';
 import { ToastMessage } from './common/Toast/ToastMessage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 
@@ -105,7 +106,7 @@ function App() {
 
 
           {/* Login Layout Routes */}
-          <Route path="/" element={<LoginLayout />}>
+          <Route path="/" element={<ProtectedRoute><LoginLayout /></ProtectedRoute>}>
             <Route path="/Dashboard" element={<Dashboard />} >
 
               {/* Redirect to DashBoardData when /Dashboard is accessed */}
@@ -113,7 +114,7 @@ function App() {
 
 
               {/* Sub-routes */}
-              <Route path="DashBoardData" element={<DashBoardData appointment_id={0} appointment_date={''} appointment_time={''} branch={0} user_name={''} user_phone={''} service_names={[]} branch_city={''} stylist_name={''} stylist_id={''} stylist_photo={''} provider_name={''}  />} />
+              <Route path="DashBoardData" element={<DashBoardData appointment_id={0} appointment_date={''} appointment_time={''} branch={0} user_name={''} user_phone={''} service_names={[]} branch_city={''} stylist_name={''} stylist_id={''} stylist_photo={''} provider_name={''} />} />
               <Route path="ProfileProgress" element={<ProfileProgress />} />
             </Route>
 
