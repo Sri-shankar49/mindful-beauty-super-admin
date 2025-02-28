@@ -4,7 +4,7 @@ import { invoiceDetailsCompleted, salesTransactionsCompletedInvoice } from '../.
 import { NotifyError } from '../../../common/Toast/ToastMessage';
 import { Button } from '../../../common/Button';
 
-interface InvoicePopupProps {
+interface InvoiceCompletedPopupProps {
     closePopup: () => void;
     appointmentId: number;
 }
@@ -62,7 +62,7 @@ const numberToWords = (num: number): string => {
     return words.trim() + ' Only';
 };
 
-export const InvoiceCompletedPopup: React.FC<InvoicePopupProps> = ({ closePopup, appointmentId }) => {
+export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ closePopup, appointmentId }) => {
 
     const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
     const [loading, setLoading] = useState(true);

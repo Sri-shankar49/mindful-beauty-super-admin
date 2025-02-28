@@ -50,7 +50,7 @@ interface DashBoardDataProps {
     branch_city: string;
     stylist_name: string;
     stylist_id: string;
-    stylist_photo: string;
+    stylist_photo?: string;
     provider_name: string;
 }
 
