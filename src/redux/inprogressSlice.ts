@@ -20,6 +20,7 @@ interface InprogressItem {
     location: string;
     stylist: string;
     stylist_id?: string;
+    stylist_photo?: string;
     payment_status: string;
     provider_name: string;
 }

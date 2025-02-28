@@ -64,9 +64,13 @@ export const SalesTransactionsTable = () => {
 
     // State Declaration for Invoice Popup
     const [showInvoicePopup, setShowInvoicePopup] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
-    const openInvoicePopup = () => {
-        setShowInvoicePopup(!showInvoicePopup)
+    const openInvoicePopup = (transaction: any) => {
+        setSelectedTransaction(transaction);
+        setShowInvoicePopup(!showInvoicePopup);
+
+        console.log("Selecting the transaction data:", transaction);
     }
 
     const closeInvoicePopup = () => {
@@ -444,7 +448,7 @@ export const SalesTransactionsTable = () => {
                                                 <div className="flex items-center space-x-2">
                                                     {/* Eye Button */}
                                                     <div
-                                                        onClick={openInvoicePopup}
+                                                        onClick={() => openInvoicePopup(transaction)}
                                                         className="border-[1px] border-mindfulBlack rounded-sm px-2 py-1.5 cursor-pointer">
                                                         <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack" />
                                                     </div>
@@ -486,7 +490,7 @@ export const SalesTransactionsTable = () => {
                 </div>
             </div>
 
-            {showInvoicePopup && <InvoicePopup closePopup={closeInvoicePopup} />}
+            {showInvoicePopup && <InvoicePopup closePopup={closeInvoicePopup} transactionData={selectedTransaction} />}
 
         </div>
     )

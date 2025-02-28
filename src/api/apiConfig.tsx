@@ -934,7 +934,26 @@ export const fetchSalesTransactionsByFilters = async (
 };
 
 
+// Service Management -- --> Completed --> InvoicePopup
+// GET Method from the API
+export const invoiceDetails = async (transactionID: number) => {
+  try {
+    const response = await apiAxios.get(`/provider-api/get-provider-transaction/?id=${transactionID}`);
 
+    console.log("Sales & Transactions list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch sales & transactions list");
+    }
+
+    return response.data;
+
+  }
+  catch (error: any) {
+    console.error("Error fetching sales & transactions list:", error.message || error);
+    throw new Error(error.response?.data?.message || "Unable to fetch sales & transactions list. Please try again later.");
+  }
+};
 
 
 // Sales & Transactions Page

@@ -7,12 +7,12 @@ import { useState, useEffect } from "react";
 // import { DenialPopup } from "@/components/Dashboard/DashBoardData/DenialPopup"
 // import { StylistPopup } from "@/components/Dashboard/DashBoardData/StylistPopup"
 // import Select, { SingleValue } from 'react-select';
-// import stylist from "../../assets/images/stylist.png"
+import stylist from "../../assets/images/stylist.png"
 // import { SelectField } from "../../common/SelectField";
-import { fetchCouponCount, fetchDashboardList, fetchWalletCount } from "../../api/apiConfig";
 import { Link, NavLink } from "react-router-dom";
 import { NotifyError } from "../../common/Toast/ToastMessage";
 import { Button } from "../../common/Button";
+import { fetchCouponCount, fetchDashboardList, fetchWalletCount } from "../../api/apiConfig";
 // import { Button } from "../../common/Button";
 // import { DenialPopup } from "./DashBoardData/DenialPopup";
 // import { StylistPopup } from "./DashBoardData/StylistPopup";
@@ -50,6 +50,7 @@ interface DashBoardDataProps {
     branch_city: string;
     stylist_name: string;
     stylist_id: string;
+    stylist_photo: string;
     provider_name: string;
 }
 
@@ -346,7 +347,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                     <th className="text-start px-2 py-3">Cust. Name</th>
                                     <th className="text-start px-2 py-3">Cust. Mobile</th>
                                     <th className="text-start px-2 py-3">Service</th>
-                                    <th className="text-start px-2 py-3">Assign Stylist</th>
+                                    <th className="text-start px-2 py-3">Stylist</th>
                                     {/* <th className="text-start px-2 py-3">Action</th> */}
                                 </tr>
                             </thead>
@@ -381,7 +382,7 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                             <td className="text-start px-2 py-5">{data.user_name}</td>
                                             <td className="text-start px-2 py-5">{data.user_phone}</td>
                                             <td className="text-start px-2 py-5">
-                                                <ul >
+                                                <ul>
                                                     {data.service_names.map((service, index) => (
                                                         <li key={index}>{service.service_name}</li>
                                                     ))}
@@ -389,7 +390,16 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
                                             </td>
 
                                             <td className="text-start px-2 py-5">
-                                                {data.stylist_name || "N/A"}
+                                                {/* {data.stylist_name || "N/A"} */}
+                                                <div className="flex items-center space-x-2">
+                                                    <div>
+                                                        <img src={data.stylist_photo || stylist} alt="stylist-image" className="w-6 h-6 " />
+                                                    </div>
+
+                                                    <div key={data.stylist_id}>
+                                                        {data.stylist_name || "N/A"}
+                                                    </div>
+                                                </div>
                                             </td>
 
                                             {/* <td className="text-center px-2 py-5">

@@ -216,7 +216,7 @@ export const Schedule = () => {
                     <td className="text-start px-2 py-5">
                       <div className="flex items-center space-x-2">
                         <div>
-                          <img src={stylist} alt="stylist-image" className="w-6 h-6 " />
+                          <img src={schedule.stylist_photo || stylist} alt="stylist-image" className="w-6 h-6 " />
                         </div>
 
                         <div key={schedule.stylist_id}>

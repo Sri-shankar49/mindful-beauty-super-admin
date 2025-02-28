@@ -214,7 +214,7 @@ export const Inprogress = () => {
                     <td className="text-start px-2 py-5">
                       <div className="flex items-center space-x-2">
                         <div>
-                          <img src={stylist} alt="stylist-image" className="w-6 h-6 " />
+                          <img src={inprogress.stylist_photo || stylist} alt="stylist-image" className="w-6 h-6 " />
                         </div>
 
                         <div key={inprogress.stylist_id}>
