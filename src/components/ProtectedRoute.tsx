@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from "../redux/store"; // Update with your store's root state type
 
 interface ProtectedRouteProps {
-  children: React.ReactElement;
+  children: React.ReactElement; 
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
