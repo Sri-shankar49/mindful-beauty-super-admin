@@ -249,8 +249,8 @@ export const Completed = () => {
                         {/* Eye Button */}
                         <div
                           onClick={() => openInvoicePopup(completed)}
-                          className="border-[1px] border-mindfulBlack rounded-sm px-2 py-1.5 cursor-pointer">
-                          <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack" />
+                          className="group border-[1px] border-mindfulBlack rounded-sm px-2 py-1.5 cursor-pointer hover:bg-mindfulBlack transition-all duration-200">
+                          <MdOutlineRemoveRedEye className="text-[20px] text-mindfulBlack group-hover:text-mindfulWhite transition-all duration-200" />
                         </div>
 
                         {/* Download Button */}

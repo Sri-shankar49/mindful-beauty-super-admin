@@ -149,7 +149,7 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
                                 {/* Invoice to: */}
                                 <div className="">
                                     <h5 className="text-md text-mindfulBlack font-semibold mb-5">
-                                        Invoice to:asas
+                                        Invoice to:
                                     </h5>
                                     <p className="text-md text-mindfulBlack">
                                         {invoiceData?.user.name} | {invoiceData?.user.phone}

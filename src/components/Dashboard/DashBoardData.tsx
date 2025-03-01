@@ -298,23 +298,23 @@ export const DashBoardData: React.FC<DashBoardDataProps> = () => {
 
 
                         {/* Charts */}
-                        <div className="grid grid-cols-2 gap-2">
+                        {/* <div className="grid grid-cols-2 gap-2">
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <AreaChart /> */}
+                                <AreaChart />
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <BarChart /> */}
+                                <BarChart />
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <RangeChart /> */}
+                                <RangeChart />
                             </div>
 
                             <div className="border-[1px] border-mindfulgrey rounded-md px-2 py-2">
-                                {/* <BarChart /> */}
+                                <BarChart />
                             </div>
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>
