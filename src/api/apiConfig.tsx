@@ -1103,7 +1103,7 @@ export const reviewsList = async (searchQuery: string, pageNumber: number) => {
 
 // Coupon Page -- --> List Coupons Tab
 // GET Method from the API
-export const couponList = async (pageNumber: number, byStatus: number, byMonth: string) => {
+export const couponList = async (pageNumber: number, byStatus:  string | number, byMonth: string) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/get-coupons/`, {

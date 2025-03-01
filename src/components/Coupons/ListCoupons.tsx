@@ -104,11 +104,18 @@ export const ListCoupons = () => {
 
 
     // Filter the Coupon Data by Status
-    const [status, setStatus] = useState<number>(0); // Default to "Active"
+    // const [status, setStatus] = useState<number>(0); // Default to "Active"
+
+    // const handleStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    //     const selectedStatus = Number(event.target.value); // Convert to number
+    //     setStatus(selectedStatus);
+    // };
+
+    const [status, setStatus] = useState<string | number>(0); // Allow both numbers and strings
 
     const handleStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedStatus = Number(event.target.value); // Convert to number
-        setStatus(selectedStatus);
+        const selectedValue = event.target.value;
+        setStatus(selectedValue === "Expired" ? selectedValue : Number(selectedValue)); // Handle numbers and strings
     };
 
     // Filter the Coupon Data by Month
@@ -205,7 +212,7 @@ export const ListCoupons = () => {
                         <option value="0" disabled>By Status</option>
                         <option value="1">Active</option>
                         <option value="2">Inactive</option>
-                        {/* <option value="expired">Expired</option> */}
+                        <option value="Expired">Expired</option>
                     </select>
                 </div>
 
