@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { invoiceDetailsCompleted, salesTransactionsCompletedInvoice } from '../../../api/apiConfig';
 import { NotifyError } from '../../../common/Toast/ToastMessage';
 import { Button } from '../../../common/Button';
+import mindfulBeautyLogoSmall from "../../../assets/icons/mindfulBeautyLogoSmall.png";
+
 
 interface InvoiceCompletedPopupProps {
     closePopup: () => void;
@@ -130,8 +132,11 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
     return (
         <div className="fixed inset-0 bg-mindfulLightBlack bg-opacity-50 flex justify-center items-center z-50">
             {/* <div className="container mx-auto"> */}
-            <div className="relative bg-white rounded-[5px] w-6/12 mx-auto px-20 py-10 my-5overflow-y-auto h-[90%]">
+            <div className="relative bg-white rounded-[5px] w-[40%] mx-auto px-10 py-10 overflow-y-auto h-[90%]">
                 {/* Close Button */}
+                <div>
+                    <img src={mindfulBeautyLogoSmall} alt="mindful beauty logo" className="w-28" />
+                </div>
                 <div onClick={closePopup} className="absolute top-5 right-5 w-fit cursor-pointer">
                     <IoCloseCircle className="text-mindfulGrey text-[32px]" />
                 </div>
@@ -143,7 +148,7 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
                 ) : (
                     <div className="">
                         {/* Invoice to & Payment Details */}
-                        <div className="grid grid-cols-2 gap-x-5 items-center mb-10">
+                        <div className="grid grid-cols-2 gap-x-5 items-start mt-5 mb-10">
                             {/* Grid Column One */}
                             <div className="space-y-5">
                                 {/* Invoice to: */}
@@ -163,7 +168,7 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
                             {/* Grid Column two */}
                             <div className="space-y-5">
                                 {/* Payment Details: */}
-                                <div className="">
+                                <div className="text-end">
                                     <h5 className="text-md text-mindfulBlack font-semibold mb-5">
                                         Payment Details:
                                     </h5>
@@ -209,7 +214,7 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
 
                         {/* Description & Charges */}
                         <div>
-                            <div className="w-3/4 mx-auto">
+                            <div className=" mx-auto">
                                 <table className="w-full">
                                     <thead>
                                         <tr className="bg-mindfulLightgrey">
@@ -218,9 +223,9 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
                                         </tr>
                                     </thead>
 
-                                    <tbody className="border-b-2">
+                                    <tbody className="border-b-1 border-mindfulgrey py-4">
                                         {invoiceData?.services.map((service, index) => (
-                                            <tr key={index}>
+                                            <tr key={index} className="py-2">
                                                 <td className="font-semibold px-2 py-2">{service.name}</td>
                                                 <td>
                                                     <span className="text-md text-mindfulBlack font-semibold text-end px-2 py-2">
@@ -231,32 +236,34 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
                                         ))}
                                     </tbody>
                                 </table>
-
-                                <div className="w-3/4 mx-auto">
-                                    <table className="w-full">
-                                        <tr className="border-b-2">
-                                            <td className="text-lg text-mindfulBlack font-semibold px-2 py-2">Sub total:</td>
-                                        </tr>
-                                        <tbody>
-                                            <tr className="border-b-2">
-                                                <td className="px-2 py-3">SGST Tax:</td>
-                                                <td className="px-2 py-3">Rs. {invoiceData?.payment.sgst}</td>
+                                <div className="">
+                                    <div className="w-2/4 ml-auto">
+                                        <table className="w-full">
+                                            <tr className="border-b-1 border-mindfulgrey">
+                                                <td className="text-lg text-mindfulBlack font-semibold px-2 py-2">Sub total:</td>
                                             </tr>
-                                            <tr className="border-b-2">
-                                                <td className="px-2 py-3">CGST Tax:</td>
-                                                <td className="px-2 py-3">Rs. {invoiceData?.payment.cgst}</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td className="text-md text-mindfulBlack font-semibold uppercase px-2 py-5">Total:</td>
-                                                <td className="text-md text-mindfulBlack font-semibold px-2 py-5">
-                                                    Rs. {invoiceData?.payment.grand_total}
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                            <tbody>
+                                                <tr className="">
+                                                    <td className="px-2 py-2">SGST Tax:</td>
+                                                    <td className="px-2 py-2">Rs. {invoiceData?.payment.sgst}</td>
+                                                </tr>
+                                                <tr className="">
+                                                    <td className="px-2 py-2">CGST Tax:</td>
+                                                    <td className="px-2 py-2">Rs. {invoiceData?.payment.cgst}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr className="border-t-1 border-mindfulgrey">
+                                                    <td className="text-md text-mindfulBlack font-semibold uppercase px-2 py-5">Total:</td>
+                                                    <td className="text-md text-mindfulBlack font-semibold px-2 py-5">
+                                                        Rs. {invoiceData?.payment.grand_total}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                 </div>
+
 
                                 {/* Download Button */}
                                 <div className="text-center py-5">
@@ -272,7 +279,7 @@ export const InvoiceCompletedPopup: React.FC<InvoiceCompletedPopupProps> = ({ cl
 
                         <div className='pb-5'>
                             {/* Rupees in words */}
-                            <div className="grid grid-cols-4">
+                            <div className="flex items-center gap-3 justify-center">
                                 <p>Rupees in words:</p>
                                 <p className="col-span-3 text-md text-mindfulBlack font-semibold">
                                     {invoiceData?.payment.grand_total ? numberToWords(invoiceData.payment.grand_total) : 'ZERO'}
