@@ -11,6 +11,8 @@ import { fetchInactiveUserList, setCurrentPage, setLoading } from "../../redux/i
 import { DeleteProviderPopup } from "./DeleteProviderPopup";
 import { ViewProvider } from "./ViewProvider";
 import { NotifyError } from "../../common/Toast/ToastMessage";
+import { Button } from "../../common/Button";
+import { ViewBranchPopup } from "./ViewBranchPopup";
 // import { EditServicePopup } from "./AddServices/EditServicePopup";
 
 
@@ -42,6 +44,7 @@ export const InactiveUsers = () => {
 
   const [showViewProviderPopup, setShowViewProviderPopup] = useState(false);
 
+  const [showViewBranchPopup, setShowViewBranchPopup] = useState(false);
 
   const [showDeleteProviderPopup, setShowDeleteProviderPopup] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<any>(null);
@@ -70,6 +73,17 @@ export const InactiveUsers = () => {
     setShowDeleteProviderPopup(false);
   }
 
+
+  const openViewBranchPopup = (providerDetails: any) => {
+    setSelectedProvider(providerDetails);
+    setShowViewBranchPopup(true);
+    console.log("Viewing Branch the Provider Details", providerDetails);
+
+  }
+
+  const closeViewBranchPopup = () => {
+    setShowViewBranchPopup(false);
+  }
 
   // Fetching data from API
   // useEffect(() => {
@@ -197,6 +211,7 @@ export const InactiveUsers = () => {
                   <th className="text-start px-2 py-3">Owner</th>
                   <th className="text-start px-2 py-3">Location</th>
                   <th className="text-start px-2 py-3">Action</th>
+                  <th className="text-start px-2 py-3">View Branch</th>
                 </tr>
               </thead>
 
@@ -204,13 +219,13 @@ export const InactiveUsers = () => {
                 {/* Content */}
                 {loading ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-5">
+                    <td colSpan={8} className="text-center py-5">
                       Loading...
                     </td>
                   </tr>
                   // ) : error ? (
                   //   <tr>
-                  //     <td colSpan={7} className="text-center py-5">
+                  //     <td colSpan={8} className="text-center py-5">
                   //       Error: {error}
                   //     </td>
                   //   </tr>
@@ -259,10 +274,20 @@ export const InactiveUsers = () => {
                           </div>
                         </div>
                       </td>
+                      <td className="text-start px-2 py-5">
+                        <div>
+                          <Button
+                            onClick={() => openViewBranchPopup(inactiveData)}
+                            buttonType="button"
+                            buttonTitle={'View Branch'}
+                            className="bg-mindfulWhite text-md text-mindfulBlack font-normal border-[1px] border-mindfulgrey rounded-md px-5 py-1 transition-all duration-200 cursor-pointer hover:bg-main hover:text-mindfulWhite hover:border-main"
+                          />
+                        </div>
+                      </td>
                     </tr>
                   ))) : (
                   <tr>
-                    <td colSpan={7} className="text-gray-500 text-center px-2 py-5">
+                    <td colSpan={8} className="text-gray-500 text-center px-2 py-5">
                       No Inactive Users Data available
                     </td>
                   </tr>
@@ -326,6 +351,19 @@ export const InactiveUsers = () => {
               providerData={selectedProvider}
               refreshData={refreshedData}
             />}
+
+          {showViewBranchPopup && selectedProvider &&
+            <ViewBranchPopup
+              closePopup={closeViewBranchPopup}
+              providerData={selectedProvider}
+              branch_id={0}
+              branch_name={""}
+              phone={""}
+              location={""}
+              logo={""}
+              service_status={0}
+            />
+          }
 
 
           {/* Pagination */}

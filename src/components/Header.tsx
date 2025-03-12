@@ -142,13 +142,13 @@ export const Header = () => {
                                 </NavLink>
 
                                 {/* Reports */}
-                                <NavLink
+                                {/* <NavLink
                                     to="/Reports"
                                     className="active-nav  max-2xl:before:!-bottom-5"
                                     aria-current="page"
                                 >
                                     <li className="text-md max-xl:text-sm">Reports</li>
-                                </NavLink>
+                                </NavLink> */}
 
                             </ul>
                         </nav>
@@ -157,9 +157,9 @@ export const Header = () => {
                     <div className="flex items-center space-x-5 2xl:space-x-5 max-2xl:order-2">
 
                         {/* Notification Bell Icon */}
-                        <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-12 h-12 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
+                        {/* <div className="group bg-mindfulBlue border-[1px] border-mindfulBlue rounded-full w-12 h-12 flex items-center justify-center cursor-pointer hover:bg-white transition-colors duration-200">
                             <FaBell className="text-[22px] text-mindfulWhite group-hover:text-mindfulBlue" />
-                        </div>
+                        </div> */}
 
                         {/* User Profile Icon */}
                         <div
@@ -172,21 +172,21 @@ export const Header = () => {
 
                                 <div>
                                     {profileHover && (
-                                        <div className="absolute bottom-[-7.7rem] right-10 mt-2 w-40 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
+                                        <div className="absolute bottom-[-1.7rem] right-10 mt-2 w-40 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
                                             {/* <Link
                                                 to="/MyAccount"
                                                 aria-current="page"
                                             // className="active-nav  max-2xl:before:!-bottom-5"
                                             > */}
-                                                <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
-                                                    My Profile
-                                                </div>
+                                            {/* <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
+                                                My Profile
+                                            </div> */}
                                             {/* </Link> */}
 
                                             {/* <Link to=""> */}
-                                            <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
+                                            {/* <div className="px-4 py-3 text-mindfulBlack hover:bg-gray-100">
                                                 Password Reset
-                                            </div>
+                                            </div> */}
                                             {/* </Link> */}
 
                                             {/* <Link to=""> */}

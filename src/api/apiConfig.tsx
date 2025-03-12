@@ -1103,7 +1103,7 @@ export const reviewsList = async (searchQuery: string, pageNumber: number) => {
 
 // Coupon Page -- --> List Coupons Tab
 // GET Method from the API
-export const couponList = async (pageNumber: number, byStatus:  string | number, byMonth: string) => {
+export const couponList = async (pageNumber: number, byStatus: string | number, byMonth: string) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/get-coupons/`, {
@@ -1309,5 +1309,62 @@ export const addCredit = async (providerID: number, amount: number, paymentDate:
   } catch (error: any) {
     console.error("Error adding credits:", error.response?.data.message || error);
     throw new Error(error.response?.data.message || "Error adding credits. Please try again later.");
+  }
+};
+
+
+
+
+
+// General Info Popup
+export const viewProviderGeneralInfo = async (providerId: number) => {
+  try {
+    const response = await apiAxios.get(`/provider-api/general_info/`, {
+      params: {
+        provider_id: providerId, // Sending provider_id as query parameter
+      },
+    });
+
+    console.log("Provider General Info GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch provider general information");
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error fetching provider general information:",
+      error.response?.data?.message || error
+    );
+    throw new Error(
+      error.response?.data?.message ||
+      "Unable to fetch provider general information. Please try again later."
+    );
+  }
+};
+
+
+
+
+
+export const viewBranchList = async (salonID: string | number) => {
+  try {
+    const response = await apiAxios.get(
+      `/provider-api/branches-list/${salonID}`
+    );
+    console.log("Branch list GET Method response", response.data);
+
+    if (!response.data || response.status !== 200) {
+      throw new Error("Failed to fetch branch list");
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching branch list:", error.message || error);
+    throw new Error(
+      error.response?.data?.message ||
+      "Unable to fetch branch list. Please try again later."
+    );
   }
 };

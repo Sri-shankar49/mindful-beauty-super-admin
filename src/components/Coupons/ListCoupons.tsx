@@ -10,6 +10,7 @@ import { Pagination } from '../../common/Pagination';
 import { couponList } from '../../api/apiConfig';
 import { DeleteCouponPopup } from './DeleteCouponPopup';
 import { EditCoupon } from './EditCoupon';
+import { NotifyError } from '../../common/Toast/ToastMessage';
 
 // Proptypes from API
 interface ListCouponsProps {
@@ -32,7 +33,7 @@ export const ListCoupons = () => {
 
     const [couponsData, setCouponData] = useState<ListCouponsProps[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
 
     const [totalItems, setTotalItems] = useState(0);
 
@@ -93,7 +94,8 @@ export const ListCoupons = () => {
                 console.log("Fetched Coupons Data List pagination count data log :", response.count);
 
             } catch (error: any) {
-                setError(error.message || "Unable to fetch coupons data. Please try again later.");
+                // setError(error.message || "Unable to fetch coupons data. Please try again later.");
+                NotifyError(error.message || "Unable to fetch coupons data. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -142,7 +144,8 @@ export const ListCoupons = () => {
                 console.log("Fetched Coupons Data List pagination count data log :", response.count);
 
             } catch (error: any) {
-                setError(error.message || "Unable to fetch coupons data. Please try again later.");
+                // setError(error.message || "Unable to fetch coupons data. Please try again later.");
+                NotifyError(error.message || "Unable to fetch coupons data. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -297,10 +300,10 @@ export const ListCoupons = () => {
                             <tr>
                                 <td colSpan={8} className="text-center py-5">Loading...</td>
                             </tr>
-                        ) : error ? (
-                            <tr>
-                                <td colSpan={8} className="text-red-500 text-center py-5">Error: {error}</td>
-                            </tr>
+                            // ) : error ? (
+                            //     <tr>
+                            //         <td colSpan={8} className="text-red-500 text-center py-5">Error: {error}</td>
+                            //     </tr>
                         ) : couponsData.length > 0 ? (
                             couponsData.map((coupon) => (
                                 <tr key={coupon.id} className="border-b-2 border-mindfulGreyTypeTwo">

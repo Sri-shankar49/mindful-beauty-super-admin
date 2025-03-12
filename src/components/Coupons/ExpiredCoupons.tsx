@@ -10,6 +10,7 @@ import { Pagination } from '../../common/Pagination';
 import { expiredCouponList } from '../../api/apiConfig';
 import { DeleteCouponPopup } from './DeleteCouponPopup';
 import { EditCoupon } from './EditCoupon';
+import { NotifyError } from '../../common/Toast/ToastMessage';
 
 // Proptypes from API
 interface ExpiredCouponsProps {
@@ -33,7 +34,7 @@ export const ExpiredCoupons = () => {
 
     const [expiredCouponData, setExpiredCouponData] = useState<ExpiredCouponsProps[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
 
     const [totalItems, setTotalItems] = useState(0);
 
@@ -97,7 +98,8 @@ export const ExpiredCoupons = () => {
                 console.log("Fetched Expired Coupons Data List pagination count data log :", response.count);
 
             } catch (error: any) {
-                setError(error.message || "Unable to fetch expired coupons data. Please try again later.");
+                // setError(error.message || "Unable to fetch expired coupons data. Please try again later.");
+                NotifyError(error.message || "Unable to fetch expired coupons data. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -141,7 +143,8 @@ export const ExpiredCoupons = () => {
                 console.log("Fetched Expired Coupons Data List pagination count data log :", response.count);
 
             } catch (error: any) {
-                setError(error.message || "Unable to fetch expired coupons data. Please try again later.");
+                // setError(error.message || "Unable to fetch expired coupons data. Please try again later.");
+                NotifyError(error.message || "Unable to fetch expired coupons data. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -296,10 +299,10 @@ export const ExpiredCoupons = () => {
                             <tr>
                                 <td colSpan={8} className="text-center py-5">Loading...</td>
                             </tr>
-                        ) : error ? (
-                            <tr>
-                                <td colSpan={8} className="text-red-500 text-center py-5">Error: {error}</td>
-                            </tr>
+                            // ) : error ? (
+                            //     <tr>
+                            //         <td colSpan={8} className="text-red-500 text-center py-5">Error: {error}</td>
+                            //     </tr>
                         ) : (
                             expiredCouponData.length > 0 ? (
                                 expiredCouponData.map((coupon) => (
