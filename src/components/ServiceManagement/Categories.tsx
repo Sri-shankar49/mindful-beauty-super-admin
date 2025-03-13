@@ -134,7 +134,7 @@ export const Categories = () => {
       setLoading(true);
 
       try {
-        const response = await fetchCategoriesList(currentPage);
+        const response = await fetchCategoriesList(currentPage, itemsPerPage);
         setCategoriesData(response.results.data);
 
         setTotalItems(response.count);

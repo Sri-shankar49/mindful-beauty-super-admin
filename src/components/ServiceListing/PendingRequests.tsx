@@ -118,12 +118,12 @@ export const PendingRequests = () => {
   // Fetch pending request list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
-    dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
+    dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, pageSize: itemsPerPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
       console.error("Error fetching pending request list:", error);
       // dispatch(setError(error.message));
       NotifyError(error.message || "Failed to fetch Pending Request. Please try again."); // ✅ Show error via toast
     });
-  }, [dispatch, searchQuery, currentPage, serviceTypeID]);
+  }, [dispatch, searchQuery, currentPage, itemsPerPage, serviceTypeID]);
 
 
 
@@ -176,7 +176,7 @@ export const PendingRequests = () => {
     try {
       dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-      await dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) }));
+      await dispatch(fetchPendingRequestList({ status: "Pending", searchQuery, currentPage, pageSize: itemsPerPage, serviceTypeID: Number(serviceTypeID) }));
 
       console.log("Pending Request list data refreshed.");
     } catch (error: any) {
@@ -217,13 +217,13 @@ export const PendingRequests = () => {
                   {/* Content */}
                   {loading ? (
                     <tr>
-                      <td colSpan={8} className="text-center py-5">
+                      <td colSpan={9} className="text-center py-5">
                         Loading...
                       </td>
                     </tr>
                     // ) : error ? (
                     //   <tr>
-                    //     <td colSpan={8} className="text-center py-5">
+                    //     <td colSpan={9} className="text-center py-5">
                     //       Error: {error}
                     //     </td>
                     //   </tr>
@@ -297,7 +297,7 @@ export const PendingRequests = () => {
                       </tr>
                     ))) : (
                     <tr>
-                      <td colSpan={8} className="text-gray-500 text-center px-2 py-5">
+                      <td colSpan={9} className="text-gray-500 text-center px-2 py-5">
                         No Pending Requests Data available
                       </td>
                     </tr>

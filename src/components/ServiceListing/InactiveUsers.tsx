@@ -120,12 +120,12 @@ export const InactiveUsers = () => {
   // Fetch active Users list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
-    dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
+    dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage, pageSize: itemsPerPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
       console.error("Error fetching inactive users list:", error);
       // dispatch(setError(error.message));
       NotifyError(error.message || "Failed to fetch inactive users. Please try again."); // ✅ Show error via toast
     });
-  }, [dispatch, searchQuery, currentPage, serviceTypeID]);
+  }, [dispatch, searchQuery, currentPage, itemsPerPage, serviceTypeID]);
 
 
 
@@ -179,7 +179,7 @@ export const InactiveUsers = () => {
     try {
       dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-      await dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) }));
+      await dispatch(fetchInactiveUserList({ status: "Inactive", searchQuery, currentPage, pageSize: itemsPerPage, serviceTypeID: Number(serviceTypeID) }));
 
       console.log("Inactive Users list data refreshed.");
     } catch (error: any) {
@@ -219,13 +219,13 @@ export const InactiveUsers = () => {
                 {/* Content */}
                 {loading ? (
                   <tr>
-                    <td colSpan={8} className="text-center py-5">
+                    <td colSpan={9} className="text-center py-5">
                       Loading...
                     </td>
                   </tr>
                   // ) : error ? (
                   //   <tr>
-                  //     <td colSpan={8} className="text-center py-5">
+                  //     <td colSpan={9} className="text-center py-5">
                   //       Error: {error}
                   //     </td>
                   //   </tr>
@@ -287,7 +287,7 @@ export const InactiveUsers = () => {
                     </tr>
                   ))) : (
                   <tr>
-                    <td colSpan={8} className="text-gray-500 text-center px-2 py-5">
+                    <td colSpan={9} className="text-gray-500 text-center px-2 py-5">
                       No Inactive Users Data available
                     </td>
                   </tr>

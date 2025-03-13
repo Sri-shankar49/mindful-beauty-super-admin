@@ -45,12 +45,12 @@ const initialState: ReviewRatingState = {
 export const fetchReviewRatingsList = createAsyncThunk(
     'review/fetchReviewRatingsList',
     async (
-        { searchQuery, currentPage }:
-            { searchQuery: string; currentPage: number },
+        { searchQuery, currentPage, pageSize }:
+            { searchQuery: string; currentPage: number, pageSize: number },
         // { rejectWithValue }
     ) => {
         try {
-            const response = await reviewsList(searchQuery, currentPage);
+            const response = await reviewsList(searchQuery, currentPage, pageSize);
             return response;
         } catch (error: any) {
             // return rejectWithValue(error.message || 'Failed to fetch review & ratings list');

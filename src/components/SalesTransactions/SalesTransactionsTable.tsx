@@ -84,7 +84,7 @@ export const SalesTransactionsTable = () => {
         const fetchSalesTransactionsListData = async () => {
             try {
                 setLoading(true);
-                const response = await salesTransactionsList(currentPage);
+                const response = await salesTransactionsList(currentPage, itemsPerPage);
 
                 setSalesTransactionsData(response.results || []);
                 setTotalItems(response.count);
@@ -145,7 +145,7 @@ export const SalesTransactionsTable = () => {
         // Fetch default sales transactions without filters
         try {
             setLoading(true);
-            const response = await salesTransactionsList(currentPage);
+            const response = await salesTransactionsList(currentPage, itemsPerPage);
             setSalesTransactionsData(response.results || []);
         } catch (error: any) {
             // setError(error.message || "Failed to fetch default sales transactions.");

@@ -88,7 +88,7 @@ export const ExpiredCoupons = () => {
             setLoading(true);
 
             try {
-                const response = await expiredCouponList(currentPage, 0, "");
+                const response = await expiredCouponList(currentPage, itemsPerPage, 0, "");
 
                 setExpiredCouponData(response.results.data);
                 setTotalItems(response.count);
@@ -133,7 +133,7 @@ export const ExpiredCoupons = () => {
             setLoading(true);
 
             try {
-                const response = await expiredCouponList(currentPage, status, month);
+                const response = await expiredCouponList(currentPage, itemsPerPage, status, month);
 
                 setExpiredCouponData(response.results.data);
                 setTotalItems(response.count);
@@ -155,7 +155,7 @@ export const ExpiredCoupons = () => {
             fetchFilteredData();
         }
 
-    }, [status, month, currentPage]);
+    }, [status, month, currentPage, itemsPerPage]);
 
 
 
@@ -172,7 +172,7 @@ export const ExpiredCoupons = () => {
     // Refreshing the data on handleActionSubmit
     const refreshedData = async () => {
         try {
-            const response = await expiredCouponList(currentPage, status, month);
+            const response = await expiredCouponList(currentPage, itemsPerPage, status, month);
             setExpiredCouponData(response.results.data);
             setTotalItems(response.count);
 

@@ -76,11 +76,11 @@ export const RatingReviewsTable = () => {
   // Fetch cancelled list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
-    dispatch(fetchReviewRatingsList({ searchQuery, currentPage })).catch((error) => {
+    dispatch(fetchReviewRatingsList({ searchQuery, currentPage, pageSize: itemsPerPage })).catch((error) => {
       // dispatch(setError(error.message));
       NotifyError(error.message || "Failed to fetch ratings & reviews list. Please try again."); // ✅ Show error via toast
     });
-  }, [dispatch, searchQuery, currentPage]);
+  }, [dispatch, searchQuery, currentPage, itemsPerPage]);
 
   // Handle search input change
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

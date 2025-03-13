@@ -164,7 +164,7 @@ export const Subcategories = () => {
       setLoading(true);
 
       try {
-        const response = await fetchSubcategoriesList(0, currentPage);
+        const response = await fetchSubcategoriesList(0, currentPage, itemsPerPage);
 
         const loadCategoriesData = await categories();
 
@@ -199,7 +199,7 @@ export const Subcategories = () => {
     // setSelectedSubCategory(""); // Reset subcategory when category changes
 
     try {
-      const response = await fetchSubcategoriesList(Number(selectedCategoryID), currentPage); // Pass categoryId to API
+      const response = await fetchSubcategoriesList(Number(selectedCategoryID), currentPage, itemsPerPage); // Pass categoryId to API
 
       setSubcategoriesData(response.results.data)      // Update subcategories
 
@@ -229,7 +229,7 @@ export const Subcategories = () => {
   // Refreshing the data on handleActionSubmit
   const refreshedData = async () => {
     try {
-      const response = await fetchSubcategoriesList(0, currentPage);
+      const response = await fetchSubcategoriesList(0, currentPage, itemsPerPage);
       setSubcategoriesData(response.results.data);
 
       setTotalItems(response.count);

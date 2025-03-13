@@ -53,12 +53,12 @@ const initialState: CompletedState = {
 export const fetchCompletedList = createAsyncThunk(
     'completed/fetchCompletedList',
     async (
-        { status, searchQuery, currentPage }:
-            { status: number; searchQuery: string; currentPage: number },
+        { status, searchQuery, currentPage, pageSize }:
+            { status: number; searchQuery: string; currentPage: number, pageSize: number },
         // { rejectWithValue }
     ) => {
         try {
-            const response = await completedList(status, searchQuery, currentPage);
+            const response = await completedList(status, searchQuery, currentPage, pageSize);
             return response;
         } catch (error: any) {
             // return rejectWithValue(error.message || 'Failed to fetch completed list');

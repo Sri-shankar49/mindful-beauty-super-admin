@@ -189,7 +189,7 @@ export const Services = () => {
       setLoading(true);
 
       try {
-        const response = await fetchServicesList(currentPage, 0, 0);
+        const response = await fetchServicesList(currentPage, itemsPerPage, 0, 0);
 
         const loadCategoriesData = await categories();
 
@@ -250,7 +250,7 @@ export const Services = () => {
       setLoading(true);
 
       try {
-        const response = await fetchServicesList(currentPage, Number(selectedCategory), Number(selectedSubCategory));
+        const response = await fetchServicesList(currentPage, itemsPerPage, Number(selectedCategory), Number(selectedSubCategory));
 
         const loadCategoriesData = await categories();
 
@@ -280,7 +280,7 @@ export const Services = () => {
     }
 
     // }, [currentPage, itemsPerPage]);
-  }, [selectedCategory, selectedSubCategory, currentPage]);
+  }, [selectedCategory, selectedSubCategory, currentPage, itemsPerPage]);
 
 
   const handlePageChange = (page: number) => {
@@ -295,7 +295,7 @@ export const Services = () => {
   // Refreshing the data on handleActionSubmit
   const refreshedData = async () => {
     try {
-      const response = await fetchServicesList(currentPage, Number(selectedCategory), Number(selectedSubCategory));
+      const response = await fetchServicesList(currentPage, itemsPerPage, Number(selectedCategory), Number(selectedSubCategory));
       setServicesData(response.results.data);
 
       setTotalItems(response.count);

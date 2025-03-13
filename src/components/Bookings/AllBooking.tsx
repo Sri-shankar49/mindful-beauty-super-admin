@@ -89,11 +89,11 @@ export const AllBooking = () => {
   // Fetch allbooking list on mount and when dependencies change
   useEffect(() => {
     dispatch(setLoading(true)); // Ensure UI updates before fetching
-    dispatch(fetchBookingList({ searchQuery, currentPage })).catch((error) => {
+    dispatch(fetchBookingList({ searchQuery, currentPage, pageSize: itemsPerPage })).catch((error) => {
       // dispatch(setError(error.message));
       NotifyError(error.message || "Failed to fetch all bookings. Please try again."); // ✅ Show error via toast
     });;
-  }, [dispatch, searchQuery, currentPage]);
+  }, [dispatch, searchQuery, currentPage, itemsPerPage]);
 
 
   const handlePageChange = (page: number) => {

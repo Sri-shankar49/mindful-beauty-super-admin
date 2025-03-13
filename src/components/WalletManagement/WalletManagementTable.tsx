@@ -60,7 +60,7 @@ export const WalletManagementTable = () => {
             setLoading(true);
 
             try {
-                const response = await walletList(currentPage, 0, "");
+                const response = await walletList(currentPage, itemsPerPage, 0, "");
 
                 setWalletData(response.results.data);
                 setTotalItems(response.count);
@@ -104,7 +104,7 @@ export const WalletManagementTable = () => {
             setLoading(true);
 
             try {
-                const response = await walletList(currentPage, Number(provider), searchQuery);
+                const response = await walletList(currentPage, itemsPerPage, Number(provider), searchQuery);
 
                 setWalletData(response.results.data);
                 setTotalItems(response.count);
@@ -125,7 +125,7 @@ export const WalletManagementTable = () => {
             fetchFilteredData();
         }
 
-    }, [provider, searchQuery, currentPage]);
+    }, [provider, searchQuery, currentPage, itemsPerPage]);
 
 
 
@@ -142,7 +142,7 @@ export const WalletManagementTable = () => {
     // Refreshing the data on handleActionSubmit
     const refreshedData = async () => {
         try {
-            const response = await walletList(currentPage, Number(provider), searchQuery);
+            const response = await walletList(currentPage, itemsPerPage, Number(provider), searchQuery);
 
             setWalletData(response.results.data);
             setTotalItems(response.count);

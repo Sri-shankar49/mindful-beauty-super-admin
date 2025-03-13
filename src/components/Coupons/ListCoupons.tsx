@@ -84,7 +84,7 @@ export const ListCoupons = () => {
             setLoading(true);
 
             try {
-                const response = await couponList(currentPage, 0, "");
+                const response = await couponList(currentPage, itemsPerPage, 0, "");
 
                 setCouponData(response.results.data);
                 setTotalItems(response.count);
@@ -134,7 +134,7 @@ export const ListCoupons = () => {
             setLoading(true);
 
             try {
-                const response = await couponList(currentPage, status, month);
+                const response = await couponList(currentPage, itemsPerPage, status, month);
 
                 setCouponData(response.results.data);
                 setTotalItems(response.count);
@@ -156,7 +156,7 @@ export const ListCoupons = () => {
             fetchFilteredData();
         }
 
-    }, [status, month, currentPage]);
+    }, [status, month, currentPage, itemsPerPage]);
 
 
     const handlePageChange = (page: number) => {
@@ -172,7 +172,7 @@ export const ListCoupons = () => {
     // Refreshing the data on handleActionSubmit
     const refreshedData = async () => {
         try {
-            const response = await couponList(currentPage, status, month);
+            const response = await couponList(currentPage, itemsPerPage, status, month);
             setCouponData(response.results.data);
             setTotalItems(response.count);
 

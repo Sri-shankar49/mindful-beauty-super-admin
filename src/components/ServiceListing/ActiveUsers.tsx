@@ -128,12 +128,12 @@ export const ActiveUsers = () => {
     // Fetch active Users list on mount and when dependencies change
     useEffect(() => {
         dispatch(setLoading(true)); // Ensure UI updates before fetching
-        dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
+        dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage, pageSize: itemsPerPage, serviceTypeID: Number(serviceTypeID) })).catch((error) => {
             console.error("Error fetching active users list:", error);
             // dispatch(setError(error.message));
             NotifyError(error.message || "Failed to fetch active users. Please try again."); // ✅ Show error via toast
         });
-    }, [dispatch, searchQuery, currentPage, serviceTypeID]);  // ✅ Added provider as dependency
+    }, [dispatch, searchQuery, currentPage, itemsPerPage, serviceTypeID]);  // ✅ Added provider as dependency
 
 
     const handlePageChange = (page: number) => {
@@ -186,7 +186,7 @@ export const ActiveUsers = () => {
         try {
             dispatch(setLoading(true)); // ✅ Show loading state before fetching
 
-            await dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage, serviceTypeID: Number(serviceTypeID) }));
+            await dispatch(fetchActiveUserList({ status: "Active", searchQuery, currentPage, pageSize: itemsPerPage, serviceTypeID: Number(serviceTypeID) }));
 
             console.log("Active Users list data refreshed.");
         } catch (error: any) {
@@ -227,13 +227,13 @@ export const ActiveUsers = () => {
                             {/* Content */}
                             {loading ? (
                                 <tr>
-                                    <td colSpan={8} className="text-center py-5">
+                                    <td colSpan={9} className="text-center py-5">
                                         Loading...
                                     </td>
                                 </tr>
                                 // ) : error ? (
                                 //     <tr>
-                                //         <td colSpan={8} className="text-center py-5">
+                                //         <td colSpan={9} className="text-center py-5">
                                 //             Error: {error}
                                 //         </td>
                                 //     </tr>
@@ -297,7 +297,7 @@ export const ActiveUsers = () => {
                                     </tr>
                                 ))) : (
                                 <tr>
-                                    <td colSpan={8} className="text-gray-500 text-center px-2 py-5">
+                                    <td colSpan={9} className="text-gray-500 text-center px-2 py-5">
                                         No Active Users Data available
                                     </td>
                                 </tr>

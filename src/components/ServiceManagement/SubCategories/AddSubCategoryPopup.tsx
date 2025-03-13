@@ -119,7 +119,7 @@ export const AddSubCategoryPopup: React.FC<AddSubCategoryPopupProps> = ({ closeP
         const fetchCategoriesData = async () => {
             setLoading(true);
             try {
-                const response = await fetchCategoriesList(1);
+                const response = await fetchCategoriesList(1, 10);
                 setCategoriesData(response.results.data);
             } catch (error: any) {
                 setError("Unable to fetch categories. Please try again later.");
@@ -201,151 +201,151 @@ export const AddSubCategoryPopup: React.FC<AddSubCategoryPopupProps> = ({ closeP
                 <div className="fixed inset-0 bg-mindfulLightBlack bg-opacity-50 flex justify-center items-center z-50">
                     {/* <div className="container mx-auto"> */}
 
-                        <div className="relative bg-white rounded-[5px] w-4/12 mx-auto px-5 py-5 max-2xl:overflow-y-auto max-2xl:h-[75%]">
+                    <div className="relative bg-white rounded-[5px] w-4/12 mx-auto px-5 py-5 max-2xl:overflow-y-auto max-2xl:h-[75%]">
 
-                            <div className="relative mb-10">
-                                <h2 className="text-2xl text-mindfulBlack font-semibold">Add Sub Category</h2>
-                                <div className="absolute inset-x-0 bottom-[-20px] mx-auto bg-mindfulgrey rounded-md w-full h-0.5">
-                                </div>
+                        <div className="relative mb-10">
+                            <h2 className="text-2xl text-mindfulBlack font-semibold">Add Sub Category</h2>
+                            <div className="absolute inset-x-0 bottom-[-20px] mx-auto bg-mindfulgrey rounded-md w-full h-0.5">
                             </div>
-
-                            {/* Close Button */}
-                            <div
-                                onClick={closePopup}
-                                className="absolute top-5 right-5 w-fit cursor-pointer"
-                            >
-                                <IoCloseCircle className="text-mindfulGrey text-[32px]" />
-                            </div>
-
-                            {loading ? (
-                                <div className="text-center py-5">Loading...</div>
-                            ) : (
-                                <div className="">
-                                    <form onSubmit={handleSubmit(onSubmit)} method="post">
-                                        <div className="">
-
-
-                                            {/* Add Sub Category Form */}
-                                            <div className="space-y-5">
-
-                                                {/* Parent Category */}
-                                                <div className="">
-                                                    <label
-                                                        htmlFor="name"
-                                                        className="text-md text-mindfulBlack font-semibold mb-1"
-                                                    >
-                                                        Category
-                                                    </label>
-
-                                                    <select
-                                                        // name=""
-                                                        id=""
-                                                        className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
-                                                        {...register("categoryID")}
-                                                        onChange={handleCategoryChange} // ✅ Handle category selection
-                                                    >
-                                                        <option value="" disabled>Select Category</option>
-
-                                                        {categoriesData.map((category) => (
-                                                            <option key={category.category_id} value={category.category_id}>
-                                                                {category.category_name}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-
-                                                    {errors.categoryID && (<p className="text-sm text-red-500">{errors.categoryID.message}</p>)}
-
-                                                </div>
-
-
-                                                {/* Sub Category */}
-                                                <div className="">
-                                                    <label
-                                                        htmlFor="name"
-                                                        className="text-md text-mindfulBlack font-semibold mb-1"
-                                                    >
-                                                        Sub Category
-                                                    </label>
-                                                    <InputField
-                                                        label={''}
-                                                        type="text"
-                                                        // name="category"
-                                                        id="category"
-                                                        placeholder="Sub Category"
-                                                        className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
-                                                        {...register("subCategoryName")}
-                                                    />
-
-                                                    {errors.subCategoryName && (<p className="text-sm text-red-500">{errors.subCategoryName.message}</p>)}
-                                                </div>
-
-                                                {/* Sub Category Image */}
-                                                <div>
-                                                    <label className="text-md text-mindfulBlack font-semibold mb-1">Sub Category Image (Optional)</label>
-                                                    <div className="border-[1px] border-mindfulgrey px-5 py-10 text-center relative">
-
-                                                        <label htmlFor="file-upload" className="cursor-pointer">
-                                                            {!fileName ? (
-                                                                <>
-                                                                    <p className="text-mindfulBlack font-semibold">
-                                                                        Drag & Drop Image or <span className="text-mindfulBlue underline">Browse</span>
-                                                                    </p>
-                                                                    <p className="text-sm text-gray-500">Supported formats: JPG, PNG</p>
-                                                                </>
-                                                            ) : (
-                                                                <div className="flex justify-center items-center">
-                                                                    <p className="text-gray-700 font-medium">{fileName}</p>
-                                                                    <IoCloseCircle
-                                                                        onClick={handleRemoveFile}
-                                                                        className="w-5 h-5 text-gray-500 ml-3 cursor-pointer hover:text-red-500"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </label>
-                                                        <input
-                                                            id="file-upload"
-                                                            type="file"
-                                                            accept="image/jpeg, image/png"
-                                                            onChange={handleFileChange}
-                                                            className="hidden"
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                        {/* Error response from the API */}
-                                        {error && <p className="text-sm text-red-500 pt-5">{error}</p>}
-
-                                        {/* Buttons */}
-                                        <div className="pt-5">
-                                            <div className="flex items-center justify-center space-x-5">
-                                                {/* Cancel Button */}
-                                                <Button
-                                                    onClick={closePopup}
-                                                    buttonType="button"
-                                                    buttonTitle="Cancel"
-                                                    className="bg-mindfulWhite text-md text-mindfulBlack rounded-sm px-4 py-1.5 focus-within:outline-none"
-                                                />
-
-                                                {/* Submit Button */}
-                                                <Button
-                                                    buttonType="submit"
-                                                    buttonTitle={loading ? "Submitting" : "Submit"}
-                                                    className="bg-mindfulBlue text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer"
-                                                    disabled={loading}
-                                                />
-                                            </div>
-                                        </div>
-
-                                    </form>
-                                </div>
-                            )}
                         </div>
+
+                        {/* Close Button */}
+                        <div
+                            onClick={closePopup}
+                            className="absolute top-5 right-5 w-fit cursor-pointer"
+                        >
+                            <IoCloseCircle className="text-mindfulGrey text-[32px]" />
+                        </div>
+
+                        {loading ? (
+                            <div className="text-center py-5">Loading...</div>
+                        ) : (
+                            <div className="">
+                                <form onSubmit={handleSubmit(onSubmit)} method="post">
+                                    <div className="">
+
+
+                                        {/* Add Sub Category Form */}
+                                        <div className="space-y-5">
+
+                                            {/* Parent Category */}
+                                            <div className="">
+                                                <label
+                                                    htmlFor="name"
+                                                    className="text-md text-mindfulBlack font-semibold mb-1"
+                                                >
+                                                    Category
+                                                </label>
+
+                                                <select
+                                                    // name=""
+                                                    id=""
+                                                    className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
+                                                    {...register("categoryID")}
+                                                    onChange={handleCategoryChange} // ✅ Handle category selection
+                                                >
+                                                    <option value="" disabled>Select Category</option>
+
+                                                    {categoriesData.map((category) => (
+                                                        <option key={category.category_id} value={category.category_id}>
+                                                            {category.category_name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+
+                                                {errors.categoryID && (<p className="text-sm text-red-500">{errors.categoryID.message}</p>)}
+
+                                            </div>
+
+
+                                            {/* Sub Category */}
+                                            <div className="">
+                                                <label
+                                                    htmlFor="name"
+                                                    className="text-md text-mindfulBlack font-semibold mb-1"
+                                                >
+                                                    Sub Category
+                                                </label>
+                                                <InputField
+                                                    label={''}
+                                                    type="text"
+                                                    // name="category"
+                                                    id="category"
+                                                    placeholder="Sub Category"
+                                                    className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
+                                                    {...register("subCategoryName")}
+                                                />
+
+                                                {errors.subCategoryName && (<p className="text-sm text-red-500">{errors.subCategoryName.message}</p>)}
+                                            </div>
+
+                                            {/* Sub Category Image */}
+                                            <div>
+                                                <label className="text-md text-mindfulBlack font-semibold mb-1">Sub Category Image (Optional)</label>
+                                                <div className="border-[1px] border-mindfulgrey px-5 py-10 text-center relative">
+
+                                                    <label htmlFor="file-upload" className="cursor-pointer">
+                                                        {!fileName ? (
+                                                            <>
+                                                                <p className="text-mindfulBlack font-semibold">
+                                                                    Drag & Drop Image or <span className="text-mindfulBlue underline">Browse</span>
+                                                                </p>
+                                                                <p className="text-sm text-gray-500">Supported formats: JPG, PNG</p>
+                                                            </>
+                                                        ) : (
+                                                            <div className="flex justify-center items-center">
+                                                                <p className="text-gray-700 font-medium">{fileName}</p>
+                                                                <IoCloseCircle
+                                                                    onClick={handleRemoveFile}
+                                                                    className="w-5 h-5 text-gray-500 ml-3 cursor-pointer hover:text-red-500"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </label>
+                                                    <input
+                                                        id="file-upload"
+                                                        type="file"
+                                                        accept="image/jpeg, image/png"
+                                                        onChange={handleFileChange}
+                                                        className="hidden"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {/* Error response from the API */}
+                                    {error && <p className="text-sm text-red-500 pt-5">{error}</p>}
+
+                                    {/* Buttons */}
+                                    <div className="pt-5">
+                                        <div className="flex items-center justify-center space-x-5">
+                                            {/* Cancel Button */}
+                                            <Button
+                                                onClick={closePopup}
+                                                buttonType="button"
+                                                buttonTitle="Cancel"
+                                                className="bg-mindfulWhite text-md text-mindfulBlack rounded-sm px-4 py-1.5 focus-within:outline-none"
+                                            />
+
+                                            {/* Submit Button */}
+                                            <Button
+                                                buttonType="submit"
+                                                buttonTitle={loading ? "Submitting" : "Submit"}
+                                                className="bg-mindfulBlue text-md text-mindfulWhite rounded-sm px-4 py-1.5 focus-within:outline-none cursor-pointer"
+                                                disabled={loading}
+                                            />
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        )}
                     </div>
-                </div >
+                </div>
+            </div >
             {/* </div > */}
         </div >
     )

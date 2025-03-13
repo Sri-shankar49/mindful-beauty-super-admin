@@ -231,13 +231,14 @@ export const addPermissions = async (
 
 
 // Service Provider Page -- > Active, Pending and Inactive
-export const fetchProvidersList = async (status: string, searchQuery: string, pageNumber: number, serviceTypeID: number) => {
+export const fetchProvidersList = async (status: string, searchQuery: string, pageNumber: number, pageSize: number, serviceTypeID: number) => {
   try {
     const response = await apiAxios.get('/provider-api/providers_list/', {
       params: {
         status: status,  // Active, Pending, Inactive
         search: searchQuery,// Search query
         page: pageNumber,
+        page_size: pageSize,
         service_type_id: serviceTypeID// Service type id
       },
     });
@@ -321,11 +322,12 @@ export const pendingAction = async (providerID: number, action: string) => {
 
 // Service Management Page -- --> Categories Tab
 // GET Method from the API
-export const fetchCategoriesList = async (pageNumber: number) => {
+export const fetchCategoriesList = async (pageNumber: number, pageSize: number) => {
   try {
     const response = await apiAxios.get("/provider-api/category/", {
       params: {
         page: pageNumber,
+        page_size: pageSize,
       }
     });
 
@@ -428,13 +430,14 @@ export const deleteCategory = async (categoryID: number) => {
 
 
 // Service Management Page -- --> Sub Categories Tab
-export const fetchSubcategoriesList = async (categoryID: number, pageNumber: number) => {
+export const fetchSubcategoriesList = async (categoryID: number, pageNumber: number, pageSize: number) => {
   try {
     const response = await apiAxios.get('/provider-api/subcategory/', {
       params: {
         // Add any query parameters you need here
         category_id: categoryID,
-        page: pageNumber
+        page: pageNumber,
+        page_size: pageSize,
       }
     });
 
@@ -540,11 +543,12 @@ export const deleteSubcategory = async (subcategoryID: number) => {
 
 
 // Service Management Page -- --> Services Tab
-export const fetchServicesList = async (pageNumber: number, category: number, subcategory: number) => {
+export const fetchServicesList = async (pageNumber: number, pageSize: number, category: number, subcategory: number) => {
   try {
     const response = await apiAxios.get('/provider-api/get_services/', {
       params: {
         page: pageNumber,
+        page_size: pageSize,
         category: category,
         subcategory: subcategory,
       }
@@ -718,13 +722,14 @@ export const deleteServices = async (serviceID: number) => {
 
 // Service Management Page -- --> All Booking List
 // GET Method from the API
-export const bookingsList = async (searchQuery: string, pageNumber: number) => {
+export const bookingsList = async (searchQuery: string, pageNumber: number, pageSize: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/getappointments/`, {
       params: {
         search: searchQuery,
         page: pageNumber,
+        page_size: pageSize,
       }
     });
 
@@ -749,7 +754,7 @@ export const bookingsList = async (searchQuery: string, pageNumber: number) => {
 
 // Service Management Page -- --> Schedule List
 // GET Method from the API
-export const scheduleList = async (status: number, searchQuery: string, pageNumber: number) => {
+export const scheduleList = async (status: number, searchQuery: string, pageNumber: number, pageSize: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/getappointments/`, {
@@ -757,6 +762,7 @@ export const scheduleList = async (status: number, searchQuery: string, pageNumb
         status: status,
         search: searchQuery,
         page: pageNumber,
+        page_size: pageSize,
       }
     });
 
@@ -778,7 +784,7 @@ export const scheduleList = async (status: number, searchQuery: string, pageNumb
 
 // Service Management Page -- --> Inprogress List
 // GET Method from the API
-export const inprogressList = async (status: number, searchQuery: string, pageNumber: number) => {
+export const inprogressList = async (status: number, searchQuery: string, pageNumber: number, pageSize: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/getappointments/`, {
@@ -786,6 +792,7 @@ export const inprogressList = async (status: number, searchQuery: string, pageNu
         status: status,
         search: searchQuery,
         page: pageNumber,
+        page_size: pageSize,
       }
     });
 
@@ -809,7 +816,7 @@ export const inprogressList = async (status: number, searchQuery: string, pageNu
 
 // Service Management Page -- --> Completed List
 // GET Method from the API
-export const completedList = async (status: number, searchQuery: string, pageNumber: number) => {
+export const completedList = async (status: number, searchQuery: string, pageNumber: number, pageSize: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/getappointments/`, {
@@ -817,6 +824,7 @@ export const completedList = async (status: number, searchQuery: string, pageNum
         status: status,
         search: searchQuery,
         page: pageNumber,
+        page_size: pageSize,
       }
     });
 
@@ -840,7 +848,7 @@ export const completedList = async (status: number, searchQuery: string, pageNum
 
 // Service Management Page -- --> Cancelled List
 // GET Method from the API
-export const cancelledList = async (status: number, searchQuery: string, pageNumber: number) => {
+export const cancelledList = async (status: number, searchQuery: string, pageNumber: number, pageSize: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/getappointments/`, {
@@ -848,6 +856,7 @@ export const cancelledList = async (status: number, searchQuery: string, pageNum
         status: status,
         search: searchQuery,
         page: pageNumber,
+        page_size: pageSize,
       }
     });
 
@@ -871,13 +880,14 @@ export const cancelledList = async (status: number, searchQuery: string, pageNum
 
 // Sales & Transactions Page
 // GET Method from the API
-export const salesTransactionsList = async (pageNumber: number) => {
+export const salesTransactionsList = async (pageNumber: number, pageSize: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/get-sales-transactions/`, {
       params: {
         //   provider_id: providerID,
         page: pageNumber,
+        page_size: pageSize,
       },
     });
 
@@ -1071,13 +1081,14 @@ export const invoiceDetailsCompleted = async (appointmentId: number) => {
 
 // Ratings & Reviews Page
 // GET Method from the API
-export const reviewsList = async (searchQuery: string, pageNumber: number) => {
+export const reviewsList = async (searchQuery: string, pageNumber: number, pageSize: number) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/review-list/`, {
       params: {
         search: searchQuery,
         page: pageNumber,
+        page_size: pageSize,
       },
     });
 
@@ -1103,12 +1114,13 @@ export const reviewsList = async (searchQuery: string, pageNumber: number) => {
 
 // Coupon Page -- --> List Coupons Tab
 // GET Method from the API
-export const couponList = async (pageNumber: number, byStatus: string | number, byMonth: string) => {
+export const couponList = async (pageNumber: number, pageSize: number, byStatus: string | number, byMonth: string) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/get-coupons/`, {
       params: {
         page: pageNumber,
+        page_size: pageSize,
         status: byStatus,
         month: byMonth,
       },
@@ -1224,12 +1236,13 @@ export const deleteCoupon = async (couponID: number) => {
 
 // Coupon Page -- --> List Coupons Tab
 // GET Method from the API
-export const expiredCouponList = async (pageNumber: number, byStatus: number, byMonth: string) => {
+export const expiredCouponList = async (pageNumber: number, pageSize: number, byStatus: number, byMonth: string) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/coupons/expired/`, {
       params: {
         page: pageNumber,
+        page_size: pageSize,
         status: byStatus,
         month: byMonth,
       },
@@ -1256,12 +1269,13 @@ export const expiredCouponList = async (pageNumber: number, byStatus: number, by
 
 // Wallet Management Page -- -->
 // GET Method from the API
-export const walletList = async (pageNumber: number, byProvider: number, searchQuery: string) => {
+export const walletList = async (pageNumber: number, pageSize: number, byProvider: number, searchQuery: string) => {
 
   try {
     const response = await apiAxios.get(`/provider-api/provider-wallet/`, {
       params: {
         page: pageNumber,
+        page_size: pageSize,
         service_type_id: byProvider,
         search: searchQuery,
       },

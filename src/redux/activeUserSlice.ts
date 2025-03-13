@@ -42,12 +42,12 @@ const initialState: ActiveUserState = {
 export const fetchActiveUserList = createAsyncThunk(
     'activeUser/fetchActiveUserList',
     async (
-        { status, searchQuery, currentPage, serviceTypeID }:
-            { status: string; searchQuery: string; currentPage: number, serviceTypeID: number },
+        { status, searchQuery, currentPage, pageSize, serviceTypeID }:
+            { status: string; searchQuery: string; currentPage: number, pageSize: number, serviceTypeID: number },
         // { rejectWithValue }
     ) => {
         try {
-            const response = await fetchProvidersList(status, searchQuery, currentPage, serviceTypeID);
+            const response = await fetchProvidersList(status, searchQuery, currentPage, pageSize, serviceTypeID);
             console.log("Active Users Data log:", response);
 
             return response;

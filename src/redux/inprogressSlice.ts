@@ -54,12 +54,12 @@ const initialState: InprogressState = {
 export const fetchInprogressList = createAsyncThunk(
     'inprogress/fetchInprogressList',
     async (
-        { status, searchQuery, currentPage }:
-            { status: number; searchQuery: string; currentPage: number },
+        { status, searchQuery, currentPage, pageSize }:
+            { status: number; searchQuery: string; currentPage: number, pageSize: number },
         // { rejectWithValue }
     ) => {
         try {
-            const response = await inprogressList(status, searchQuery, currentPage);
+            const response = await inprogressList(status, searchQuery, currentPage, pageSize);
             return response;
         } catch (error: any) {
             // return rejectWithValue(error.message || 'Failed to fetch inprogress list');
