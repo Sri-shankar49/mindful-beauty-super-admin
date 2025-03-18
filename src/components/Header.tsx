@@ -1,7 +1,8 @@
 import { useState } from "react";
 // import { FaBell } from "react-icons/fa6";
 import { FaUserLarge } from "react-icons/fa6";
-import mindfulBeautyLogoSmall from "../assets/icons/mindfulBeautyLogoSmall.png";
+// import mindfulBeautyLogoSmall from "../assets/icons/mindfulBeautyLogoSmall.png";
+import mindfulBeautyLogoSmallNew from "../assets/icons/mindfulBeautyLogoSmallNew.png";
 // import ashtamudiLogo from "../assets/icons/ashtamudiLogo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiMoreVertical } from "react-icons/fi";
@@ -60,7 +61,7 @@ export const Header = () => {
                         {/* Mindful Beauty Logo */}
                         <Link to="/Dashboard">
                             <div>
-                                <img src={mindfulBeautyLogoSmall} alt="mindful beauty logo" />
+                                <img src={mindfulBeautyLogoSmallNew} alt="mindful beauty logo" />
                             </div>
                         </Link>
 
