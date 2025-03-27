@@ -173,7 +173,7 @@ export const Header = () => {
 
                                 <div>
                                     {profileHover && (
-                                        <div className="absolute bottom-[-1.7rem] right-10 mt-2 w-40 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
+                                        <div className="absolute bottom-[-0.5rem] right-10 mt-2 w-40 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
                                             {/* <Link
                                                 to="/MyAccount"
                                                 aria-current="page"
@@ -216,7 +216,7 @@ export const Header = () => {
 
                                 <div>
                                     {moreHover && (
-                                        <div className="absolute bottom-[-4.7rem] right-10 mt-2 w-48 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
+                                        <div className="absolute bottom-[-3.5rem] right-10 mt-2 w-48 bg-mindfulWhite rounded-md shadow-lg py-1 z-20">
                                             <Link
                                                 to="/WalletManagement"
                                                 aria-current="page"
