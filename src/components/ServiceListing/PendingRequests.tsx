@@ -209,7 +209,7 @@ export const PendingRequests = () => {
                     <th className="text-start px-2 py-3">Owner</th>
                     <th className="text-start px-2 py-3">Location</th>
                     <th className="text-start px-2 py-3">Action</th>
-                    <th className="text-start px-2 py-3">View Branch</th>
+                    <th className="w-40 text-start px-2 py-3">View Branch</th>
                   </tr>
                 </thead>
 
@@ -272,14 +272,14 @@ export const PendingRequests = () => {
                             </div>
 
                             {/* Close Button */}
-                            <div
+                            {/* <div
                               title="Deactivate Salon"
                               onClick={() => handleActionSubmit(pendingData.salon_id, "Inactive")}
                               className="border-[1px] border-mindfulGreyTypeTwo rounded-md px-2 py-1.5 cursor-pointer group hover:bg-[#ffe1e1] transition-colors duration-200"
                             >
                               <IoClose className="text-[20px] text-mindfulBlack group-hover:text-mindfulRed" />
 
-                            </div>
+                            </div> */}
 
 
                           </div>

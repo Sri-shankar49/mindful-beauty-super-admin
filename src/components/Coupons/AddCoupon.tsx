@@ -1,5 +1,5 @@
 import { InputField } from '../../common/InputField';
-import { SelectField } from '../../common/SelectField';
+// import { SelectField } from '../../common/SelectField';
 import { Button } from '../../common/Button';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -175,7 +175,8 @@ export const AddCoupon = () => {
                                                             // name="startDate"
                                                             id="startDate"
                                                             placeholder="Start Date"
-                                                            className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
+                                                            className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 cursor-pointer focus-within:outline-none"
+                                                            onFocus={(e) => e.target.showPicker()} 
                                                             {...register("valid_from")}
                                                         />
                                                         {errors.valid_from && <p className="text-sm text-red-500">{errors.valid_from.message}</p>}
@@ -196,7 +197,8 @@ export const AddCoupon = () => {
                                                             // name="endDate"
                                                             id="endDate"
                                                             placeholder="End Date"
-                                                            className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 focus-within:outline-none"
+                                                            className="w-full rounded-[5px] border-[1px] border-mindfulgrey px-2 py-1.5 cursor-pointer focus-within:outline-none"
+                                                            onFocus={(e) => e.target.showPicker()} 
                                                             {...register("valid_until")}
                                                         />
                                                         {errors.valid_until && <p className="text-sm text-red-500">{errors.valid_until.message}</p>}
@@ -249,7 +251,7 @@ export const AddCoupon = () => {
                                                         </div>
 
                                                         {/* Discount Area */}
-                                                        <div>
+                                                        {/* <div>
                                                             <label
                                                                 htmlFor="discountArea"
                                                                 className="text-md text-mindfulBlack font-semibold mb-1"
@@ -270,7 +272,7 @@ export const AddCoupon = () => {
                                                                 ]}
                                                             // error="This field is required."
                                                             />
-                                                        </div>
+                                                        </div> */}
 
                                                         {/* Discount Value */}
                                                         <div>
@@ -299,7 +301,7 @@ export const AddCoupon = () => {
 
 
                                                         {/* Discounts ON */}
-                                                        <div>
+                                                        {/* <div>
                                                             <label
                                                                 htmlFor="discountArea"
                                                                 className="text-md text-mindfulBlack font-semibold mb-1"
@@ -321,7 +323,7 @@ export const AddCoupon = () => {
                                                                 ]}
                                                             // error="This field is required."
                                                             />
-                                                        </div>
+                                                        </div> */}
 
                                                         {/* Coupon Limit */}
                                                         <div>
