@@ -73,7 +73,7 @@ export const ViewCoupon: React.FC<ViewCouponProps> = ({ closePopup, couponData }
                                             </div>
 
                                             {/*	Discount Type */}
-                                            <div className="">
+                                            {/* <div className="">
                                                 <label
                                                     htmlFor="discountType"
                                                     className="text-md text-mindfulBlack font-semibold mb-1"
@@ -90,7 +90,7 @@ export const ViewCoupon: React.FC<ViewCouponProps> = ({ closePopup, couponData }
                                                     value={couponData.discount_type}
                                                     readOnly
                                                 />
-                                            </div>
+                                            </div> */}
 
                                             {/*	Value */}
                                             <div className="">

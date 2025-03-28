@@ -188,7 +188,7 @@ export const EditCoupon: React.FC<EditCouponProps> = ({ closePopup, couponData, 
                                                 </div>
 
                                                 {/*	Discount Type */}
-                                                <div className="">
+                                                {/* <div className="">
                                                     <label
                                                         htmlFor="discountType"
                                                         className="text-md text-mindfulBlack font-semibold mb-1"
@@ -207,7 +207,7 @@ export const EditCoupon: React.FC<EditCouponProps> = ({ closePopup, couponData, 
                                                         readOnly
                                                     />
                                                     {errors.discount_type && <p className="text-sm text-red-500">{errors.discount_type.message}</p>}
-                                                </div>
+                                                </div> */}
 
 
                                                 {/*	Coupon Limit */}
