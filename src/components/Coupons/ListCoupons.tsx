@@ -279,7 +279,7 @@ export const ListCoupons = () => {
                         <tr className="">
 
                             <th className="text-start px-2 py-3">Coupon Name</th>
-                            <th className="text-start px-2 py-3">Discount Type</th>
+                            {/* <th className="text-start px-2 py-3">Discount Type</th> */}
                             <th className="text-start px-2 py-3">Coupon Limit</th>
                             <th className="text-start px-2 py-3">Value</th>
                             <th className="text-start px-2 py-3">Start Date</th>
@@ -309,7 +309,7 @@ export const ListCoupons = () => {
                                 <tr key={coupon.id} className="border-b-2 border-mindfulGreyTypeTwo">
 
                                     <td className="text-start px-2 py-5">{coupon.coupon_code}</td>
-                                    <td className="text-start px-2 py-5">{coupon.discount_type}</td>
+                                    {/* <td className="text-start px-2 py-5">{coupon.discount_type}</td> */}
                                     <td className="text-start px-2 py-5">{coupon.coupon_limit}</td>
                                     <td className="text-start px-2 py-5">{coupon.discount_value}</td>
                                     <td className="text-start px-2 py-5">{coupon.valid_from}</td>
