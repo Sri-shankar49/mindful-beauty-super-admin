@@ -99,9 +99,9 @@ export const ViewBranchPopup: React.FC<ViewBranchPopupProps> = ({ closePopup, pr
                     phone={branch.phone}
                     location={branch.location}
                     logo={branch.logo || ""} // If logo is null, pass an empty string
-                    userName={branch.staff?.name || "N/A"} // Provide default values if staff info is missing
-                    userPhone={branch.staff?.phone || "N/A"}
-                    userRole={branch.staff?.role || "N/A"}
+                    userName={branch.staff?.name ||  "Manager Name - N/A"} // Provide default values if staff info is missing
+                    userPhone={branch.staff?.phone || "Phone - N/A"}
+                    userRole={branch.staff?.role || "Role - N/A"}
                     BranchStatus={branch.service_status}
                   />
                 ))
